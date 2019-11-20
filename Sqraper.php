@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.0.1
+Version: 1.0.2
 Last Updated: November 20, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.0.1";
+$scriptVersion = "1.0.2";
 $scriptUpdated = "Last Updated: November 20, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -245,7 +245,7 @@ function cleanHtmlText($htmlText) {
 	$htmlText = str_replace('<p class="body-line ltr quote ">', '', $htmlText);
 
 	$htmlText = str_replace('<p class="body-line ltr ">', '', $htmlText);
-	$htmlText = str_replace('</p>', '\n', $htmlText);	
+	$htmlText = str_replace("</p>", "\n", $htmlText);	
 	
 	return $htmlText;
 		
