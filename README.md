@@ -3,6 +3,17 @@ PHP 8Kun Q post scraper.
 
 -----------------
 
+IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. It is being released in BETA early and to
+limited persons due to lag in picking up new drops from some data sources.
+
+This script is not for novices. Basic PHP understanding required.
+
+I worked hard to write this in order to help the community. Therefore I ask, if you find bugs and correct them, make
+improvements, etc., contribute your changes back to the community via this GitHub. Don't be "that guy". WWG1WGA is not
+just a catchy statement, let's all try to live it.
+
+-----------------
+
 CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqraper.php)
 
 {
