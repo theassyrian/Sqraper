@@ -223,8 +223,8 @@ function getConfig() {
 
 function cleanHtmlText($htmlText) {
 	
-	$emptyPattern = '~<p class=\"body-line empty \"> <\\\/p>~';
-	$htmlText = preg_replace($emptyPattern, '\n', $htmlText);
+	// $emptyPattern = '~<p class=\"body-line empty \"> <\\\/p>~';
+	// $htmlText = preg_replace($emptyPattern, '\n', $htmlText);
 
 	$referencePattern = '~<a [^>]+>&gt;&gt;(\d+)<\\\/a>~';
 	$htmlText = preg_replace($referencePattern, '>>${1}1', $htmlText);
@@ -232,11 +232,20 @@ function cleanHtmlText($htmlText) {
 	$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
 	$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
 	
-	$quotePattern = '~<p class="body-line ltr quote">&gt;(.+?)<\\\/p>~';
-	$htmlText = preg_replace($quotePattern, '>${1}1\n', $htmlText);
+	// $quotePattern = '~<p class="body-line ltr quote">&gt;(.+?)<\\\/p>~';
+	// $htmlText = preg_replace($quotePattern, '>${1}1\n', $htmlText);
 	
-	$paragraphPattern = '~<p class="body-line ltr ">(.+?)<\\\/p>~';
-	$htmlText = preg_replace($paragraphPattern, '${1}1\n', $htmlText);
+	// $paragraphPattern = '~<p class=\"body-line ltr \">(.+?)<\\\/p>~';
+	// $htmlText = preg_replace($paragraphPattern, '${1}1\n', $htmlText);
+	
+	$htmlText = str_replace('<p class="body-line empty">', '', $htmlText);
+	$htmlText = str_replace('<p class="body-line empty ">', '', $htmlText);
+
+	$htmlText = str_replace('<p class="body-line ltr quote">', '', $htmlText);
+	$htmlText = str_replace('<p class="body-line ltr quote ">', '', $htmlText);
+
+	$htmlText = str_replace('<p class="body-line ltr ">', '', $htmlText);
+	$htmlText = str_replace('</p>', '\n', $htmlText);	
 	
 	return $htmlText;
 		
