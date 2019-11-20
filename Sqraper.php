@@ -80,7 +80,7 @@ function displayError($errDescription) {
 	
 }
 
-function mask ( $str, $start = 0, $length = null ) {
+function mask ($str, $start = 0, $length = null) {
 	$mask = preg_replace ( "/\S/", "*", $str );
     if( is_null ( $length )) {
 		$mask = substr ( $mask, $start );
