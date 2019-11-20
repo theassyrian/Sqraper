@@ -1,2 +1,18 @@
-IMPORTANT! This is a pre-release. It is being released in BETA early and to limited persons due lag in picking up new drops from some data sources.
+IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. It is being released in BETA early and to
+limited persons due to lag in picking up new drops from some data sources.
+
+As this point I have only had the opportunity to test it in a Windows 10 command prompt ("PHP.exe Sqraper.php") and have
+not had the opportunity to test it on my Linux machine yet. It is never intended to be run as a public facing web page,
+especially since that would also expose your "sqraper_config.json" file and thus compromise any FTP credentials and paths
+that you may have entered in the config.
+
+This script is not for novices. Basic PHP understanding required.
+
+I worked hard to write this in order to help the community. Therefore I ask, if you find bugs and correct them, make
+improvements, etc., contribute your changes back to the community. Don't be "that guy". WWG1WGA is not just a catchy
+statement, let's all try to live it.
+
+I'll try to get docs done soon and update the Git.
+
+DevAnon
 
