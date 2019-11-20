@@ -148,7 +148,7 @@ function getConfig() {
 			'productionPostsJSONFilename' => 'posts.json',
 			'productionJSONFolder' => 'json/',
 			'productionMediaFolder' => 'media/',
-			'productionMediaURL' => 'https://qalerts.app/media/', // If not blank, the media URL in the file will be build with this domain and path.
+			'productionMediaURL' => 'https://yourserver.com/media/', // If not blank, the media URL in the file will be build with this domain and path.
 			'ftpUploadJSON' => false,
 			'ftpUploadJSONFolder' => '/data/posts/', // Folder must already exist on the remote server.
 			'ftpUploadMedia' => false,
