@@ -1,6 +1,8 @@
 # Sqraper
 PHP 8Kun Q post scraper.
 
+View this README.md RAW for a more true reading experience :)
+
 -----------------
 
 IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. It is being released in BETA early and to
@@ -43,7 +45,7 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
 
 -----------------
 
-CONFIGURATION ITEM EXPLAINATIONS (SORRY, WORK CALLS... WILL UPDATE LATER):
+CONFIGURATION ITEM EXPLAINATIONS:
 
   qTrip:
     Type: String
