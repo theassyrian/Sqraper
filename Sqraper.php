@@ -559,8 +559,8 @@ do {
 	echo "   \e[1;34mProduction Media (Remote) URL:\e[0m $productionMediaURL\n";
 	echo "   \e[1;34mSave Downloaded 8kun JSON Files To Local:\e[0m $saveRemoteFilesToLocal\n";
 	echo "   \e[1;34mRead From Local 8Kun Files (for debugging/testing):\e[0m $readFromLocal8KunFiles\n";
-	echo "   \e[1;34mFTP Server:\e[0m $ftpServer\n";
-	echo "   \e[1;34mFTP Login ID:\e[0m $ftpLoginID\n";
+	echo "   \e[1;34mFTP Server:\e[0m " . mask($ftpServer) . "\n";
+	echo "   \e[1;34mFTP Login ID:\e[0m " . mask($ftpLoginID) . "\n";
 	echo "   \e[1;34mFTP Password:\e[0m " . mask($ftpPassword) . "\n";
 	echo "   \e[1;34mFTP Upload JSON Posts:\e[0m $ftpUploadJSON\n";
 	echo "   \e[1;34mFTP Upload JSON Posts Folder:\e[0m $ftpUploadJSONFolder\n";
