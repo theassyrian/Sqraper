@@ -1,7 +1,35 @@
 # Sqraper
 PHP 8Kun Q post scraper.
 
-View this README.md RAW for a more true reading experience :)
+When viewing via GitHub view this README.md as RAW for proper formatting.
+
+-----------------
+
+The goal and intent of this project is in short, redundancy and community. As of the date of publishing, as far as I am aware,
+there is only one scraper making their data public (thank you Patriot!) so that other sites and apps can use it. In the event
+that anything ever happen to that site, it's operator or anything else, well... not putting that into the universe. I can say
+single point of failure. The only other site I am aware of that operates their own scraper keeps the data they scrape private
+to their internal use, as far as I know anyway.
+
+My hope in this script is a few fold:
+	
+	1) STRONGLY ENCOURAGED! Every site that uses this or any other scraper place their posts.json file at 
+	yoursite.com/data/json/posts.json and their downloaded media (images/videos) at yoursite.com/media/. 
+	This way if there is ever any issue of any type (e.g. deplatforming), other sites and apps
+	can easily grab the date in a multitude of places. They can't $uicide us all.
+	2) Don't just grab the scraper and run and ignore the rest of the community. If you make improvements
+	that can help the movement at large, post your updates to the GitHub. WARNING though. Please don't change
+	the posts.json format... we all need to retain backward compatibility.
+	3) Be free to share on your site, or at least with others you know that are capable of running a site and/or
+	scraper, that you are using Sqraper and where they can get it. Let's not be selfish. At the very least make
+	your scraped data available to others. This is not about one person or site, it's about "we the people".
+	4) Perhaps in comments of this GitHub or somewhere else reliable people can post a list of sites that are
+	serving up the data.
+	5) Perhaps not a bad idea to clone this Git elsewhere, or at least periodically download it for safe keeping.
+	I'm not looking for massive credit or anything or to make a name for myself, however, give credit where
+	credit is due. By license, don't just take it, hack a few changes and call it your own. Please leave the
+	credit in the source code. Don't be a d___. We cool?
+	... long story short, not rocket science, let's work together as a team. WWG1WGA.
 
 -----------------
 
