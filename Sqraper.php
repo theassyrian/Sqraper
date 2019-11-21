@@ -100,8 +100,6 @@ function createBlueBGText($text) {
 
 function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 
-	/* extension=php_ftp.dll must be in the php.ini file */
-	
 	if ($isMedia) {
 		$dataType = FTP_BINARY;
 		$localFilePath = $GLOBALS['productionMediaFolder'] . $localFile;
@@ -223,20 +221,11 @@ function getConfig() {
 
 function cleanHtmlText($htmlText) {
 	
-	// $emptyPattern = '~<p class=\"body-line empty \"> <\\\/p>~';
-	// $htmlText = preg_replace($emptyPattern, '\n', $htmlText);
-
 	$referencePattern = '~<a [^>]+>&gt;&gt;(\d+)<\\\/a>~';
 	$htmlText = preg_replace($referencePattern, '>>${1}1', $htmlText);
 
 	$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
 	$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
-	
-	// $quotePattern = '~<p class="body-line ltr quote">&gt;(.+?)<\\\/p>~';
-	// $htmlText = preg_replace($quotePattern, '>${1}1\n', $htmlText);
-	
-	// $paragraphPattern = '~<p class=\"body-line ltr \">(.+?)<\\\/p>~';
-	// $htmlText = preg_replace($paragraphPattern, '${1}1\n', $htmlText);
 	
 	$htmlText = str_replace('<p class="body-line empty">', '', $htmlText);
 	$htmlText = str_replace('<p class="body-line empty ">', '', $htmlText);
@@ -940,6 +929,12 @@ do {
 	*/
 	getConfig(); 
 	/************************************************************/	
+	
+	/*
+	Uncomment the line below if you ever need to force the posts.json up to your FTP server without having to wait for
+	a new Q drop. Useful if you ever have to manually edit the post.json file to make a modification to the data in it.
+	*/
+	// uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);	
 	
 	echo "\e[1;32mSLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
 	sleep($sleepBetweenNewQPostChecks);
