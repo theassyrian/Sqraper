@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.0.2
+Version: 1.0.3
 Last Updated: November 20, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.0.2";
+$scriptVersion = "1.0.3";
 $scriptUpdated = "Last Updated: November 20, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
