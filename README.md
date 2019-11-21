@@ -16,7 +16,7 @@ My hope in this script is a few fold:
 	1) STRONGLY ENCOURAGED! Every site that uses this or any other scraper place their posts.json file at 
 	yoursite.com/data/json/posts.json and their downloaded media (images/videos) at yoursite.com/media/. 
 	This way if there is ever any issue of any type (e.g. deplatforming), other sites and apps
-	can easily grab the date in a multitude of places. They can't $uicide us all.
+	can easily grab the data in a multitude of places. They can't $uicide us all.
 	2) Don't just grab the scraper and run and ignore the rest of the community. If you make improvements
 	that can help the movement at large, post your updates to the GitHub. WARNING though. Please don't change
 	the posts.json format... we all need to retain backward compatibility.
@@ -28,17 +28,20 @@ My hope in this script is a few fold:
 	5) If you find bugs and correct them, make improvements, etc., contribute your changes back to the Git.
 	Don't be "that guy".
 	6) Perhaps not a bad idea to clone this Git elsewhere, or at least periodically download it for safe keeping.
-	I'm not looking for massive credit or anything or to make a name for myself, however, give credit where
-	credit is due. By license, don't just take it, hack a few changes and call it your own. Please leave the
-	credit in the source code. Don't be a d___. We cool?
+	I'm not looking for massive credit or to make a name for myself, however, give credit where credit is due. 
+	By license, don't just take it, hack a few changes and call it your own. Please leave the
+	credit in the source code. Don't be a d___.
 	... long story short, not rocket science, let's work together as a team. WWG1WGA.
 
 -----------------
 
-IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. It is being released in BETA early and to
-limited persons due to lag in picking up new drops from some data sources.
+IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. It is being released in BETA early due
+to some lags in picking up new drops by another scraper... more than likely due to all of us having to adapt to the
+challenges we are overcoming regarding 8kun's battles against the DS.
 
-This script is not for novices. Basic PHP understanding required.
+This script is not for novices. Basic PHP understanding required. I CAN NOT provide support. Maybe from time to time
+I can pipe in. However, I am buried as it is. Plus, I am not a PHP expert. This is only my 3rd PHP project ever. Those
+more experienced can maybe take the lead and help others. Community.
 
 -----------------
 
