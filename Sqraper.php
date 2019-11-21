@@ -235,7 +235,7 @@ function cleanHtmlText($htmlText) {
 	$htmlText = str_replace('<p class="body-line ltr quote ">', '', $htmlText);
 
 	$htmlText = str_replace('<p class="body-line ltr ">', '', $htmlText);
-	$htmlText = str_replace('</p>', '\n', $htmlText);	
+	$htmlText = str_replace('</p>', "\n", $htmlText);	
 	
 	return $htmlText;
 		
