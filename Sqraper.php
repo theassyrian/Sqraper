@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.0.3
-Last Updated: November 20, 2019
+Version: 1.1.0
+Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.0.3";
-$scriptUpdated = "Last Updated: November 20, 2019";
+$scriptVersion = "1.1.0";
+$scriptUpdated = "Last Updated: November 19, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -76,7 +76,9 @@ function displayError($errDescription) {
 	
 	echo "\n\e[1;31m>>>\e[0m ========================================\n";
 	echo "\e[1;31m>>>\e[0m ERROR: $errDescription\n";			
+	echo "\e[1;31m>>>\e[0m SLEEP: 5 seconds.\n";			
 	echo "\e[1;31m>>>\e[0m ========================================\n\n";		
+	sleep(5);
 	
 }
 
@@ -220,10 +222,9 @@ function getConfig() {
 }
 
 function cleanHtmlText($htmlText) {
+		
+	$htmlText = preg_replace('#<a onclick=\"highlightReply.*?>(.*?)</a>#i', '${1}', $htmlText);
 	
-	$referencePattern = '~<a [^>]+>&gt;&gt;(\d+)<\\\/a>~';
-	$htmlText = preg_replace($referencePattern, '>>${1}1', $htmlText);
-
 	$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
 	$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
 	
@@ -234,7 +235,7 @@ function cleanHtmlText($htmlText) {
 	$htmlText = str_replace('<p class="body-line ltr quote ">', '', $htmlText);
 
 	$htmlText = str_replace('<p class="body-line ltr ">', '', $htmlText);
-	$htmlText = str_replace("</p>", "\n", $htmlText);	
+	$htmlText = str_replace('</p>', '\n', $htmlText);	
 	
 	return $htmlText;
 		
@@ -255,20 +256,32 @@ function getReferencedPostNumbers($searchStr) {
 function downloadMediaFile($thisUrl, $thisStorageFilename) {
 
 	if ((isset($GLOBALS['productionMediaFolder'])) && ($GLOBALS['productionMediaFolder'] != '')) {
-		$thisMedia = @file_get_contents($thisUrl);
-		if (!$thisMedia) {				
-			displayError("Could not get media from URL \"$thisUrl");				
+
+		if (file_exists($GLOBALS['productionMediaFolder'] . $thisStorageFilename)) {
+
+			echo "\e[1;33m--- SKIP DOWNLOAD MEDIA (ALREADY EXISTS): \n    " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";	
+			
 		} else {
-			if (!file_exists($GLOBALS['productionMediaFolder'])) {
-				echo "\e[1;31mCREATE FOLDER:\e[0m " . $GLOBALS['productionMediaFolder'] . "\n";
-				mkdir($GLOBALS['productionMediaFolder'], 0777, true);
+
+			echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";	
+			
+			$thisMedia = @file_get_contents($thisUrl);
+			if (!$thisMedia) {				
+				displayError("Could not get media from URL \"$thisUrl");				
+			} else {
+				if (!file_exists($GLOBALS['productionMediaFolder'])) {
+					echo "\e[1;31mCREATE FOLDER:\e[0m " . $GLOBALS['productionMediaFolder'] . "\n";
+					mkdir($GLOBALS['productionMediaFolder'], 0777, true);
+				}
+				file_put_contents($GLOBALS['productionMediaFolder'] . $thisStorageFilename, $thisMedia, LOCK_EX);
+				unset($thisMedia);
+				if ($GLOBALS['ftpUploadMedia']) {
+					uploadViaFTP($thisStorageFilename, $thisStorageFilename, true);
+				}
 			}
-			file_put_contents($GLOBALS['productionMediaFolder'] . $thisStorageFilename, $thisMedia, LOCK_EX);
-			unset($thisMedia);
-			if ($GLOBALS['ftpUploadMedia']) {
-				uploadViaFTP($thisStorageFilename, $thisStorageFilename, true);
-			}
+			
 		}
+		
 	}
 
 }
@@ -281,7 +294,7 @@ function getMediaObject($inArray) {
 		if ((isset($GLOBALS['productionMediaURL'])) && ($GLOBALS['productionMediaURL'] != '')) {
 			$thisUrl = $GLOBALS['productionMediaURL'] . $inArray['tim'] . $inArray['ext'];
 		} else {
-			$thisUrl = "https://media." . $domain8KunForLinks . "/file_store/" . $inArray['tim'] . $inArray['ext'];			
+			$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $inArray['tim'] . $inArray['ext'];			
 		}		
 		
 		$thisFilename = $inArray['filename'] . $inArray['ext'];
@@ -291,11 +304,19 @@ function getMediaObject($inArray) {
 			'url' => $thisUrl
 		);
 		array_push($returnArray, $thisMedia);		
-		downloadMediaFile($thisUrl, $thisStorageFilename);
+		
+		if ($GLOBALS['useLoki']) {
+			$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
+			downloadMediaFile($thisDownload, $thisStorageFilename);
+		} else {
+			$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $inArray['tim'] . $inArray['ext'];
+			downloadMediaFile($thisDownload, $thisStorageFilename);
+		}	
+		
 		if (isset($inArray['extra_files'])) {
 			foreach($inArray['extra_files'] as $extraFile) {															
 				if ((isset($extraFile['filename'])) && (isset($extraFile['ext'])) && (isset($extraFile['tim']))){																
-					$thisUrl = "https://media." . $domain8KunForLinks . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+					$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 					$thisFilename = $extraFile['filename'] . $extraFile['ext'];
 					$thisStorageFilename = $extraFile['tim'] . $extraFile['ext'];
 					$thisMedia = array(
@@ -303,7 +324,14 @@ function getMediaObject($inArray) {
 						'url' => $thisUrl
 					);
 					array_push($returnArray, $thisMedia);					
-					downloadMediaFile($thisUrl, $thisStorageFilename);
+
+					if ($GLOBALS['useLoki']) {
+						$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+						downloadMediaFile($thisDownload, $thisStorageFilename);
+					} else {
+						$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+						downloadMediaFile($thisDownload, $thisStorageFilename);
+					}					
 				}
 			}
 		}
@@ -312,115 +340,137 @@ function getMediaObject($inArray) {
 }
 
 function getReferencesObject($searchStr) {
-	
+
 	// index 0 is the content as it matched with the >>
 	// index 1 is the content without the >>
 	// Use print_r($matches); to see the array
 	
-	$findReferencesPattern = "~>>(\d+)~is";
-	preg_match_all($findReferencesPattern, cleanHtmlText($searchStr), $matches, PREG_PATTERN_ORDER);
+	$findReferencesPattern = "~&gt;&gt;(\d+)~is";
+	preg_match_all($findReferencesPattern, $searchStr, $matches, PREG_PATTERN_ORDER);
+
+	$returnArray = [];
 
 	if (!empty($matches)) {		
-		$post_references = [];
+		$post_references = ['referencesONE'];
 		foreach($matches[1] as $match) {
-			foreach($jsonThreads['posts'] as $postReference) { // Loop through all of the posts in the current thread of the current catalog.
-				if ($postReference['no'] == $match) {
-					if (isset($postReference['email'])) {
-						$postReference_email = $postReference['email'];	
-					} else {
-						$postReference_email = null;
-					}
-					if (isset($postReference['no'])) {
-						$postReference_id = $postReference['no'];	
-					} else {
-						$postReference_id = 0;
-					}
-					if (isset($postReference['resto'])) {
-						$postReference_threadId = $postReference['resto'];	
-					} else {
-						$postReference_threadId = 0;
-					}
-					$postReference_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
-					if (isset($postReference['name'])) {
-						$postReference_name = trim($postReference['name']);	
-					} else {
-						$postReference_name = null;
-					}
-					$postReference_source = explode(".", $domain8KunForLinks)[0] . "_$board";
-					$post_subject = null;
-					if (isset($postReference['com'])) {
-						$postReference_text = cleanHtmlText(trim($postReference['com']));	
-					} else {
-						$postReference_text = null;
-					}
-					if (isset($postReference['time'])) {
-						$postReference_timestamp = $postReference['time'];	
-					} else {
-						$postReference_timestamp = 0;
-					}
-					if (isset($postReference['last_modified'])) {
-						$postReference_lastModified = $postReference['last_modified'];	
-					} else {
-						$postReference_lastModified = 0;
-					}															
-					if (isset($postReference['trip'])) {
-						$postReference_trip = $postReference['trip'];	
-					} else {
-						$postReference_trip = null;
-					}
-					if (isset($postReference['id'])) {
-						$postReference_userId = $postReference['id'];	
-					} else {
-						$postReference_userId = 0;
-					}
+						
+			$jsonThreads['posts'] = $GLOBALS['jsonThreads']['posts'];
+			
+			if (!empty($jsonThreads['posts'])) {
+			
+				foreach($jsonThreads['posts'] as $postReference) { // Loop through all of the posts in the current thread of the current catalog.
 
-					$thisReferencesPost = array(
-						'threadId' => $postReferences_threadId,
-						'id' => $postReferences_id,
-						'timestamp' => $postReferences_timestamp,
-						'lastModified' => $postReferences_lastModified,
-						'source' => $postReferences_source,
-						'link' => $postReferences_link,
-						'name' => $postReferences_name,
-						'trip' => $postReferences_trip,
-						'userId' => $postReferences_userId,
-						'text' => $postReferences_text
-					);															
-					array_push($post_references, $thisReferencesPost);
-					
-					$post_referencesMedia = [];															
-					if ((isset($postReference['filename'])) && (isset($postReference['ext'])) && (isset($postReference['tim']))){			
-						$thisPostReferenceUrl = "https://media." . $domain8KunForLinks . "/file_store/" . $postReference['tim'] . $postReference['ext'];
-						$thisPostReferenceFilename = $postReference['filename'] . $postReference['ext'];
-						$thisPostReferenceMedia = array(
-							'filename' => $thisFilename,
-							'url' => $thisUrl
-						);
-						array_push($postReference_media, $thisPostReferenceMedia);															
-						if (isset($postReference['extra_files'])) {
-							foreach($postReference['extra_files'] as $extraPostReferenceFile) {															
-								if ((isset($extraPostReferenceFile['filename'])) && (isset($extraPostReferenceFile['ext'])) && (isset($extraPostReferenceFile['tim']))){
-									$thisPostReferenceUrl = "https://media." . $domain8KunForLinks . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
-									$thisPostReferenceFilename = $extraPostReferenceFile['filename'] . $extraPostReferenceFile['ext'];
-									$thisPostReferenceMedia = array(
-										'filename' => $thisPostReferenceFilename,
-										'url' => $thisPostReferenceUrl
-									);
-									array_push($post_referencesMedia, $thisPostReferenceMedia);
+					if ($postReference['no'] == $match) {
+
+						echo "--------- \e[1;32mREFERENCE POST FOUND: $match\e[0m\n";
+
+						if (isset($postReference['email'])) {
+							$postReference_email = $postReference['email'];	
+						} else {
+							$postReference_email = null;
+						}
+						if (isset($postReference['no'])) {
+							$postReference_id = $postReference['no'];	
+						} else {
+							$postReference_id = 0;
+						}
+						if (isset($postReference['resto'])) {
+							$postReference_threadId = $postReference['resto'];	
+						} else {
+							$postReference_threadId = 0;
+						}
+						$postReference_link = "https://" . $GLOBALS['domain8KunForLinks'] . "/" . $GLOBALS['board'] . "/res/$postReference_threadId.html#$postReference_id";
+						if (isset($postReference['name'])) {
+							$postReference_name = trim($postReference['name']);	
+						} else {
+							$postReference_name = null;
+						}
+						$postReference_source = explode(".", $GLOBALS['domain8KunForLinks'])[0] . "_" . $GLOBALS['board'];
+						$post_subject = null;
+						if (isset($postReference['com'])) {
+							$postReference_text = cleanHtmlText(trim($postReference['com']));	
+						} else {
+							$postReference_text = null;
+						}
+						if (isset($postReference['time'])) {
+							$postReference_timestamp = $postReference['time'];	
+						} else {
+							$postReference_timestamp = 0;
+						}
+						if (isset($postReference['last_modified'])) {
+							$postReference_lastModified = $postReference['last_modified'];	
+						} else {
+							$postReference_lastModified = 0;
+						}															
+						if (isset($postReference['trip'])) {
+							$postReference_trip = $postReference['trip'];	
+						} else {
+							$postReference_trip = null;
+						}
+						if (isset($postReference['id'])) {
+							$postReference_userId = $postReference['id'];	
+						} else {
+							$postReference_userId = 0;
+						}
+
+						$thisReferencesPost = array(
+							'threadId' => $postReference_threadId,
+							'id' => $postReference_id,
+							'timestamp' => $postReference_timestamp,
+							'lastModified' => $postReference_lastModified,
+							'source' => $postReference_source,
+							'link' => $postReference_link,
+							'name' => $postReference_name,
+							'trip' => $postReference_trip,
+							'userId' => $postReference_userId,
+							'text' => $postReference_text
+						);															
+						
+						$post_referencesMedia = [];															
+						if ((isset($postReference['filename'])) && (isset($postReference['ext'])) && (isset($postReference['tim']))){			
+							$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+							$thisPostReferenceFilename = $postReference['filename'] . $postReference['ext'];
+							$thisPostReferenceMedia = array(
+								'filename' => $thisPostReferenceFilename,
+								'url' => $thisPostReferenceUrl
+							);
+							array_push($post_referencesMedia, $thisPostReferenceMedia);															
+							if (isset($postReference['extra_files'])) {
+								foreach($postReference['extra_files'] as $extraPostReferenceFile) {															
+									if ((isset($extraPostReferenceFile['filename'])) && (isset($extraPostReferenceFile['ext'])) && (isset($extraPostReferenceFile['tim']))){
+										$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+										$thisPostReferenceFilename = $extraPostReferenceFile['filename'] . $extraPostReferenceFile['ext'];
+										$thisPostReferenceMedia = array(
+											'filename' => $thisPostReferenceFilename,
+											'url' => $thisPostReferenceUrl
+										);										
+										array_push($post_referencesMedia, $thisPostReferenceMedia);
+									}
 								}
-							}
-						}																
-						$post_references['media'] = $post_referencesMedia;																
-					}															
-
-					break;
-				
+							}																
+							$thisReferencesPost['media'] = $post_referencesMedia;
+						}
+						
+						$post_referencesReferences = [];
+						$subSub_References_Result = getReferencesObject($postReference_text);
+						foreach($subSub_References_Result as $subSubReference) {
+							array_push($post_referencesReferences, $subSubReference);
+						}
+						if (!empty($subSub_References_Result)) {
+							$thisReferencesPost['references'] = $subSub_References_Result;
+						}
+						
+						array_push($returnArray, $thisReferencesPost);
+						break;
+					
+					}
 				}
+				
 			}
 		}
-		return $post_references;
+		return $returnArray;
 	} else {
-		return $matches;
+		return $returnArray;
 	}
 	
 }
@@ -513,6 +563,7 @@ function hasThreadUpdated($varNo, $varLastModified) {
 /* ============================= */
 
 /* Color codes: https://joshtronic.com/2013/09/02/how-to-use-colors-in-command-line-output/ */
+
 echo "\n\e[0;37;41m************************************************************\e[0m\n";
 echo createBlueBGText($scriptTitle) . "\n";
 echo createBlueBGText("Version: " . $scriptVersion) . "\n";
@@ -751,7 +802,7 @@ do {
 												echo "------------ \e[1;33mTRIP $qTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published.\e[0m\n";
 											} else {
 												$foundAnyNewPosts = true;
-												echo "------------ \e[0;37;42mTRIP $qTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";//here												
+												echo "------------ \e[0;37;42mTRIP $qTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";												
 												echo "\n\e[1;30m" . $post['com'] . "\e[0m\n\n";
 
 												if (isset($post['email'])) {
@@ -816,32 +867,16 @@ do {
 												if (!empty($post_media)) {
 													$thisPost['media'] = $post_media;
 												}
-
+												
 												$post_References_Result = getReferencesObject($post_text);
-												if (!empty($post_References_Result)) {																										
-													$post_Reference_media = getMediaObject($post_References_Result);
-													if (!empty($post_Reference_media)) {
-														$post_References_Result['media'] = $post_Reference_media;
-													}
-													foreach($post_References_Result as $subSubReference) {													
-														if (isset($subSubReference['com'])) {
-															$subSubReference_text = cleanHtmlText(trim($subSubReference['com']));																
-															$subSub_References_Result = getReferencesObject($subSubReference_text);
-															if (!empty($subSub_References_Result)) {
-																$post_SubReference_media = getMediaObject($subSub_References_Result);
-																if (!empty($post_SubReference_media)) {
-																	$subSub_References_Result['media'] = $post_SubReference_media;
-																}
-																$post_References_Result['references'] = $subSub_References_Result;
-															}
-														}													
-													}													
-													$thisPost['references'] = $post_References_Result;	
+												if (!empty($post_References_Result)) {
+													$thisPost['references'] = $post_References_Result;
 												}
 												
 												array_push($newlyAddedQPosts, $thisPost);
 
 												$newQSinceStart ++;																								
+
 												// If you want to put each post on your Desktop for debugging: file_put_contents("C:/Users/YOU/Desktop/" . $resto . "-" . $postNo . ".json", json_encode($newlyAddedQPosts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 												
 											} // If already exists in posts.json then ignore.
@@ -919,7 +954,6 @@ do {
 	$timeFinished  = strtotime(date('m/d/Y h:i:s a', time()));
 	$differenceInSeconds = $timeFinished - $timeStarted;
 	echo "\e[1;32mFINISHED:\e[0m " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete.\n";
-	//echo "============================================================\n\n";
 	
 	/*
 	This allows you to change the sqraper_config.json file to make config changes without stopping and restarting the script.
@@ -930,11 +964,7 @@ do {
 	getConfig(); 
 	/************************************************************/	
 	
-	/*
-	Uncomment the line below if you ever need to force the posts.json up to your FTP server without having to wait for
-	a new Q drop. Useful if you ever have to manually edit the post.json file to make a modification to the data in it.
-	*/
-	// uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);	
+	//uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
 	
 	echo "\e[1;32mSLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
 	sleep($sleepBetweenNewQPostChecks);
