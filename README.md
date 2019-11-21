@@ -14,7 +14,7 @@ of the following:
 	"media" element within the "references" element.
 	5) Referenced posts and any media within them dig down two levels deep.
 	
-IF YOU HAVE DOWNLOADED PRIOR VERSIONS IT IS ESSENTIAL YOU REPLACE THEM WITH THIS VERSION FOR "media" or "references" to work!
+IF YOU HAVE DOWNLOADED PRIOR VERSIONS IT IS ESSENTIAL YOU REPLACE THEM WITH THIS VERSION for "media" or "references" to work!
 
 -----------------
 
