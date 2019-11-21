@@ -3,6 +3,19 @@ PHP 8Kun Q post scraper.
 
 When viewing via GitHub view this README.md as RAW for proper formatting.
 
+Version 1.1.0 released 11/21/2019 @ 6:20PM EST. This version corrects code for the following and confirms proper functioning
+of the following:
+
+	1) Includes any media contained with the post and adds them to the element "media".
+	2) Downloads any images found in the post and optionally uploads them via FTP.
+	3) Includes any posts referenced within the main post and adds them to the 
+	element "references".
+	4) Also locates and adds any media in the referenced post to a
+	"media" element within the "references" element.
+	5) Referenced posts and any media within them dig down two levels deep.
+	
+IF YOU HAVE DOWNLOADED PRIOR VERSIONS IT IS ESSENTIAL YOU REPLACE THEM WITH THIS VERSION FOR "media" or "references" to work!
+
 -----------------
 
 The goal and intent of this project is in short, redundancy and community. As of the date of publishing, as far as I am aware,
