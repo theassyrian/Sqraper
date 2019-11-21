@@ -25,7 +25,9 @@ My hope in this script is a few fold:
 	your scraped data available to others. This is not about one person or site, it's about "we the people".
 	4) Perhaps in comments of this GitHub or somewhere else reliable people can post a list of sites that are
 	serving up the data.
-	5) Perhaps not a bad idea to clone this Git elsewhere, or at least periodically download it for safe keeping.
+	5) If you find bugs and correct them, make improvements, etc., contribute your changes back to the Git.
+	Don't be "that guy".
+	6) Perhaps not a bad idea to clone this Git elsewhere, or at least periodically download it for safe keeping.
 	I'm not looking for massive credit or anything or to make a name for myself, however, give credit where
 	credit is due. By license, don't just take it, hack a few changes and call it your own. Please leave the
 	credit in the source code. Don't be a d___. We cool?
@@ -37,10 +39,6 @@ IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. I
 limited persons due to lag in picking up new drops from some data sources.
 
 This script is not for novices. Basic PHP understanding required.
-
-I worked hard to write this in order to help the community. Therefore I ask, if you find bugs and correct them, make
-improvements, etc., contribute your changes back to the community via this GitHub. Don't be "that guy". WWG1WGA is not
-just a catchy statement, let's all try to live it.
 
 -----------------
 
