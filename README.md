@@ -76,64 +76,64 @@ CONFIGURATION ITEM EXPLAINATIONS:
   qTrip:
     Type: String
     Default: "!!mG7VJxZNCI"
-		Q's current trip code. When Q changes trips, be sure the sqraper has downloaded all posts with the previous
-		trip code first. Then change the configuration file to Q's new trip code to start pulling posts from the
-		new trip.
+    Q's current trip code. When Q changes trips, be sure the sqraper has downloaded all posts with the previous
+    trip code first. Then change the configuration file to Q's new trip code to start pulling posts from the
+    new trip.
     
   boards:
     Type: Array
     Default: [
       "qresearch"
     ]
-		Enter the one or more boards Q is dropping on. At time of publishing, Q is only dropping on "qresearch" 
-		8kun.top/qresearch/. If Q were to start posting on, let's say "patriotsfight" also, you would enter
-		"qresearch","patriotsfight".
+    Enter the one or more boards Q is dropping on. At time of publishing, Q is only dropping on "qresearch" 
+    8kun.top/qresearch/. If Q were to start posting on, let's say "patriotsfight" also, you would enter
+    "qresearch","patriotsfight".
     
   domain8Kun:
     Type: String
     Default: "8kun.top"
-		This is only used if "useLoki" is false, which causes sqraping over the normal Internet (which at this time is
-		not possible due to the DDoS protection 8kun has in place). If sqraping over Internet, you enter the domain to
-		scrape (without any leading https:// or trailing /).
+    This is only used if "useLoki" is false, which causes sqraping over the normal Internet (which at this time is
+    not possible due to the DDoS protection 8kun has in place). If sqraping over Internet, you enter the domain to
+    scrape (without any leading https:// or trailing /).
     
   domain8KunForLinks:
     Type: String
     Default: "8kun.top"
-		All links within the posts.json file to 8kun will be generated with this domain. Do not enter any leading
-		https:// or trailing /. Examples: "8kun.net", "8kun.top", etc. WARNING. Once the posts are generated in the
-		posts.json file, they are generated. Therefore, this setting only is applied to newly added posts. You may want
-		to consider just using "8kun.net" and then do a search and replace in the user facing interface to switch it
-		to the current 8kun flavor of the week :).
+    All links within the posts.json file to 8kun will be generated with this domain. Do not enter any leading
+    https:// or trailing /. Examples: "8kun.net", "8kun.top", etc. WARNING. Once the posts are generated in the
+    posts.json file, they are generated. Therefore, this setting only is applied to newly added posts. You may want
+    to consider just using "8kun.net" and then do a search and replace in the user facing interface to switch it
+    to the current 8kun flavor of the week :).
     
   lokiKun:
     Type: String
     Default: "http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki"
-		Simply the fully qualified URL to 8kun over LokiNet with no trailing /.
+    Simply the fully qualified URL to 8kun over LokiNet with no trailing /.
 
   useLoki:
     Type: Boolean
     Default: true
-		If true, causes the sqraper to scrape for new Q over the Loki network (uses "lokiKun" URL setting"). If false,
-		causes the sqraper to scrape new Q over the normal Internet (uses "domain8Kun" setting).
+    If true, causes the sqraper to scrape for new Q over the Loki network (uses "lokiKun" URL setting"). If false,
+    causes the sqraper to scrape new Q over the normal Internet (uses "domain8Kun" setting).
     
   saveRemoteFilesToLocal:
     Type: Boolean
     Default: true
-		Saves all JSON files scraped from 8kun to your local drive. This can be helpful after the fact for debugging
-		with "readFromLocal8KunFiles". It can also be useful if you ever need to reference older 8kun files since they
-		seem to cease to be available after a day or so.
+    Saves all JSON files scraped from 8kun to your local drive. This can be helpful after the fact for debugging
+    with "readFromLocal8KunFiles". It can also be useful if you ever need to reference older 8kun files since they
+    seem to cease to be available after a day or so.
     
   readFromLocal8KunFiles:
     Type: Boolean
     Default: false
-		Only used if "saveRemoteFilesToLocal" has been previously enabled and files exist. It is generally used (seldom)
-		for in-depth debugging.
+    Only used if "saveRemoteFilesToLocal" has been previously enabled and files exist. It is generally used (seldom)
+    for in-depth debugging.
     
   sleepBetweenNewQPostChecks:
     Type: Integer
     Default: 150
-		The time in seconds to wait between checking for new posts. I suggest you don't get too greedy and chew up 8kun
-		resources any more than need be. Let's be respectful. 150 is every 2 and half minutes.
+    The time in seconds to wait between checking for new posts. I suggest you don't get too greedy and chew up 8kun
+    resources any more than need be. Let's be respectful. 150 is every 2 and half minutes.
     
   productionPostsJSONFilename:
     Type: String
