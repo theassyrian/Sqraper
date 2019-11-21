@@ -138,57 +138,62 @@ CONFIGURATION ITEM EXPLAINATIONS:
   productionPostsJSONFilename:
     Type: String
     Default: "posts.json"
-		Description coming soon...
+    This is the filename to be used for posts both on your local computer as well as the filename that will be uploaded
+    if you are using the FTP upload option.
     
   productionJSONFolder:
     Type: String
     Default: "json/"
-		Description coming soon...
+    The folder on your local computer where the master "posts.json" (or whatever is defined in "productionPostsJSONFilename")
+    is stored and updated.
     
   productionMediaFolder:
     Type: String
     Default: "media/"
-		Description coming soon...
+    The folder on your local computer where images/videos referenced in scraped posts are saved to. If empty then media
+    will not be downloaded and thus will not be able to be uploaded via FTP if you use the FTP upload options.
     
   ftpUploadJSON:
     Type: Boolean
     Default: false
-		Description coming soon...
+    Whether or not to upload the "posts.json" file via FTP to a remote server when it is updated.
   
   ftpUploadJSONFolder:
     Type: String
     Default: "/data/json/"
-		Description coming soon...
+    The folder on the remote server where the "posts.json" will be FTP uploaded to.
     
   ftpUploadMedia:
     Type: Boolean
     Default: false
-		Description coming soon...
-    
+    Whether or not to upload images/videos via FTP to a remote server when they are found in newly scraped posts.
+    Also requires "productionMediaFolder".
+
   ftpUploadMediaFolder:
     Type: String
     Default: "/media/"
-		Description coming soon...
+    The folder on the remote server where images/videos will be FTP uploaded to.
     
   ftpServer:
     Type: String
     Default: "ftp.yourserver.com"
-		Description coming soon...
-    
+    Self explanitory.
+
   ftpLoginID:
     Type: String
     Default: "your_user_name"
-		Description coming soon...
+    Self explanitory.
     
   ftpPassword:
     Type: String
     Default: "your_password"
-		Description coming soon...
+    Self explanitory
     
   productionMediaURL:
     Type: String
     Default: "https://yourserver.com/media/"
-		Description coming soon...
+    When media (images/videos) are present in a scraped post, this is the URL that will be prepended to the filename
+    in the posts.json file. It should be a valid URL on your web server.
 
 -----------------
 
