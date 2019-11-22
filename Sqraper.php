@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.1.0
+Version: 1.2.0
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.1.0";
-$scriptUpdated = "Last Updated: November 19, 2019";
+$scriptVersion = "1.2.0";
+$scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -136,7 +136,7 @@ function getConfig() {
 		echo "\e[1;31mCREATE FILE:\e[0m sqraper_config.json did not exist. Creating and reading default configuration JSON file.\n";
 
 		$defaultConfig = array(
-			'qTrip' => '!!mG7VJxZNCI',
+			'qTrips' => ['!!mG7VJxZNCI'],
 			'boards' => ['qresearch'],
 			'domain8Kun' => '8kun.top',
 			'domain8KunForLinks' => '8kun.net',
@@ -157,7 +157,7 @@ function getConfig() {
 			'ftpLoginID' => 'your_user_name',
 			'ftpPassword' => 'your_password' // BEWARE placing this script in an Internet acccessible folder. Someone could easily view your sqraper.json file and access your FTP password!
 		);		
-		$GLOBALS['qTrip'] = $defaultConfig['qTrip'];
+		$GLOBALS['qTrips'] = $defaultConfig['qTrips'];
 		$GLOBALS['boards'] = $defaultConfig['boards'];
 		$GLOBALS['domain8Kun'] = $defaultConfig['domain8Kun'];
 		$GLOBALS['domain8KunForLinks'] = $defaultConfig['domain8KunForLinks'];
@@ -194,7 +194,7 @@ function getConfig() {
 				displayError("getConfig unable to parse JSON. Halting.");
 				exit;
 			} else {
-				$GLOBALS['qTrip'] = $currentConfigJSON['qTrip'];
+				$GLOBALS['qTrips'] = $currentConfigJSON['qTrips'];
 				$GLOBALS['boards'] = $currentConfigJSON['boards'];
 				$GLOBALS['domain8Kun'] = $currentConfigJSON['domain8Kun'];
 				$GLOBALS['domain8KunForLinks'] = $currentConfigJSON['domain8KunForLinks'];
@@ -581,13 +581,18 @@ do {
 
 	$strBoards = "";
 	foreach($boards as $board) {	
-		$strBoards = $board . " ";
+		$strBoards = $strBoards . $board . " ";
+	}
+
+	$strQTrips = "";
+	foreach($qTrips as $qTrip) {	
+		$strQTrips = $strQTrips . $qTrip . " ";
 	}
 
 	echo "\e[1;34mSqraper Started:\e[0m $sqraperStarted\n";
 	echo "\e[1;34mNew Q Drops Since Start:\e[0m $newQSinceStart\n";
 	echo "\e[1;34mConfiguration:\e[0m\n";
-	echo "   \e[1;34mTrip:\e[0m $qTrip\n";
+	echo "   \e[1;34mTrips:\e[0m $strQTrips\n";
 	echo "   \e[1;34mBoards:\e[0m " . trim($strBoards) . "\n";
 	echo "   \e[1;34mInternet Domain:\e[0m $domain8Kun\n";
 	echo "   \e[1;34mInternet Domain for Links in JSON:\e[0m $domain8KunForLinks\n";
@@ -796,13 +801,22 @@ do {
 										} else {
 											$trip = null;
 										}
+
+										$foundTrip = false;
+										foreach($qTrips as $qTrip) {	
+											if ($trip === $qTrip) {
+												$foundTrip = true;
+												$currentTrip = $qTrip;
+												break;
+											}
+										}
 										
-										if ($trip === $qTrip) {
+										if ($foundTrip == true) {
 											if (isInPostsJSON($resto, $postNo)) { // If already exists in posts.json then ignore.
-												echo "------------ \e[1;33mTRIP $qTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published.\e[0m\n";
+												echo "------------ \e[1;33mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published.\e[0m\n";
 											} else {
 												$foundAnyNewPosts = true;
-												echo "------------ \e[0;37;42mTRIP $qTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";												
+												echo "------------ \e[0;37;42mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";												
 												echo "\n\e[1;30m" . $post['com'] . "\e[0m\n\n";
 
 												if (isset($post['email'])) {
