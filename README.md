@@ -3,6 +3,11 @@ PHP 8Kun Q post scraper.
 
 When viewing via GitHub view this README.md as RAW for proper formatting.
 
+Version 1.2.0 released 11/22/2019 @ 5:30PM EST. The previous STRING type configuration item "qTrip" is now obsolete.
+It has been replaced with an ARRAY type configuration item named "qTrips". You can now enter more than one trip code.
+This is to ensure that when Q changes trip codes that you get posts that you may have missed on a previous trip as
+well as posts made with the new trip.
+
 Version 1.1.0 released 11/21/2019 @ 6:20PM EST. This version corrects code for the following and confirms proper functioning
 of the following:
 
