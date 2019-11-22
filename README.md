@@ -57,7 +57,9 @@ more experienced can maybe take the lead and help others. Community.
 CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqraper.php)
 
 {
-  "qTrip": "!!mG7VJxZNCI",
+  "qTrips": [
+    "!!mG7VJxZNCI"
+  ],
   "boards": [
     "qresearch"
   ],
@@ -85,9 +87,14 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
 
 CONFIGURATION ITEM EXPLAINATIONS:
 
-  qTrip:
-    Type: String
-    Default: "!!mG7VJxZNCI"
+As of version 1.2.0, the previous STRING type configuration item "qTrip" is now obsolete. It has been replaced with an
+ARRAY type configuration item named "qTrips".
+
+  qTrips:
+    Type: Array
+    Default: [
+      "!!mG7VJxZNCI"
+    ],
     Q's current trip code. When Q changes trips, be sure the sqraper has downloaded all posts with the previous
     trip code first. Then change the configuration file to Q's new trip code to start pulling posts from the
     new trip.
