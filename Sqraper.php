@@ -139,7 +139,7 @@ function getConfig() {
 			'qTrip' => '!!mG7VJxZNCI',
 			'boards' => ['qresearch'],
 			'domain8Kun' => '8kun.top',
-			'domain8KunForLinks' => '8kun.top',
+			'domain8KunForLinks' => '8kun.net',
 			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
 			'useLoki' => true,
 			'saveRemoteFilesToLocal' => true,
