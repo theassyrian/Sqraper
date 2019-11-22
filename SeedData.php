@@ -107,9 +107,11 @@ https://keybase.pub/qntmpkts/data/json/posts.json
 https://qalerts.app/data/json/posts.json
 */
 
-if (!file_exists($productionJSONFolder)) {
-	echo "\e[1;31mCREATE FOLDER:\e[0m " . $productionJSONFolder . "\n";
-	mkdir($productionJSONFolder, 0777, true);
+if ((isset($productionJSONFolder)) && ($productionJSONFolder !== '')) {
+	if (!file_exists($productionJSONFolder)) {
+		echo "\e[1;31mCREATE FOLDER:\e[0m " . $productionJSONFolder . "\n";
+		mkdir($productionJSONFolder, 0777, true);
+	}
 }
 echo "\e[1;32mDOWNLOAD JSON:\e[0m " . $productionJSONFolder . "posts.json" . "\n";
 $thisMedia = @file_get_contents($jsonUrl);
@@ -124,28 +126,36 @@ if ($thisMedia) {
 /* = Download and save the latest media collection = */
 /* ===============================================+= */
 
-$mediaUrl = "https://qalerts.net/media/";
-$thisMedia = @file_get_contents($mediaUrl);
-if (!file_exists($productionMediaFolder)) {
-	echo "\e[1;31mCREATE FOLDER:\e[0m " . $productionMediaFolder . "\n";
-	mkdir($productionMediaFolder, 0777, true);
-}
-$jsonMedia = @json_decode($thisMedia, true);
-if (($jsonMedia == FALSE) && (json_last_error() !== JSON_ERROR_NONE)) {
-	displayError("JSON parse error");
-} else {					
-	if (!empty($jsonMedia)) {
-		foreach($jsonMedia as $media) {					
-			if (!file_exists($productionMediaFolder . basename($media))) {
-				echo "\e[1;32mDOWNLOAD MEDIA:\e[0m " . $productionMediaFolder . basename($media) . "\n";
-				$thisFile = @file_get_contents($media);
-				file_put_contents($productionMediaFolder . basename($media), $thisFile, LOCK_EX);	
-			} else {
-				echo "\e[1;33mSKIP EXISTING MEDIA:\e[0m " . $productionMediaFolder . basename($media) . "\n";			
+if ((isset($productionMediaFolder)) && ($productionMediaFolder !== '')) {
+
+	$mediaUrl = "https://qalerts.net/media/";
+	$thisMedia = @file_get_contents($mediaUrl);
+	if (!file_exists($productionMediaFolder)) {
+		echo "\e[1;31mCREATE FOLDER:\e[0m " . $productionMediaFolder . "\n";
+		mkdir($productionMediaFolder, 0777, true);
+	}
+	$jsonMedia = @json_decode($thisMedia, true);
+	if (($jsonMedia == FALSE) && (json_last_error() !== JSON_ERROR_NONE)) {
+		displayError("JSON parse error");
+	} else {					
+		if (!empty($jsonMedia)) {
+			foreach($jsonMedia as $media) {					
+				if (!file_exists($productionMediaFolder . basename($media))) {
+					echo "\e[1;32mDOWNLOAD MEDIA:\e[0m " . $productionMediaFolder . basename($media) . "\n";
+					$thisFile = @file_get_contents($media);
+					file_put_contents($productionMediaFolder . basename($media), $thisFile, LOCK_EX);	
+				} else {
+					echo "\e[1;33mSKIP EXISTING MEDIA:\e[0m " . $productionMediaFolder . basename($media) . "\n";			
+				}
 			}
 		}
+		unset($jsonMedia);		
 	}
-	unset($jsonMedia);		
+
+} else {
+	
+	echo "\e[1;33mSKIP DOWNLOAD MEDIA:\e[0m productionMediaFolder is configured as blank." . "\n";			
+
 }
 
 /* ===============================================+= */
