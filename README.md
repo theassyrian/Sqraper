@@ -48,11 +48,7 @@ My hope in this script is a few fold:
 
 -----------------
 
-IMPORTANT! This is a pre-release. It wasn't intended to be released this soon. It is being released in BETA early due
-to some lags in picking up new drops by another scraper... more than likely due to all of us having to adapt to the
-challenges we are overcoming regarding 8kun's battles against the DS.
-
-This script is not for novices. Basic PHP understanding required. I CAN NOT provide support. Maybe from time to time
+This script is NOT for novices. Basic PHP understanding required. I CAN NOT provide support. Maybe from time to time
 I can pipe in. However, I am buried as it is. Plus, I am not a PHP expert. This is only my 3rd PHP project ever. Those
 more experienced can maybe take the lead and help others. Community.
 
@@ -217,26 +213,6 @@ PREREQUISITES:
 
 You MUST have PHP installed. I have tested the script with PHP on both Windows 10 as well as Linux Ubuntu Server LTS.
 
-In order to have previous posts, before starting the sqraper for the 1st time, get a posts.json file from one of the
-following sources and place it in the folder you configure for your "productionJSONFolder" configuration variable.
-If you have configured something other than "posts.json" for the "productionPostsJSONFilename" configuration variable
-then rename the JSON file that name.
-
-https://qalerts.app/data/json/posts.json
-https://qanon.pub/data/json/posts.json
-https://keybase.pub/qntmpkts/data/json/posts.json
-
-It is imperative that your JSON file is up-to-date before the sqraper finds any new posts since it adds newly found
-posts onto the existing posts.json file when they are found.
-
-You will also more than likely need to grab all of the images contained in posts thus far from a site operator who
-already has them all, or you can find them here:
-
-https://keybase.pub/qntmpkts/data/media/
-
-Special thanks to "qntmpkts" for all of his work compiling posts since the very beginning! He has been a pioneer in
-the movement to say the least. 
-
 As of the writing of this, you will have to install LOKINET from https://loki.network/ and run this script with "lokiKun"
 set to true. This is because 8kun DDoS protection is blocking scripts.
 
@@ -244,6 +220,29 @@ The first time you run the script it will create the configuration file "sqraper
 sqraper.php lives in. You can then edit the file to set your configuration (or you can create it from scratch prior).
 Once the sqraper is running you can change "sqraper_config.json" anytime to make config changes and have them applied
 to the already running script since the config file is re-read at the end of each loop.
+
+It is imperative that your "posts.json" file is up-to-date before the Sqraper finds any new posts since it adds newly found
+posts onto the existing "posts.json" file. You can download a copy from one of the following URLs (amongst other places)
+and place it in the folder you have configured for "productionJSONFolder". Alteratively you can consider running the
+included "SeedData.php" script.
+
+https://qalerts.app/data/json/posts.json
+https://qanon.pub/data/json/posts.json
+https://keybase.pub/qntmpkts/data/json/posts.json
+
+You will also more than likely need to grab all of the images contained in posts thus far from a site operator who
+already has them all, or you can find them via the links below. Alteratively you can consider running the
+included "SeedData.php" script.
+
+https://keybase.pub/qntmpkts/data/media/
+https://qalerts.net/media/
+
+SeedData.php: This script downloads the latest "posts.json" file and all media files from QAlerts.app and places them in
+the appropriate folders of your Sqraper installation based on the "productionJSONFolder" and "productionMediaFolder" settings
+in your "sqraper_config.json".
+
+Special thanks to "qntmpkts" for all of his work compiling posts since the very beginning! He has been a pioneer in
+the movement to say the least. 
 
 To have the script send files via FTP you will in most cases need to add (or uncomment) the FTP extension to your PHP.ini
 file. This varies depending on your operating system and PHP version. If you run into issues or questions just google it.
