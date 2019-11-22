@@ -1,4 +1,7 @@
 <?php
+date_default_timezone_set("America/New_York");
+$timeStarted  = strtotime(date('m/d/Y h:i:s a', time()));
+
 function displayError($errDescription) {	
 	echo "\n\e[1;31m>>>\e[0m ========================================\n";
 	echo "\e[1;31m>>>\e[0m ERROR: $errDescription\n";			
@@ -147,5 +150,7 @@ if (($jsonMedia == FALSE) && (json_last_error() !== JSON_ERROR_NONE)) {
 
 /* ===============================================+= */
 
-echo "Finished\n";
+$timeFinished  = strtotime(date('m/d/Y h:i:s a', time()));
+$differenceInSeconds = $timeFinished - $timeStarted;
+echo "\e[1;32mFINISHED:\e[0m " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete.\n";
 ?>
