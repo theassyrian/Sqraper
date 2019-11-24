@@ -21,6 +21,6 @@ setterm -blank 5
 sleep 15
 
 # Start the sqraper.
-(cd ~/Sqraper && php ~/Sqraper/sqraper.php)
+(cd ~/sqraper && php ~/sqraper/sqraper.php)
 
 # Reboot, login and sqrape some Q!
