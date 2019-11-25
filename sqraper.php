@@ -720,10 +720,13 @@ do {
 				foreach($jsonBoardCatalog as $pages) { // Loop through all of the pages in the catalog.
 
 					$page = $pages['page'];
-					$threads = $pages['threads'];
+					
+					//$threads = $pages['threads'];
 					echo "--- \e[1;32mPARSE:\e[0m Page $page.\n";
 
-					if (!empty($threads)) {
+					if (!empty($pages['threads'])) {
+						
+						$threads = $pages['threads'];
 
 						foreach($threads as $thread) { // Loop through all of the threads in the current page of the catalog.
 							
