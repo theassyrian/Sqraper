@@ -137,7 +137,7 @@ function getConfig() {
 
 		$defaultConfig = array(
 			'qTrips' => ['!!mG7VJxZNCI'],
-			'boards' => ['qresearch'],
+			'boards' => ['projectdcomms','qresearch'],
 			'domain8Kun' => '8kun.top',
 			'domain8KunForLinks' => '8kun.net',
 			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
