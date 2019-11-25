@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.2.1
+Version: 1.2.2
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.2.1";
+$scriptVersion = "1.2.2";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -723,199 +723,205 @@ do {
 					$threads = $pages['threads'];
 					echo "--- \e[1;32mPARSE:\e[0m Page $page.\n";
 
-					foreach($threads as $thread) { // Loop through all of the threads in the current page of the catalog.
-						
-						$threadNo = $thread['no'];
-						
-						if (isset($thread['last_modified'])) {
-							$threadLastModified = $thread['last_modified'];	
-						} else {
-							$threadLastModified = 0;
-						}
+					if (!empty($threads)) {
 
-						// This is where we check the thread dates and then conditionally continue.	
-						if (hasThreadUpdated($threadNo, $threadLastModified)) {
-
-							echo "------ \e[1;32mThread No\e[0m $threadNo, \e[1;32mLast Modified\e[0m " . date("M d, Y g:i:s A", $threadLastModified) . ".\n";						
-							echo "--------- \e[1;32mThread HAS Changed.\e[0m\n";
-
-							$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";
-
+						foreach($threads as $thread) { // Loop through all of the threads in the current page of the catalog.
+							
 							$threadNo = $thread['no'];
+							
+							if (isset($thread['last_modified'])) {
+								$threadLastModified = $thread['last_modified'];	
+							} else {
+								$threadLastModified = 0;
+							}
 
-							if ($readFromLocal8KunFiles) {
-								if (!file_exists($productionJSONFolder . $board)) {
-									echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
-									mkdir($productionJSONFolder . $board, 0777, true);
-								}
-								if (file_exists($productionJSONFolder . $board . "/" . $threadNo . ".json")) {
-									$threadUrl = $productionJSONFolder . $board . "/" . $threadNo . ".json";					
+							// This is where we check the thread dates and then conditionally continue.	
+							if (hasThreadUpdated($threadNo, $threadLastModified)) {
+
+								echo "------ \e[1;32mThread No\e[0m $threadNo, \e[1;32mLast Modified\e[0m " . date("M d, Y g:i:s A", $threadLastModified) . ".\n";						
+								echo "--------- \e[1;32mThread HAS Changed.\e[0m\n";
+
+								$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";
+
+								$threadNo = $thread['no'];
+
+								if ($readFromLocal8KunFiles) {
+									if (!file_exists($productionJSONFolder . $board)) {
+										echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
+										mkdir($productionJSONFolder . $board, 0777, true);
+									}
+									if (file_exists($productionJSONFolder . $board . "/" . $threadNo . ".json")) {
+										$threadUrl = $productionJSONFolder . $board . "/" . $threadNo . ".json";					
+									} else {
+										if ($useLoki) {
+											$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
+										} else {
+											$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";							
+										}							
+									}				
 								} else {
 									if ($useLoki) {
 										$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
 									} else {
 										$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";							
 									}							
-								}				
-							} else {
-								if ($useLoki) {
-									$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
-								} else {
-									$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";							
-								}							
-							}
-
-							echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";
-							$threadContents = @file_get_contents($threadUrl);
-							
-							if ($threadContents == FALSE) {
-
-								displayError('Could not get thread \"$threadNo\" for board \"$board\", URL \"$threadUrl\".');
-
-							} else {
-
-								if ($saveRemoteFilesToLocal) {
-									if (!file_exists($productionJSONFolder . $board)) {
-										echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
-										mkdir($productionJSONFolder . $board, 0777, true);
-									}
-									file_put_contents($productionJSONFolder . $board . '/' . basename($threadUrl), $threadContents, LOCK_EX);	
 								}
 
-								echo "--------- \e[1;32mDECODE.\e[0m\n";
-								$jsonThreads = json_decode($threadContents, true);
+								echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";
+								$threadContents = @file_get_contents($threadUrl);
+								
+								if ($threadContents == FALSE) {
 
-								if ($jsonThreads == FALSE) {
-
-									displayError("jsonThreads parse error.");
+									displayError('Could not get thread \"$threadNo\" for board \"$board\", URL \"$threadUrl\".');
 
 								} else {
 
-									echo "--------- \e[1;32mPARSE.\e[0m\n";
-									foreach($jsonThreads['posts'] as $post) { // Loop through all of the posts in the current thread of the current catalog.
-
-										/* ========================================= */
-										/* ======= Do the real heavy lifting ======= */
-										/* ========================================= */
-										
-										$postNo = $post['no'];
-										$resto = $post['resto'];
-
-										if (isset($post['trip'])) {
-											$trip = $post['trip'];	
-										} else {
-											$trip = null;
+									if ($saveRemoteFilesToLocal) {
+										if (!file_exists($productionJSONFolder . $board)) {
+											echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
+											mkdir($productionJSONFolder . $board, 0777, true);
 										}
+										file_put_contents($productionJSONFolder . $board . '/' . basename($threadUrl), $threadContents, LOCK_EX);	
+									}
 
-										$foundTrip = false;
-										foreach($qTrips as $qTrip) {	
-											if ($trip === $qTrip) {
-												$foundTrip = true;
-												$currentTrip = $qTrip;
-												break;
-											}
-										}
-										
-										if ($foundTrip == true) {
-											if (isInPostsJSON($resto, $postNo)) { // If already exists in posts.json then ignore.
-												echo "------------ \e[1;33mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published.\e[0m\n";
+									echo "--------- \e[1;32mDECODE.\e[0m\n";
+									$jsonThreads = json_decode($threadContents, true);
+
+									if ($jsonThreads == FALSE) {
+
+										displayError("jsonThreads parse error.");
+
+									} else {
+
+										echo "--------- \e[1;32mPARSE.\e[0m\n";
+										foreach($jsonThreads['posts'] as $post) { // Loop through all of the posts in the current thread of the current catalog.
+
+											/* ========================================= */
+											/* ======= Do the real heavy lifting ======= */
+											/* ========================================= */
+											
+											$postNo = $post['no'];
+											$resto = $post['resto'];
+
+											if (isset($post['trip'])) {
+												$trip = $post['trip'];	
 											} else {
-												$foundAnyNewPosts = true;
-												echo "------------ \e[0;37;42mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";												
-												echo "\n\e[1;30m" . $post['com'] . "\e[0m\n\n";
+												$trip = null;
+											}
 
-												if (isset($post['email'])) {
-													$post_email = $post['email'];	
-												} else {
-													$post_email = null;
+											$foundTrip = false;
+											foreach($qTrips as $qTrip) {	
+												if ($trip === $qTrip) {
+													$foundTrip = true;
+													$currentTrip = $qTrip;
+													break;
 												}
-												if (isset($post['no'])) {
-													$post_id = $post['no'];	
+											}
+											
+											if ($foundTrip == true) {
+												if (isInPostsJSON($resto, $postNo)) { // If already exists in posts.json then ignore.
+													echo "------------ \e[1;33mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published.\e[0m\n";
 												} else {
-													$post_id = 0;
-												}
-												if (isset($post['resto'])) {
-													$post_threadId = $post['resto'];	
-												} else {
-													$post_threadId = 0;
-												}
-												$post_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
-												if (isset($post['name'])) {
-													$post_name = trim($post['name']);	
-												} else {
-													$post_name = null;
-												}
-												$post_source = explode(".", $domain8KunForLinks)[0] . "_$board";
-												$post_subject = null;
-												if (isset($post['com'])) {
-													$post_text = cleanHtmlText(trim($post['com']));	
-												} else {
-													$post_text = null;
-												}
-												if (isset($post['time'])) {
-													$post_timestamp = $post['time'];	
-												} else {
-													$post_timestamp = 0;
-												}
-												if (isset($post['last_modified'])) {
-													$post_lastModified = $post['last_modified'];	
-												} else {
-													$post_lastModified = 0;
-												}												
-												$post_trip = $trip;
-												if (isset($post['id'])) {
-													$post_userId = $post['id'];	
-												} else {
-													$post_userId = 0;
-												}
+													$foundAnyNewPosts = true;
+													echo "------------ \e[0;37;42mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";												
+													echo "\n\e[1;30m" . $post['com'] . "\e[0m\n\n";
 
-												$thisPost = array(
-													'threadId' => $post_threadId,
-													'id' => $post_id,
-													'timestamp' => $post_timestamp,
-													'lastModified' => $post_lastModified,
-													'source' => $post_source,
-													'link' => $post_link,
-													'name' => $post_name,
-													'trip' => $post_trip,
-													'userId' => $post_userId,
-													'text' => $post_text
-												);
-												
-												$post_media = getMediaObject($post);
-												if (!empty($post_media)) {
-													$thisPost['media'] = $post_media;
-												}
-												
-												$post_References_Result = getReferencesObject($post_text);
-												if (!empty($post_References_Result)) {
-													$thisPost['references'] = $post_References_Result;
-												}
-												
-												array_push($newlyAddedQPosts, $thisPost);
+													if (isset($post['email'])) {
+														$post_email = $post['email'];	
+													} else {
+														$post_email = null;
+													}
+													if (isset($post['no'])) {
+														$post_id = $post['no'];	
+													} else {
+														$post_id = 0;
+													}
+													if (isset($post['resto'])) {
+														$post_threadId = $post['resto'];	
+													} else {
+														$post_threadId = 0;
+													}
+													$post_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
+													if (isset($post['name'])) {
+														$post_name = trim($post['name']);	
+													} else {
+														$post_name = null;
+													}
+													$post_source = explode(".", $domain8KunForLinks)[0] . "_$board";
+													$post_subject = null;
+													if (isset($post['com'])) {
+														$post_text = cleanHtmlText(trim($post['com']));	
+													} else {
+														$post_text = null;
+													}
+													if (isset($post['time'])) {
+														$post_timestamp = $post['time'];	
+													} else {
+														$post_timestamp = 0;
+													}
+													if (isset($post['last_modified'])) {
+														$post_lastModified = $post['last_modified'];	
+													} else {
+														$post_lastModified = 0;
+													}												
+													$post_trip = $trip;
+													if (isset($post['id'])) {
+														$post_userId = $post['id'];	
+													} else {
+														$post_userId = 0;
+													}
 
-												$newQSinceStart ++;																								
-
-												// If you want to put each post on your Desktop for debugging: file_put_contents("C:/Users/YOU/Desktop/" . $resto . "-" . $postNo . ".json", json_encode($newlyAddedQPosts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
-												
-											} // If already exists in posts.json then ignore.
-										}
-										
-										/* ============================================= */
-										/* ======= End of the real heavy lifting ======= */
-										/* ============================================= */
-
-									} // End of loop through all of the posts in the current thread of the current catalog.
-
-									unset($jsonThreads);							
-								
-								} // if ($jsonThreads == FALSE) {
-
-							} // if ($threadContents != FALSE) {
+													$thisPost = array(
+														'threadId' => $post_threadId,
+														'id' => $post_id,
+														'timestamp' => $post_timestamp,
+														'lastModified' => $post_lastModified,
+														'source' => $post_source,
+														'link' => $post_link,
+														'name' => $post_name,
+														'trip' => $post_trip,
+														'userId' => $post_userId,
+														'text' => $post_text
+													);
 													
-						} // This is where we check the thread dates and then conditionally continue.						
+													$post_media = getMediaObject($post);
+													if (!empty($post_media)) {
+														$thisPost['media'] = $post_media;
+													}
+													
+													$post_References_Result = getReferencesObject($post_text);
+													if (!empty($post_References_Result)) {
+														$thisPost['references'] = $post_References_Result;
+													}
+													
+													array_push($newlyAddedQPosts, $thisPost);
 
-					} // End of loop through all of the threads in the current page of the catalog.			
+													$newQSinceStart ++;																								
+
+													// If you want to put each post on your Desktop for debugging: file_put_contents("C:/Users/YOU/Desktop/" . $resto . "-" . $postNo . ".json", json_encode($newlyAddedQPosts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
+													
+												} // If already exists in posts.json then ignore.
+											}
+											
+											/* ============================================= */
+											/* ======= End of the real heavy lifting ======= */
+											/* ============================================= */
+
+										} // End of loop through all of the posts in the current thread of the current catalog.
+
+										unset($jsonThreads);							
+									
+									} // if ($jsonThreads == FALSE) {
+
+								} // if ($threadContents != FALSE) {
+														
+							} // This is where we check the thread dates and then conditionally continue.						
+
+						} // End of loop through all of the threads in the current page of the catalog.			
+						
+					} else {
+						echo "--- \e[1;32mEMPTY:\e[0m threads object is empty on page $page.\n";
+					}
 				
 					unset($jsonBoardCatalog);
 					
