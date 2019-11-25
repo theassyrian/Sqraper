@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.2.0
+Version: 1.2.1
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.2.0";
+$scriptVersion = "1.2.1";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -316,7 +316,12 @@ function getMediaObject($inArray) {
 		if (isset($inArray['extra_files'])) {
 			foreach($inArray['extra_files'] as $extraFile) {															
 				if ((isset($extraFile['filename'])) && (isset($extraFile['ext'])) && (isset($extraFile['tim']))){																
-					$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+					if ((isset($GLOBALS['productionMediaURL'])) && ($GLOBALS['productionMediaURL'] != '')) {
+						$thisUrl = $GLOBALS['productionMediaURL'] . $extraFile['tim'] . $extraFile['ext'];
+					} else {
+						$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];			
+					}		
+					//$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 					$thisFilename = $extraFile['filename'] . $extraFile['ext'];
 					$thisStorageFilename = $extraFile['tim'] . $extraFile['ext'];
 					$thisMedia = array(
