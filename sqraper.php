@@ -923,7 +923,7 @@ do {
 						} // End of loop through all of the threads in the current page of the catalog.			
 						
 					} else {
-						echo "--- \e[1;32mEMPTY:\e[0m threads object is empty on page $page.\n";
+						echo "--- \e[1;32mEMPTY:\e[0m Threads object is empty on page $page. Probably no posts yet.\n";
 					}
 				
 					unset($jsonBoardCatalog);
