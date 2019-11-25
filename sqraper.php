@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.2.2
+Version: 1.2.3
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.2.2";
+$scriptVersion = "1.2.3";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -923,7 +923,7 @@ do {
 						} // End of loop through all of the threads in the current page of the catalog.			
 						
 					} else {
-						echo "--- \e[1;32mEMPTY:\e[0m Threads object is empty on page $page. Probably no posts yet.\n";
+						echo "--- \e[1;31mEMPTY:\e[0m Threads object is empty on page $page. Probably no posts yet.\n";
 					}
 				
 					unset($jsonBoardCatalog);
