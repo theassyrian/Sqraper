@@ -16,6 +16,9 @@ https://qanon.pub/data/json/posts.json
 https://keybase.pub/qntmpkts/data/json/posts.json
 https://qalerts.app/data/json/posts.json
 
+PS: If you end up just querying our JSON files, PLEASE DO NOT BEAT THE SERVER every few seconds!!! Don't check JSON more
+frequently than every 60 seconds. We were courteous enough when using another JSON provider to only poll every 2-3 minutes. 
+
 You will also more than likely need to grab all of the images contained in posts thus far from a site operator who already has them all, or you can find them here:
 
 https://keybase.pub/qntmpkts/data/media/
