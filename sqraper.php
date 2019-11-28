@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.2.3
+Version: 1.2.4
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -15,9 +15,6 @@ than "posts.json" for the "productionPostsJSONFilename" configuration variable t
 https://qanon.pub/data/json/posts.json
 https://keybase.pub/qntmpkts/data/json/posts.json
 https://qalerts.app/data/json/posts.json
-
-PS: If you end up just querying our JSON files, PLEASE DO NOT BEAT THE SERVER every few seconds!!! Don't check JSON more
-frequently than every 60 seconds. We were courteous enough when using another JSON provider to only poll every 2-3 minutes. 
 
 You will also more than likely need to grab all of the images contained in posts thus far from a site operator who already has them all, or you can find them here:
 
@@ -39,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.2.3";
+$scriptVersion = "1.2.4";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -809,11 +806,46 @@ do {
 											$postNo = $post['no'];
 											$resto = $post['resto'];
 
+											if (isset($post['name'])) {
+												$post_name = trim($post['name']);	
+											} else {
+												$post_name = null;
+											}
+
 											if (isset($post['trip'])) {
 												$trip = $post['trip'];	
 											} else {
 												$trip = null;
 											}
+
+											/* ============================= */
+											/* This is for when Q changes trips, at least we can detect it and manually eval it. */
+											/* If it is valid, manually stop the sqraper, delete the EACH_BOARD_checked_threads.json files, */
+											/* manually update the sqraper_config.json file to add the new trip, then relaunch the sqraper. */
+											/* ============================= */
+											if (trim($post_name) === "Q") {
+												$foundThisTrip = false;
+												foreach($qTrips as $qTrip) {	
+													if ($trip === $qTrip) {
+														$foundThisTrip = true;
+													}
+												}
+												if (!$foundThisTrip) {
+													if (isset($post['com'])) {
+														$post_text_temp = cleanHtmlText(trim($post['com']));	
+													} else {
+														$post_text_temp = "---";
+													}
+													file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, LOCK_EX);					
+													echo "------------ \e[0;37;42mFound potentially new trip: " . $trip . "\e[0m\n";
+													echo "------------ \e[0;37;42mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
+													echo "------------ \e[0;37;42mWaiting 30 seconds for you to review and possibly press CTRL-C\e[0m\n";
+													sleep(30);
+												}
+											}
+											/* ============================= */
+											/* ==== End new trip check. ==== */
+											/* ============================= */
 
 											$foundTrip = false;
 											foreach($qTrips as $qTrip) {	
@@ -848,11 +880,6 @@ do {
 														$post_threadId = 0;
 													}
 													$post_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
-													if (isset($post['name'])) {
-														$post_name = trim($post['name']);	
-													} else {
-														$post_name = null;
-													}
 													$post_source = explode(".", $domain8KunForLinks)[0] . "_$board";
 													$post_subject = null;
 													if (isset($post['com'])) {
