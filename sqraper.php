@@ -826,7 +826,7 @@ do {
 											if (trim($post_name) === "Q") {
 												$foundThisTrip = false;
 												foreach($qTrips as $qTrip) {	
-													if ($trip === $qTrip) {
+													if ($qTrip === $trip) {
 														$foundThisTrip = true;
 													}
 												}
@@ -839,9 +839,10 @@ do {
 													file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, LOCK_EX);					
 													echo "------------ \e[0;37;42mFound potentially new trip: " . $trip . "\e[0m\n";
 													echo "------------ \e[0;37;42mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
-													echo "------------ \e[0;37;42mWaiting 30 seconds for you to review and possibly press CTRL-C\e[0m\n";
-													sleep(30);
-												}
+													echo "------------ \e[0;37;42mWaiting 90 seconds for you to review and possibly press CTRL-C.\e[0m\n";
+													echo "------------ \e[0;37;42mIf valid, delete " . $board . "_checked_threads.json, update the\e[0m\n";
+													echo "------------ \e[0;37;42msqraper_config.json file and restart sqraper.\e[0m\n";
+													sleep(90);												}
 											}
 											/* ============================= */
 											/* ==== End new trip check. ==== */
