@@ -65,6 +65,7 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "qTrips": [
     "!!mG7VJxZNCI"
   ],
+  "bogusTrips": [],
   "boards": [
     "qresearch"
   ],
@@ -103,6 +104,14 @@ ARRAY type configuration item named "qTrips".
     Q's current trip code. When Q changes trips, be sure the sqraper has downloaded all posts with the previous
     trip code first. Then change the configuration file to Q's new trip code to start pulling posts from the
     new trip.
+
+bogusTrips:
+    Type: Array
+    Default: [],
+    When the script sees a post from the "name" Q, it will display the post and trip so you can confirm if Q has
+    started using a new trip. In most cases it is just a knucklhead. In these cases if you want to block detection
+    of that false trip you can add it to bogusTrips. You can also just let it eventually fade away as well. The
+    dudes will tired and run up from the basement for momma's cookies.
     
   boards:
     Type: Array
