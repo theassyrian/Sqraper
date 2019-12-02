@@ -858,10 +858,10 @@ do {
 														echo "------------ \e[1;33mFound potentially new trip: " . $trip . "\e[0m\n";
 														echo "------------ \e[1;30m$post_text_temp\e[0m\n";
 														echo "------------ \e[1;33mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
-														echo "------------ \e[1;33mWaiting 5 seconds for you to review and possibly press CTRL-C.\e[0m\n";
+														echo "------------ \e[1;33mWaiting 1 seconds for you to review and possibly press CTRL-C.\e[0m\n";
 														echo "------------ \e[1;33mIf valid, delete " . $board . "_checked_threads.json, update the\e[0m\n";
 														echo "------------ \e[1;33msqraper_config.json file and restart sqraper.\e[0m\n";
-														sleep(5);
+														sleep(1);
 													}
 												}
 											}
