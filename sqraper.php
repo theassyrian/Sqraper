@@ -736,8 +736,8 @@ do {
 					if (!empty($pages['threads'])) {
 						$useThreadsOrPages = 'threads';
 					} else {
-						if (!empty($pages['pages'])) {
-							$useThreadsOrPages = 'pages';
+						if (!empty($pages['posts'])) {
+							$useThreadsOrPages = 'posts';
 						}						
 					}
 					
