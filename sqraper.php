@@ -730,12 +730,24 @@ do {
 
 					$page = $pages['page'];
 					
-					//$threads = $pages['threads'];
 					echo "--- \e[1;32mPARSE:\e[0m Page $page.\n";
 
+					
 					if (!empty($pages['threads'])) {
+						$useThreadsOrPages = 'threads';
+					} else {
+						if (!empty($pages['pages'])) {
+							$useThreadsOrPages = 'pages';
+						}						
+					}
+					
+					
+					
+					//if (!empty($pages['threads'])) {
+					if (!empty($pages[$useThreadsOrPages])) {
 						
-						$threads = $pages['threads'];
+						//$threads = $pages['threads'];
+						$threads = $pages[$useThreadsOrPages];
 
 						foreach($threads as $thread) { // Loop through all of the threads in the current page of the catalog.
 							
