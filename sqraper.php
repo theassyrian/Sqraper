@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.2.4
+Version: 1.3.0
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.2.4";
+$scriptVersion = "1.3.0";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -137,6 +137,7 @@ function getConfig() {
 
 		$defaultConfig = array(
 			'qTrips' => ['!!mG7VJxZNCI'],
+			'bogusTrips' => [],
 			'boards' => ['projectdcomms','qresearch'],
 			'domain8Kun' => '8kun.top',
 			'domain8KunForLinks' => '8kun.net',
@@ -158,6 +159,7 @@ function getConfig() {
 			'ftpPassword' => 'your_password' // BEWARE placing this script in an Internet acccessible folder. Someone could easily view your sqraper.json file and access your FTP password!
 		);		
 		$GLOBALS['qTrips'] = $defaultConfig['qTrips'];
+		$GLOBALS['bogusTrips'] = $defaultConfig['bogusTrips'];
 		$GLOBALS['boards'] = $defaultConfig['boards'];
 		$GLOBALS['domain8Kun'] = $defaultConfig['domain8Kun'];
 		$GLOBALS['domain8KunForLinks'] = $defaultConfig['domain8KunForLinks'];
@@ -195,6 +197,7 @@ function getConfig() {
 				exit;
 			} else {
 				$GLOBALS['qTrips'] = $currentConfigJSON['qTrips'];
+				$GLOBALS['bogusTrips'] = $currentConfigJSON['bogusTrips'];
 				$GLOBALS['boards'] = $currentConfigJSON['boards'];
 				$GLOBALS['domain8Kun'] = $currentConfigJSON['domain8Kun'];
 				$GLOBALS['domain8KunForLinks'] = $currentConfigJSON['domain8KunForLinks'];
@@ -594,10 +597,16 @@ do {
 		$strQTrips = $strQTrips . $qTrip . " ";
 	}
 
+	$strBogusTrips = "";
+	foreach($bogusTrips as $bogusTrip) {	
+		$strBogusTrips = $strBogusTrips . $bogusTrip . " ";
+	}
+
 	echo "\e[1;34mSqraper Started:\e[0m $sqraperStarted\n";
 	echo "\e[1;34mNew Q Drops Since Start:\e[0m $newQSinceStart\n";
 	echo "\e[1;34mConfiguration:\e[0m\n";
 	echo "   \e[1;34mTrips:\e[0m $strQTrips\n";
+	echo "   \e[1;34mBogus Trips:\e[0m $strBogusTrips\n";
 	echo "   \e[1;34mBoards:\e[0m " . trim($strBoards) . "\n";
 	echo "   \e[1;34mInternet Domain:\e[0m $domain8Kun\n";
 	echo "   \e[1;34mInternet Domain for Links in JSON:\e[0m $domain8KunForLinks\n";
@@ -831,18 +840,30 @@ do {
 													}
 												}
 												if (!$foundThisTrip) {
-													if (isset($post['com'])) {
-														$post_text_temp = cleanHtmlText(trim($post['com']));	
-													} else {
-														$post_text_temp = "---";
+													
+													$isBogusTrip = false;
+													foreach($bogusTrips as $bogusTrip) {	
+														if ($bogusTrip === $trip) {
+															$isBogusTrip = true;
+														}
 													}
-													file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, LOCK_EX);					
-													echo "------------ \e[0;37;42mFound potentially new trip: " . $trip . "\e[0m\n";
-													echo "------------ \e[0;37;42mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
-													echo "------------ \e[0;37;42mWaiting 90 seconds for you to review and possibly press CTRL-C.\e[0m\n";
-													echo "------------ \e[0;37;42mIf valid, delete " . $board . "_checked_threads.json, update the\e[0m\n";
-													echo "------------ \e[0;37;42msqraper_config.json file and restart sqraper.\e[0m\n";
-													sleep(90);												}
+													
+													if (!$foundThisTrip) {
+														if (isset($post['com'])) {
+															$post_text_temp = cleanHtmlText(trim($post['com']));	
+														} else {
+															$post_text_temp = "---";
+														}
+														file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, LOCK_EX);					
+														echo "------------ \e[1;33mFound potentially new trip: " . $trip . "\e[0m\n";
+														echo "------------ \e[1;30m$post_text_temp\e[0m\n";
+														echo "------------ \e[1;33mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
+														echo "------------ \e[1;33mWaiting 30 seconds for you to review and possibly press CTRL-C.\e[0m\n";
+														echo "------------ \e[1;33mIf valid, delete " . $board . "_checked_threads.json, update the\e[0m\n";
+														echo "------------ \e[1;33msqraper_config.json file and restart sqraper.\e[0m\n";
+														sleep(30);
+													}
+												}
 											}
 											/* ============================= */
 											/* ==== End new trip check. ==== */
