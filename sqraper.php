@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.0
+Version: 1.3.1
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.0";
+$scriptVersion = "1.3.1";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -742,6 +742,7 @@ do {
 					}
 					
 					
+					echo $useThreadsOrPages . "\n\n";
 					
 					//if (!empty($pages['threads'])) {
 					if (!empty($pages[$useThreadsOrPages])) {
