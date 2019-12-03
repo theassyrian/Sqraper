@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.2
+Version: 1.3.3
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.2";
+$scriptVersion = "1.3.3";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -749,9 +749,9 @@ do {
 								$threadLastModified = 0;
 							}
 							
-							echo "threadNo:$threadNo\n";
-							echo "threadLastModified:$threadLastModified\n";
-							echo "hasThreadUpdated:" . hasThreadUpdated($threadNo, $threadLastModified) . "\n";
+							//echo "threadNo:$threadNo\n";
+							//echo "threadLastModified:$threadLastModified\n";
+							//echo "hasThreadUpdated:" . hasThreadUpdated($threadNo, $threadLastModified) . "\n";
 
 							// This is where we check the thread dates and then conditionally continue.	
 							if (hasThreadUpdated($threadNo, $threadLastModified)) {
