@@ -746,8 +746,8 @@ do {
 								$threadLastModified = 0;
 							}
 							
-							echo "threadNo:$threadNo\n"
-							echo "threadLastModified:$threadLastModified\n"
+							echo "threadNo:$threadNo\n";
+							echo "threadLastModified:$threadLastModified\n";
 
 							// This is where we check the thread dates and then conditionally continue.	
 							if (hasThreadUpdated($threadNo, $threadLastModified)) {
