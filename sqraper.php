@@ -558,7 +558,8 @@ function hasThreadUpdated($varNo, $varLastModified) {
 				'last_modified' => $varLastModified
 			));	
 		}
-		return $entryUpdated;		
+		//return $entryUpdated;		
+		return true;		
 	}
 
 }	
