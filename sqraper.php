@@ -840,17 +840,13 @@ do {
 											/* If it is valid, manually stop the sqraper, delete the EACH_BOARD_checked_threads.json files, */
 											/* manually update the sqraper_config.json file to add the new trip, then relaunch the sqraper. */
 											/* ============================= */
-											if ((trim($post_name) === "Q") || ($board == 'projectdcomms')) {
+											if (trim($post_name) === "Q") {
 												$foundThisTrip = false;
 												foreach($qTrips as $qTrip) {	
 													if ($qTrip === $trip) {
 														$foundThisTrip = true;
 													}
 												}												
-												
-												if ($board == 'projectdcomms') {
-													$foundThisTrip = true;
-												}	
 												
 												if (!$foundThisTrip) {
 													
@@ -890,6 +886,10 @@ do {
 													break;
 												}
 											}
+											
+											if ($board == 'projectdcomms') {
+												$foundTrip = true;
+											}											
 											
 											if ($foundTrip == true) {
 												if (isInPostsJSON($resto, $postNo)) { // If already exists in posts.json then ignore.
