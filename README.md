@@ -3,6 +3,8 @@ PHP 8Kun Q post scraper.
 
 When viewing via GitHub view this README.md as RAW for proper formatting.
 
+Version 1.3.7: Added offPeakSleepBetweenNewQPostChecks and bogusTrips to the config file.
+
 Version 1.2.0 released 11/22/2019 @ 5:30PM EST. The previous STRING type configuration item "qTrip" is now obsolete.
 It has been replaced with an ARRAY type configuration item named "qTrips". You can now enter more than one trip code.
 This is to ensure that when Q changes trip codes that you get posts that you may have missed on a previous trip as
@@ -75,7 +77,8 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "useLoki": true,
   "saveRemoteFilesToLocal": true,
   "readFromLocal8KunFiles": false,
-  "sleepBetweenNewQPostChecks": 120,
+  "sleepBetweenNewQPostChecks": 150,
+  "offPeakSleepBetweenNewQPostChecks":300
   "productionPostsJSONFilename": "posts.json",
   "productionJSONFolder": "json/",
   "productionMediaFolder": "media/",
@@ -167,6 +170,11 @@ bogusTrips:
     Default: 150
     The time in seconds to wait between checking for new posts. I suggest you don't get too greedy and chew up 8kun
     resources any more than need be. Let's be respectful. 150 is every 2 and half minutes.
+    
+  offPeakSleepBetweenNewQPostChecks:
+    Type: Integer
+    Default: 300
+    The time in seconds to wait between checking for new posts during non-peak times (2AM-9AM).
     
   productionPostsJSONFilename:
     Type: String
