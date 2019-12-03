@@ -227,6 +227,7 @@ function getConfig() {
 function cleanHtmlText($htmlText) {
 		
 	$htmlText = preg_replace('#<a onclick=\"highlightReply.*?>(.*?)</a>#i', '${1}', $htmlText);
+	$htmlText = str_replace(' rel="nofollow" target="_blank"', '', $htmlText);	
 	
 	$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
 	$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
