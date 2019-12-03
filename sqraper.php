@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.1
+Version: 1.3.2
 Last Updated: November 21, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.1";
+$scriptVersion = "1.3.2";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -546,7 +546,9 @@ function hasThreadUpdated($varNo, $varLastModified) {
 				}						
 				break;					
 			}					
-		}					
+		} else {
+			$entryUpdated = true;
+		}			
 	}
 
 	if (($GLOBALS['debugWithAPost']) && ($varNo == $GLOBALS['debugThreadNo']))    {
@@ -558,8 +560,8 @@ function hasThreadUpdated($varNo, $varLastModified) {
 				'last_modified' => $varLastModified
 			));	
 		}
-		//return $entryUpdated;		
-		return true;		
+		return $entryUpdated;		
+		//return true;		
 	}
 
 }	
