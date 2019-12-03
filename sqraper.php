@@ -4,7 +4,7 @@
 
 Sqraper
 Version: 1.3.4
-Last Updated: November 21, 2019
+Last Updated: December 2, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
