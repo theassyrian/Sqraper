@@ -1052,7 +1052,7 @@ do {
 	getConfig(); 
 	/************************************************************/	
 	
-	uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
+	//uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
 	
 	/*
 	It's good etiquette to poll less frequently whenever we think there is little to no chance of Q posting.
