@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.3.7
-Last Updated: December 2, 2019
+Version: 1.3.8
+Last Updated: December 3, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.7";
-$scriptUpdated = "Last Updated: November 22, 2019";
+$scriptVersion = "1.3.8";
+$scriptUpdated = "Last Updated: December 3, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -232,8 +232,9 @@ function cleanHtmlText($htmlText) {
 	$htmlText = preg_replace('#<a onclick=\"highlightReply.*?>(.*?)</a>#i', '${1}', $htmlText);
 	$htmlText = str_replace(' rel="nofollow" target="_blank"', '', $htmlText);	
 	
-	$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
-	$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
+	$htmlText = preg_replace('#<a.*?>(.*?)</a>#i', '\1', $htmlText);	
+	//$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
+	//$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
 	
 	$htmlText = str_replace('<p class="body-line empty">', '', $htmlText);
 	$htmlText = str_replace('<p class="body-line empty ">', '', $htmlText);
@@ -1051,7 +1052,7 @@ do {
 	getConfig(); 
 	/************************************************************/	
 	
-	//uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
+	uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
 	
 	/*
 	It's good etiquette to poll less frequently whenever we think there is little to no chance of Q posting.
