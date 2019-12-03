@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.8
+Version: 1.3.9
 Last Updated: December 3, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.8";
+$scriptVersion = "1.3.9";
 $scriptUpdated = "Last Updated: December 3, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -840,13 +840,18 @@ do {
 											/* If it is valid, manually stop the sqraper, delete the EACH_BOARD_checked_threads.json files, */
 											/* manually update the sqraper_config.json file to add the new trip, then relaunch the sqraper. */
 											/* ============================= */
-											if (trim($post_name) === "Q") {
+											if ((trim($post_name) === "Q") || ($board == 'projectdcomms')) {
 												$foundThisTrip = false;
 												foreach($qTrips as $qTrip) {	
 													if ($qTrip === $trip) {
 														$foundThisTrip = true;
 													}
-												}
+												}												
+												
+												if ($board == 'projectdcomms') {
+													$foundThisTrip = true;
+												}	
+												
 												if (!$foundThisTrip) {
 													
 													$isBogusTrip = false;
