@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.6
+Version: 1.3.7
 Last Updated: December 2, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.6";
+$scriptVersion = "1.3.7";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -145,7 +145,8 @@ function getConfig() {
 			'useLoki' => true,
 			'saveRemoteFilesToLocal' => true,
 			'readFromLocal8KunFiles' => false,
-			'sleepBetweenNewQPostChecks' => 150,
+			'sleepBetweenNewQPostChecks' => 90,
+			'offPeakSleepBetweenNewQPostChecks' => 150,
 			'productionPostsJSONFilename' => 'posts.json',
 			'productionJSONFolder' => 'json/',
 			'productionMediaFolder' => 'media/',
@@ -168,6 +169,7 @@ function getConfig() {
 		$GLOBALS['saveRemoteFilesToLocal'] = $defaultConfig['saveRemoteFilesToLocal'];
 		$GLOBALS['readFromLocal8KunFiles'] = $defaultConfig['readFromLocal8KunFiles'];
 		$GLOBALS['sleepBetweenNewQPostChecks'] = $defaultConfig['sleepBetweenNewQPostChecks'];
+		$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $defaultConfig['offPeakSleepBetweenNewQPostChecks'];		
 		$GLOBALS['productionPostsJSONFilename'] = $defaultConfig['productionPostsJSONFilename'];
 		$GLOBALS['productionMediaFolder'] = $defaultConfig['productionMediaFolder'];
 		$GLOBALS['productionMediaURL'] = $defaultConfig['productionMediaURL'];
@@ -206,6 +208,7 @@ function getConfig() {
 				$GLOBALS['saveRemoteFilesToLocal'] = $currentConfigJSON['saveRemoteFilesToLocal'];
 				$GLOBALS['readFromLocal8KunFiles'] = $currentConfigJSON['readFromLocal8KunFiles'];
 				$GLOBALS['sleepBetweenNewQPostChecks'] = $currentConfigJSON['sleepBetweenNewQPostChecks'];
+				$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $currentConfigJSON['offPeakSleepBetweenNewQPostChecks'];
 				$GLOBALS['productionPostsJSONFilename'] = $currentConfigJSON['productionPostsJSONFilename'];	
 				$GLOBALS['productionMediaFolder'] = $currentConfigJSON['productionMediaFolder'];
 				$GLOBALS['productionMediaURL'] = $currentConfigJSON['productionMediaURL'];
@@ -629,6 +632,8 @@ do {
 	echo "   \e[1;34mFTP Upload Media:\e[0m $ftpUploadMedia\n";
 	echo "   \e[1;34mFTP Upload Media Folder:\e[0m $ftpUploadMediaFolder\n";
 	echo "   \e[1;34mSleep Between Loops:\e[0m $sleepBetweenNewQPostChecks\n";
+	echo "   \e[1;34mOff Peak Sleep Between Loops:\e[0m $offPeakSleepBetweenNewQPostChecks\n";
+	
 	echo "\e[1;34mLoop Started:\e[0m " . date("m/d/Y h:i:s a") . "\n";
 	echo "============================================================\n\n";
 
@@ -1053,15 +1058,13 @@ do {
 	You may want/need to adjust this for your time zone. Default is slow down after 2AM and ramp back up to
 	whatever is in the config at 9AM.
 	*/
-
 	if ((date('H') >= 2) && (date('H') < 9)) {
-		echo "\e[1;32mNON-PRIME TIME (LONGER) SLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";
-		$sleepBetweenNewQPostChecks = 120;
+		echo "\e[1;32mOFF PEAK TIME SLEEP:\e[0m $offPeakSleepBetweenNewQPostChecks seconds.\n\n";		
+		sleep($offPeakSleepBetweenNewQPostChecks);
 	} else {
-		echo "\e[1;32mPRIME-TIME (STANDARD) SLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
-	}
-	
-	sleep($sleepBetweenNewQPostChecks);
+		echo "\e[1;32mPEAK TIME SLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
+		sleep($sleepBetweenNewQPostChecks);
+	}		
 	
 } while ($continue == true);
 
