@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.5
+Version: 1.3.6
 Last Updated: December 2, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.5";
+$scriptVersion = "1.3.6";
 $scriptUpdated = "Last Updated: November 22, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -325,7 +325,6 @@ function getMediaObject($inArray) {
 					} else {
 						$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];			
 					}		
-					//$thisUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 					$thisFilename = $extraFile['filename'] . $extraFile['ext'];
 					$thisStorageFilename = $extraFile['tim'] . $extraFile['ext'];
 					$thisMedia = array(
@@ -1049,7 +1048,19 @@ do {
 	
 	//uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
 	
-	echo "\e[1;32mSLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
+	/*
+	It's good etiquette to poll less frequently whenever we think there is little to no chance of Q posting.
+	You may want/need to adjust this for your time zone. Default is slow down after 2AM and ramp back up to
+	whatever is in the config at 9AM.
+	*/
+
+	if ((date('H') >= 2) && (date('H') < 9)) {
+		echo "\e[1;32mNON-PRIME TIME (LONGER) SLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";
+		$sleepBetweenNewQPostChecks = 120;
+	} else {
+		echo "\e[1;32mPRIME-TIME (STANDARD) SLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
+	}
+	
 	sleep($sleepBetweenNewQPostChecks);
 	
 } while ($continue == true);
