@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.4.0
-Last Updated: December 3, 2019
+Version: 1.4.1
+Last Updated: December 4, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.0";
+$scriptVersion = "1.4.1";
 $scriptUpdated = "Last Updated: December 3, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -138,7 +138,7 @@ function getConfig() {
 		$defaultConfig = array(
 			'qTrips' => ['!!mG7VJxZNCI','!!Hs1Jq13jV6'],
 			'bogusTrips' => [],
-			'boards' => ['projectdcomms^','qresearch'],
+			'boards' => ['projectdcomms','qresearch'],
 			'domain8Kun' => '8kun.top',
 			'domain8KunForLinks' => '8kun.net',
 			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
@@ -876,7 +876,7 @@ do {
 														} else {
 															$post_text_temp = "---";
 														}
-														file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, FILE_APPEND | LOCK_EX);
+														file_put_contents("new_trip_eval.txt", "Trip:$trip\nPost:" . $post_text_temp . "\n\n", FILE_APPEND | LOCK_EX);
 														echo "------------ \e[1;33mFound potentially new trip: " . $trip . "\e[0m\n";
 														echo "------------ \e[1;30m$post_text_temp\e[0m\n";
 														echo "------------ \e[1;33mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
