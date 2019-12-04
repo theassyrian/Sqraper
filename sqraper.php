@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.3.9
+Version: 1.4.0
 Last Updated: December 3, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.3.9";
+$scriptVersion = "1.4.0";
 $scriptUpdated = "Last Updated: December 3, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -136,9 +136,9 @@ function getConfig() {
 		echo "\e[1;31mCREATE FILE:\e[0m sqraper_config.json did not exist. Creating and reading default configuration JSON file.\n";
 
 		$defaultConfig = array(
-			'qTrips' => ['!!mG7VJxZNCI'],
+			'qTrips' => ['!!mG7VJxZNCI','!!Hs1Jq13jV6'],
 			'bogusTrips' => [],
-			'boards' => ['projectdcomms','qresearch'],
+			'boards' => ['projectdcomms^','qresearch'],
 			'domain8Kun' => '8kun.top',
 			'domain8KunForLinks' => '8kun.net',
 			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
@@ -659,8 +659,20 @@ do {
 	}			
 
 	foreach($boards as $board) { // Loop through all boards defined in the array in the configuration section at the top of the page.
-
-		$foundAnyNewPosts = false;
+		
+		/*
+		You can add a ^ to the end of a board name in the config file sqraper_config.json to allow searching for Q posts that do not
+		have a trip. Used on Q private boards. CAUTION: Do NOT attempt this on a public board!
+		*/
+		if (strpos($board, "^") !== false) {
+			$includeNoTripPosts = true;
+			$board = str_replace('^', '', $board);	
+		} else {
+			$includeNoTripPosts = false;
+		}
+		/************************************************************/	
+		
+		$foundAnyNewPosts = false;		
 		
 		$threadMap = [];
 		$threadMapFile = $productionJSONFolder . $board . '_checked_threads.json';
@@ -821,7 +833,8 @@ do {
 											/* ========================================= */
 											
 											$postNo = $post['no'];
-											$resto = $post['resto'];
+											//$resto = $post['resto'];
+											$resto = basename($threadUrl, ".json");											
 
 											if (isset($post['name'])) {
 												$post_name = trim($post['name']);	
@@ -863,7 +876,7 @@ do {
 														} else {
 															$post_text_temp = "---";
 														}
-														file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, LOCK_EX);					
+														file_put_contents("new_trip_eval.txt", $trip . "\n" . $post_text_temp, FILE_APPEND | LOCK_EX);
 														echo "------------ \e[1;33mFound potentially new trip: " . $trip . "\e[0m\n";
 														echo "------------ \e[1;30m$post_text_temp\e[0m\n";
 														echo "------------ \e[1;33mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
@@ -887,9 +900,10 @@ do {
 												}
 											}
 											
-											if ($board == 'projectdcomms') {
+											if (($includeNoTripPosts == true) && ($foundTrip == false)) {
 												$foundTrip = true;
-											}											
+												$currentTrip = '[Private Board, Anonymous, No Trip]';											
+											}
 											
 											if ($foundTrip == true) {
 												if (isInPostsJSON($resto, $postNo)) { // If already exists in posts.json then ignore.
@@ -909,11 +923,16 @@ do {
 													} else {
 														$post_id = 0;
 													}
+													
+													/*
 													if (isset($post['resto'])) {
 														$post_threadId = $post['resto'];	
 													} else {
 														$post_threadId = 0;
 													}
+													*/
+													$post_threadId = basename($threadUrl, ".json");													
+													
 													$post_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
 													$post_source = explode(".", $domain8KunForLinks)[0] . "_$board";
 													$post_subject = null;
