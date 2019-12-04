@@ -3,26 +3,6 @@ PHP 8Kun Q post scraper.
 
 When viewing via GitHub view this README.md as RAW for proper formatting.
 
-Version 1.3.7: Added offPeakSleepBetweenNewQPostChecks and bogusTrips to the config file.
-
-Version 1.2.0 released 11/22/2019 @ 5:30PM EST. The previous STRING type configuration item "qTrip" is now obsolete.
-It has been replaced with an ARRAY type configuration item named "qTrips". You can now enter more than one trip code.
-This is to ensure that when Q changes trip codes that you get posts that you may have missed on a previous trip as
-well as posts made with the new trip.
-
-Version 1.1.0 released 11/21/2019 @ 6:20PM EST. This version corrects code for the following and confirms proper functioning
-of the following:
-
-	1) Includes any media contained with the post and adds them to the element "media".
-	2) Downloads any images found in the post and optionally uploads them via FTP.
-	3) Includes any posts referenced within the main post and adds them to the 
-	element "references".
-	4) Also locates and adds any media in the referenced post to a
-	"media" element within the "references" element.
-	5) Referenced posts and any media within them dig down two levels deep.
-	
-IF YOU HAVE DOWNLOADED PRIOR VERSIONS IT IS ESSENTIAL YOU REPLACE THEM WITH THIS VERSION for "media" or "references" to work!
-
 -----------------
 
 The goal and intent of this project is in short, redundancy and community. As of the date of publishing, as far as I am aware,
@@ -121,10 +101,11 @@ bogusTrips:
     Default: [
       "qresearch"
     ]
-    Enter the one or more boards Q is dropping on. At time of publishing, Q is only dropping on "qresearch" 
-    8kun.top/qresearch/. If Q were to start posting on, let's say "patriotsfight" also, you would enter
-    "qresearch","patriotsfight".
-    
+    All lower case. Enter the one or more boards Q is dropping on. Example: "qresearch","projectdcomms". When Q
+    has a PRIVATE BOARD that only Q can post on, at times Q may initially post as Anonymous WITHOUT a trip code.
+    If you would like to pick these posts up also, place a ^ at the end of the board name. Example: "projectdcomms^".
+    CAUTION: Do NOT use ^ on a public board!
+
   domain8Kun:
     Type: String
     Default: "8kun.top"
