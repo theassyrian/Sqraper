@@ -100,6 +100,7 @@ getConfig();
 /* ================================================ */
 
 $jsonUrl = "https://qalerts.app/data/json/posts.json";
+//$jsonUrl = "https://qanon.pub/data/json/posts.json";
 
 /*
 https://qanon.pub/data/json/posts.json
@@ -113,7 +114,7 @@ if ((isset($productionJSONFolder)) && ($productionJSONFolder !== '')) {
 		mkdir($productionJSONFolder, 0777, true);
 	}
 }
-echo "\e[1;32mDOWNLOAD JSON:\e[0m " . $productionJSONFolder . "posts.json" . "\n";
+echo "\e[1;32mDOWNLOAD JSON:\e[0m " . $jsonUrl . " > " . $productionJSONFolder . "posts.json" . "\n";
 $thisMedia = @file_get_contents($jsonUrl);
 if ($thisMedia) {
 	file_put_contents($productionJSONFolder . "posts.json", $thisMedia, LOCK_EX);	
