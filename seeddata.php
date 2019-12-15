@@ -129,6 +129,7 @@ if ($thisMedia) {
 
 if ((isset($productionMediaFolder)) && ($productionMediaFolder !== '')) {
 
+	$downloadedImagesCount = 0;
 	$mediaUrl = "https://qalerts.net/media/";
 	$thisMedia = @file_get_contents($mediaUrl);
 	if (!file_exists($productionMediaFolder)) {
@@ -145,6 +146,7 @@ if ((isset($productionMediaFolder)) && ($productionMediaFolder !== '')) {
 					echo "\e[1;32mDOWNLOAD MEDIA:\e[0m " . $productionMediaFolder . basename($media) . "\n";
 					$thisFile = @file_get_contents($media);
 					file_put_contents($productionMediaFolder . basename($media), $thisFile, LOCK_EX);	
+					$downloadedImagesCount ++;
 				} else {
 					echo "\e[1;33mSKIP EXISTING MEDIA:\e[0m " . $productionMediaFolder . basename($media) . "\n";			
 				}
@@ -163,5 +165,6 @@ if ((isset($productionMediaFolder)) && ($productionMediaFolder !== '')) {
 
 $timeFinished  = strtotime(date('m/d/Y h:i:s a', time()));
 $differenceInSeconds = $timeFinished - $timeStarted;
-echo "\e[1;32mFINISHED:\e[0m " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete.\n";
+
+echo "\e[1;32mFINISHED:\e[0m " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete. $downloadedImagesCount image(s) downloaded.\n";
 ?>
