@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.4.2
-Last Updated: December 14, 2019
+Version: 1.4.4
+Last Updated: December 15, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.2";
-$scriptUpdated = "Last Updated: December 14, 2019";
+$scriptVersion = "1.4.4";
+$scriptUpdated = "Last Updated: December 15, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -121,7 +121,8 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 	if (ftp_put($ftpConnection, $remoteFilePath, $localFilePath, $dataType)) {
 		echo "\e[1;32m--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
 	} else {
-		echo "\e[1;31m--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . error_get_last() . ".\e[0m\n";
+		$last_error = error_get_last();
+		echo "\e[1;31m--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . ".\e[0m\n";
 	}
 
 	echo "\e[1;32m--- FTP CLOSE.\e[0m\n";	
@@ -233,8 +234,6 @@ function cleanHtmlText($htmlText) {
 	$htmlText = str_replace(' rel="nofollow" target="_blank"', '', $htmlText);	
 	
 	$htmlText = preg_replace('#<a.*?>(.*?)</a>#i', '\1', $htmlText);	
-	//$linkPattern = '~<a [^>]+>(.+?)<\\\/a>~';
-	//$htmlText = preg_replace($linkPattern, '${1}1', $htmlText);	
 	
 	$htmlText = str_replace('<p class="body-line empty">', '', $htmlText);
 	$htmlText = str_replace('<p class="body-line empty ">', '', $htmlText);
@@ -439,9 +438,6 @@ function getReferencesObject($searchStr) {
 						);															
 						
 						$post_referencesMedia = [];	
-						//$post_referencesMedia = getMediaObject($postReference);						
-						
-						//hereherehere
 						if ((isset($postReference['filename'])) && (isset($postReference['ext'])) && (isset($postReference['tim']))){			
 							$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 							$thisPostReferenceFilename = $postReference['filename'] . $postReference['ext'];
@@ -450,8 +446,6 @@ function getReferencesObject($searchStr) {
 								'url' => $thisPostReferenceUrl
 							);
 							array_push($post_referencesMedia, $thisPostReferenceMedia);															
-
-
 							
 							$thisStorageFilename = $postReference['tim'] . $postReference['ext'];
 							if ($GLOBALS['useLoki']) {
@@ -461,8 +455,6 @@ function getReferencesObject($searchStr) {
 								$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 								downloadMediaFile($thisDownload, $thisStorageFilename);
 							}	
-
-
 
 							if (isset($postReference['extra_files'])) {
 								foreach($postReference['extra_files'] as $extraPostReferenceFile) {															
@@ -475,7 +467,6 @@ function getReferencesObject($searchStr) {
 										);										
 										array_push($post_referencesMedia, $thisPostReferenceMedia);
 
-
 										$thisStorageFilename = $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 										if ($GLOBALS['useLoki']) {
 											$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
@@ -484,8 +475,6 @@ function getReferencesObject($searchStr) {
 											$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 											downloadMediaFile($thisDownload, $thisStorageFilename);
 										}	
-
-
 
 									}
 								}
