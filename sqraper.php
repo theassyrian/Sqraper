@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.4.1
-Last Updated: December 4, 2019
+Version: 1.4.2
+Last Updated: December 14, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.1";
-$scriptUpdated = "Last Updated: December 3, 2019";
+$scriptVersion = "1.4.2";
+$scriptUpdated = "Last Updated: December 14, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -438,7 +438,10 @@ function getReferencesObject($searchStr) {
 							'text' => $postReference_text
 						);															
 						
-						$post_referencesMedia = [];															
+						$post_referencesMedia = [];	
+						//$post_referencesMedia = getMediaObject($postReference);						
+						
+						//hereherehere
 						if ((isset($postReference['filename'])) && (isset($postReference['ext'])) && (isset($postReference['tim']))){			
 							$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 							$thisPostReferenceFilename = $postReference['filename'] . $postReference['ext'];
@@ -447,6 +450,20 @@ function getReferencesObject($searchStr) {
 								'url' => $thisPostReferenceUrl
 							);
 							array_push($post_referencesMedia, $thisPostReferenceMedia);															
+
+
+							
+							$thisStorageFilename = $postReference['tim'] . $postReference['ext'];
+							if ($GLOBALS['useLoki']) {
+								$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+								downloadMediaFile($thisDownload, $thisStorageFilename);
+							} else {
+								$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+								downloadMediaFile($thisDownload, $thisStorageFilename);
+							}	
+
+
+
 							if (isset($postReference['extra_files'])) {
 								foreach($postReference['extra_files'] as $extraPostReferenceFile) {															
 									if ((isset($extraPostReferenceFile['filename'])) && (isset($extraPostReferenceFile['ext'])) && (isset($extraPostReferenceFile['tim']))){
@@ -457,6 +474,19 @@ function getReferencesObject($searchStr) {
 											'url' => $thisPostReferenceUrl
 										);										
 										array_push($post_referencesMedia, $thisPostReferenceMedia);
+
+
+										$thisStorageFilename = $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+										if ($GLOBALS['useLoki']) {
+											$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+											downloadMediaFile($thisDownload, $thisStorageFilename);
+										} else {
+											$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+											downloadMediaFile($thisDownload, $thisStorageFilename);
+										}	
+
+
+
 									}
 								}
 							}																
@@ -924,13 +954,6 @@ do {
 														$post_id = 0;
 													}
 													
-													/*
-													if (isset($post['resto'])) {
-														$post_threadId = $post['resto'];	
-													} else {
-														$post_threadId = 0;
-													}
-													*/
 													$post_threadId = basename($threadUrl, ".json");													
 													
 													$post_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
