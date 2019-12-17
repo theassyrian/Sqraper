@@ -655,6 +655,15 @@ do {
 	echo "   \e[1;34mTrips:\e[0m $strQTrips\n";
 	echo "   \e[1;34mBogus Trips:\e[0m $strBogusTrips\n";
 	echo "   \e[1;34mBoards:\e[0m " . trim($strBoards) . "\n";
+
+	if (file_exists('search_replace.json')) {	
+		$searchReplace = @file_get_contents('search_replace.json');
+		if ($searchReplace) {		
+			echo "   \e[1;34msearch_replace.json:\e[0m " . trim($searchReplace) . "\n";
+
+		}	
+	}	
+
 	echo "   \e[1;34mInternet Domain:\e[0m $domain8Kun\n";
 	echo "   \e[1;34mInternet Domain for Links in JSON:\e[0m $domain8KunForLinks\n";
 	echo "   \e[1;34mUse Loki.Network:\e[0m $useLoki\n";
