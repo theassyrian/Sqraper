@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.4.4
-Last Updated: December 15, 2019
+Version: 1.4.5
+Last Updated: December 17, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.4";
-$scriptUpdated = "Last Updated: December 15, 2019";
+$scriptVersion = "1.4.5";
+$scriptUpdated = "Last Updated: December 17, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -243,6 +243,27 @@ function cleanHtmlText($htmlText) {
 
 	$htmlText = str_replace('<p class="body-line ltr ">', '', $htmlText);
 	$htmlText = str_replace('</p>', "\n", $htmlText);	
+		
+	if (file_exists('search_replace.json')) {	
+		
+		// Example: [{"replace":"&hellip;","with":"..."},{"replace":"&ndash;","with":"-"}]
+		
+		$searchReplace = @file_get_contents('search_replace.json');
+		if (!$searchReplace) {		
+			displayError("!searchReplace.");
+		} else {
+			$searchReplaceJSON = json_decode($searchReplace, true);
+			if ($searchReplaceJSON == FALSE) {
+				displayError("searchReplaceJSON parse error.");
+			} else {
+				foreach($searchReplaceJSON as $sr) {					
+					if (isset($sr['replace']) && isset($sr['with'])) {
+						$htmlText = str_replace($sr['replace'], $sr['with'], $htmlText);
+					}
+				}						
+			}
+		}	
+	}	
 	
 	return $htmlText;
 		
