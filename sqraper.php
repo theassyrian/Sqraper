@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.4.5
+Version: 1.4.6
 Last Updated: December 17, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.5";
+$scriptVersion = "1.4.6";
 $scriptUpdated = "Last Updated: December 17, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -460,11 +460,20 @@ function getReferencesObject($searchStr) {
 						
 						$post_referencesMedia = [];	
 						if ((isset($postReference['filename'])) && (isset($postReference['ext'])) && (isset($postReference['tim']))){			
-							$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+
+							// $thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+							if ((isset($GLOBALS['productionMediaURL'])) && ($GLOBALS['productionMediaURL'] != '')) {
+								$thisPostReferenceUrl = $GLOBALS['productionMediaURL'] . $postReference['tim'] . $postReference['ext'];
+							} else {
+								$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];			
+							}		
+							// End change 12-17-2019
+
 							$thisPostReferenceFilename = $postReference['filename'] . $postReference['ext'];
+
 							$thisPostReferenceMedia = array(
 								'filename' => $thisPostReferenceFilename,
-								'url' => $thisPostReferenceUrl
+								'url' => $thisPostReferenceUrl //hereherehere
 							);
 							array_push($post_referencesMedia, $thisPostReferenceMedia);															
 							
@@ -480,7 +489,15 @@ function getReferencesObject($searchStr) {
 							if (isset($postReference['extra_files'])) {
 								foreach($postReference['extra_files'] as $extraPostReferenceFile) {															
 									if ((isset($extraPostReferenceFile['filename'])) && (isset($extraPostReferenceFile['ext'])) && (isset($extraPostReferenceFile['tim']))){
-										$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+										
+										//$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+										if ((isset($GLOBALS['productionMediaURL'])) && ($GLOBALS['productionMediaURL'] != '')) {
+											$thisPostReferenceUrl = $GLOBALS['productionMediaURL'] . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+										} else {
+											$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];			
+										}		
+										// End added 12-17-2019
+										
 										$thisPostReferenceFilename = $extraPostReferenceFile['filename'] . $extraPostReferenceFile['ext'];
 										$thisPostReferenceMedia = array(
 											'filename' => $thisPostReferenceFilename,
