@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.4.6
+Version: 1.4.7
 Last Updated: December 17, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.6";
+$scriptVersion = "1.4.7";
 $scriptUpdated = "Last Updated: December 17, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -449,7 +449,6 @@ function getReferencesObject($searchStr) {
 							'threadId' => $postReference_threadId,
 							'id' => $postReference_id,
 							'timestamp' => $postReference_timestamp,
-							'lastModified' => $postReference_lastModified,
 							'source' => $postReference_source,
 							'link' => $postReference_link,
 							'name' => $postReference_name,
@@ -1021,7 +1020,6 @@ do {
 														'threadId' => $post_threadId,
 														'id' => $post_id,
 														'timestamp' => $post_timestamp,
-														'lastModified' => $post_lastModified,
 														'source' => $post_source,
 														'link' => $post_link,
 														'name' => $post_name,
