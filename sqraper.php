@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.4.7
-Last Updated: December 17, 2019
+Version: 1.4.8
+Last Updated: December 18, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.7";
-$scriptUpdated = "Last Updated: December 17, 2019";
+$scriptVersion = "1.4.8";
+$scriptUpdated = "Last Updated: December 18, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -371,7 +371,7 @@ function getMediaObject($inArray) {
 	return $returnArray;
 }
 
-function getReferencesObject($searchStr) {
+function getReferencesObject($searchStr, $digDeeper) {
 
 	// index 0 is the content as it matched with the >>
 	// index 1 is the content without the >>
@@ -519,13 +519,16 @@ function getReferencesObject($searchStr) {
 							$thisReferencesPost['media'] = $post_referencesMedia;
 						}
 						
-						$post_referencesReferences = [];
-						$subSub_References_Result = getReferencesObject($postReference_text);
-						foreach($subSub_References_Result as $subSubReference) {
-							array_push($post_referencesReferences, $subSubReference);
-						}
-						if (!empty($subSub_References_Result)) {
-							$thisReferencesPost['references'] = $subSub_References_Result;
+						//$post_referencesReferences = [];
+						
+						if ($digDeeper == true) { //here
+							$subSub_References_Result = getReferencesObject($postReference_text, false); // If you want to dig unlimited levels deep set to true
+							//foreach($subSub_References_Result as $subSubReference) {
+							//	array_push($post_referencesReferences, $subSubReference);
+							//}
+							if (!empty($subSub_References_Result)) {
+								$thisReferencesPost['references'] = $subSub_References_Result;
+							}							
 						}
 						
 						array_push($returnArray, $thisReferencesPost);
@@ -1025,7 +1028,8 @@ do {
 														'name' => $post_name,
 														'trip' => $post_trip,
 														'userId' => $post_userId,
-														'text' => $post_text
+														'text' => $post_text,
+														'minedBy' => $scriptTitle . ' ' . $scriptVersion
 													);
 													
 													$post_media = getMediaObject($post);
@@ -1033,7 +1037,7 @@ do {
 														$thisPost['media'] = $post_media;
 													}
 													
-													$post_References_Result = getReferencesObject($post_text);
+													$post_References_Result = getReferencesObject($post_text, true);
 													if (!empty($post_References_Result)) {
 														$thisPost['references'] = $post_References_Result;
 													}
