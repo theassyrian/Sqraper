@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.4.8
-Last Updated: December 18, 2019
+Version: 1.5.0
+Last Updated: December 19, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.4.8";
-$scriptUpdated = "Last Updated: December 18, 2019";
+$scriptVersion = "1.5.0";
+$scriptUpdated = "Last Updated: December 19, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -401,6 +401,11 @@ function getReferencesObject($searchStr, $digDeeper) {
 						} else {
 							$postReference_email = null;
 						}
+						if (isset($postReference['subject'])) {
+							$postReference_subject = $postReference['subject'];	
+						} else {
+							$postReference_subject = null;
+						}
 						if (isset($postReference['no'])) {
 							$postReference_id = $postReference['no'];	
 						} else {
@@ -418,7 +423,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 							$postReference_name = null;
 						}
 						$postReference_source = explode(".", $GLOBALS['domain8KunForLinks'])[0] . "_" . $GLOBALS['board'];
-						$post_subject = null;
+
 						if (isset($postReference['com'])) {
 							$postReference_text = cleanHtmlText(trim($postReference['com']));	
 						} else {
@@ -446,15 +451,17 @@ function getReferencesObject($searchStr, $digDeeper) {
 						}
 
 						$thisReferencesPost = array(
-							'threadId' => $postReference_threadId,
+							'email' => $postReference_email,
 							'id' => $postReference_id,
-							'timestamp' => $postReference_timestamp,
-							'source' => $postReference_source,
 							'link' => $postReference_link,
 							'name' => $postReference_name,
+							'source' => $postReference_source,
+							'subject' => $postReference_subject,
+							'text' => $postReference_text,
+							'threadId' => $postReference_threadId,
+							'timestamp' => $postReference_timestamp,
 							'trip' => $postReference_trip,
-							'userId' => $postReference_userId,
-							'text' => $postReference_text
+							'userId' => $postReference_userId
 						);															
 						
 						$post_referencesMedia = [];	
@@ -517,6 +524,8 @@ function getReferencesObject($searchStr, $digDeeper) {
 								}
 							}																
 							$thisReferencesPost['media'] = $post_referencesMedia;
+						} else {
+							$thisReferencesPost['media'] = [];
 						}
 						
 						//$post_referencesReferences = [];
@@ -872,7 +881,7 @@ do {
 								
 								if ($threadContents == FALSE) {
 
-									displayError('Could not get thread \"$threadNo\" for board \"$board\", URL \"$threadUrl\".');
+									displayError('Could not get thread "' . $threadNo . '" for board "' . $board . '", URL ' . $threadUrl . '.');
 
 								} else {
 
@@ -986,6 +995,13 @@ do {
 													} else {
 														$post_email = null;
 													}
+
+													if (isset($post['subject'])) {
+														$post_subject = $post['subject'];	
+													} else {
+														$post_subject = null;
+													}
+
 													if (isset($post['no'])) {
 														$post_id = $post['no'];	
 													} else {
@@ -996,7 +1012,7 @@ do {
 													
 													$post_link = "https://$domain8KunForLinks/$board/res/$post_threadId.html#$post_id";
 													$post_source = explode(".", $domain8KunForLinks)[0] . "_$board";
-													$post_subject = null;
+
 													if (isset($post['com'])) {
 														$post_text = cleanHtmlText(trim($post['com']));	
 													} else {
@@ -1020,21 +1036,25 @@ do {
 													}
 
 													$thisPost = array(
-														'threadId' => $post_threadId,
+														'email' => $post_email,
 														'id' => $post_id,
-														'timestamp' => $post_timestamp,
-														'source' => $post_source,
 														'link' => $post_link,
 														'name' => $post_name,
+														'source' => $post_source,
+														'subject' => $post_subject,
+														'text' => $post_text,
+														'threadId' => $post_threadId,
+														'timestamp' => $post_timestamp,
 														'trip' => $post_trip,
 														'userId' => $post_userId,
-														'text' => $post_text,
 														'minedBy' => $scriptTitle . ' ' . $scriptVersion
 													);
 													
 													$post_media = getMediaObject($post);
 													if (!empty($post_media)) {
 														$thisPost['media'] = $post_media;
+													} else {
+														$thisPost['media'] = [];
 													}
 													
 													$post_References_Result = getReferencesObject($post_text, true);
