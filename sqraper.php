@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.5.0
-Last Updated: December 19, 2019
+Version: 1.5.1
+Last Updated: December 26, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.5.0";
-$scriptUpdated = "Last Updated: December 19, 2019";
+$scriptVersion = "1.5.1";
+$scriptUpdated = "Last Updated: December 26, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -467,19 +467,17 @@ function getReferencesObject($searchStr, $digDeeper) {
 						$post_referencesMedia = [];	
 						if ((isset($postReference['filename'])) && (isset($postReference['ext'])) && (isset($postReference['tim']))){			
 
-							// $thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 							if ((isset($GLOBALS['productionMediaURL'])) && ($GLOBALS['productionMediaURL'] != '')) {
 								$thisPostReferenceUrl = $GLOBALS['productionMediaURL'] . $postReference['tim'] . $postReference['ext'];
 							} else {
 								$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];			
 							}		
-							// End change 12-17-2019
 
 							$thisPostReferenceFilename = $postReference['filename'] . $postReference['ext'];
 
 							$thisPostReferenceMedia = array(
 								'filename' => $thisPostReferenceFilename,
-								'url' => $thisPostReferenceUrl //hereherehere
+								'url' => $thisPostReferenceUrl
 							);
 							array_push($post_referencesMedia, $thisPostReferenceMedia);															
 							
@@ -496,13 +494,11 @@ function getReferencesObject($searchStr, $digDeeper) {
 								foreach($postReference['extra_files'] as $extraPostReferenceFile) {															
 									if ((isset($extraPostReferenceFile['filename'])) && (isset($extraPostReferenceFile['ext'])) && (isset($extraPostReferenceFile['tim']))){
 										
-										//$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 										if ((isset($GLOBALS['productionMediaURL'])) && ($GLOBALS['productionMediaURL'] != '')) {
 											$thisPostReferenceUrl = $GLOBALS['productionMediaURL'] . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 										} else {
 											$thisPostReferenceUrl = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];			
 										}		
-										// End added 12-17-2019
 										
 										$thisPostReferenceFilename = $extraPostReferenceFile['filename'] . $extraPostReferenceFile['ext'];
 										$thisPostReferenceMedia = array(
@@ -528,13 +524,8 @@ function getReferencesObject($searchStr, $digDeeper) {
 							$thisReferencesPost['media'] = [];
 						}
 						
-						//$post_referencesReferences = [];
-						
-						if ($digDeeper == true) { //here
-							$subSub_References_Result = getReferencesObject($postReference_text, false); // If you want to dig unlimited levels deep set to true
-							//foreach($subSub_References_Result as $subSubReference) {
-							//	array_push($post_referencesReferences, $subSubReference);
-							//}
+						if ($digDeeper == true) {
+							$subSub_References_Result = getReferencesObject($postReference_text, true); // If you want to dig unlimited levels deep set to true
 							if (!empty($subSub_References_Result)) {
 								$thisReferencesPost['references'] = $subSub_References_Result;
 							}							
@@ -910,7 +901,6 @@ do {
 											/* ========================================= */
 											
 											$postNo = $post['no'];
-											//$resto = $post['resto'];
 											$resto = basename($threadUrl, ".json");											
 
 											if (isset($post['name'])) {
