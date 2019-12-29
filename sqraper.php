@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.5.1
-Last Updated: December 26, 2019
+Version: 1.5.2
+Last Updated: December 29, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.5.1";
-$scriptUpdated = "Last Updated: December 26, 2019";
+$scriptVersion = "1.5.2";
+$scriptUpdated = "Last Updated: December 29, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -337,7 +337,7 @@ function getMediaObject($inArray) {
 			$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
 			downloadMediaFile($thisDownload, $thisStorageFilename);
 		} else {
-			$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $inArray['tim'] . $inArray['ext'];
+			$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $inArray['tim'] . $inArray['ext'];
 			downloadMediaFile($thisDownload, $thisStorageFilename);
 		}	
 		
@@ -361,7 +361,7 @@ function getMediaObject($inArray) {
 						$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 						downloadMediaFile($thisDownload, $thisStorageFilename);
 					} else {
-						$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+						$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 						downloadMediaFile($thisDownload, $thisStorageFilename);
 					}					
 				}
@@ -486,7 +486,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 								$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 								downloadMediaFile($thisDownload, $thisStorageFilename);
 							} else {
-								$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+								$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 								downloadMediaFile($thisDownload, $thisStorageFilename);
 							}	
 
@@ -512,7 +512,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 											$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 											downloadMediaFile($thisDownload, $thisStorageFilename);
 										} else {
-											$thisDownload = "https://media." . $GLOBALS['domain8KunForLinks'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+											$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 											downloadMediaFile($thisDownload, $thisStorageFilename);
 										}	
 
