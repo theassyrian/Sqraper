@@ -1,4 +1,4 @@
-#~/bin/sh
+#!/bin/sh
 
 # This is just a sample of the file startup.sh which I placed in my ~/ (home) folder on the Linux Server installation.
 # sudo nano ~/startup.sh
