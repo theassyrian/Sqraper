@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.5.2
+Version: 1.9.0
 Last Updated: December 29, 2019
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.5.2";
+$scriptVersion = "1.9.0";
 $scriptUpdated = "Last Updated: December 29, 2019";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -142,8 +142,10 @@ function getConfig() {
 			'boards' => ['projectdcomms','qresearch'],
 			'domain8Kun' => '8kun.top',
 			'domain8KunForLinks' => '8kun.net',
-			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
 			'useLoki' => true,
+			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
+			'useTor' => false,
+			'torKun' => 'http://www.jthnx5wyvjvzsxtu.onion',
 			'saveRemoteFilesToLocal' => true,
 			'readFromLocal8KunFiles' => false,
 			'sleepBetweenNewQPostChecks' => 150,
@@ -166,7 +168,9 @@ function getConfig() {
 		$GLOBALS['domain8Kun'] = $defaultConfig['domain8Kun'];
 		$GLOBALS['domain8KunForLinks'] = $defaultConfig['domain8KunForLinks'];
 		$GLOBALS['lokiKun'] = $defaultConfig['lokiKun'];
+		$GLOBALS['torKun'] = $defaultConfig['torKun'];
 		$GLOBALS['useLoki'] = $defaultConfig['useLoki'];
+		$GLOBALS['useTor'] = $defaultConfig['useTor'];
 		$GLOBALS['saveRemoteFilesToLocal'] = $defaultConfig['saveRemoteFilesToLocal'];
 		$GLOBALS['readFromLocal8KunFiles'] = $defaultConfig['readFromLocal8KunFiles'];
 		$GLOBALS['sleepBetweenNewQPostChecks'] = $defaultConfig['sleepBetweenNewQPostChecks'];
@@ -205,7 +209,9 @@ function getConfig() {
 				$GLOBALS['domain8Kun'] = $currentConfigJSON['domain8Kun'];
 				$GLOBALS['domain8KunForLinks'] = $currentConfigJSON['domain8KunForLinks'];
 				$GLOBALS['lokiKun'] = $currentConfigJSON['lokiKun'];
+				$GLOBALS['torKun'] = $currentConfigJSON['torKun'];
 				$GLOBALS['useLoki'] = $currentConfigJSON['useLoki'];
+				$GLOBALS['useTor'] = $currentConfigJSON['useTor'];
 				$GLOBALS['saveRemoteFilesToLocal'] = $currentConfigJSON['saveRemoteFilesToLocal'];
 				$GLOBALS['readFromLocal8KunFiles'] = $currentConfigJSON['readFromLocal8KunFiles'];
 				$GLOBALS['sleepBetweenNewQPostChecks'] = $currentConfigJSON['sleepBetweenNewQPostChecks'];
@@ -333,9 +339,15 @@ function getMediaObject($inArray) {
 		);
 		array_push($returnArray, $thisMedia);		
 		
-		if ($GLOBALS['useLoki']) {
-			$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
-			downloadMediaFile($thisDownload, $thisStorageFilename);
+		if (($GLOBALS['useLoki']) || ($GLOBALS['useTor'])) {			
+			if ($GLOBALS['useLoki']) {
+				$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
+				downloadMediaFile($thisDownload, $thisStorageFilename);				
+			}
+			if ($GLOBALS['useTor']) {
+				$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
+				downloadMediaFile($thisDownload, $thisStorageFilename);				
+			}			
 		} else {
 			$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $inArray['tim'] . $inArray['ext'];
 			downloadMediaFile($thisDownload, $thisStorageFilename);
@@ -357,9 +369,15 @@ function getMediaObject($inArray) {
 					);
 					array_push($returnArray, $thisMedia);					
 
-					if ($GLOBALS['useLoki']) {
-						$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
-						downloadMediaFile($thisDownload, $thisStorageFilename);
+					if (($GLOBALS['useLoki']) || ($GLOBALS['useTor'])) {
+						if ($GLOBALS['useLoki']) {
+							$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+							downloadMediaFile($thisDownload, $thisStorageFilename);
+						}
+						if ($GLOBALS['useTor']) {
+							$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+							downloadMediaFile($thisDownload, $thisStorageFilename);
+						}						
 					} else {
 						$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 						downloadMediaFile($thisDownload, $thisStorageFilename);
@@ -482,9 +500,15 @@ function getReferencesObject($searchStr, $digDeeper) {
 							array_push($post_referencesMedia, $thisPostReferenceMedia);															
 							
 							$thisStorageFilename = $postReference['tim'] . $postReference['ext'];
-							if ($GLOBALS['useLoki']) {
-								$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
-								downloadMediaFile($thisDownload, $thisStorageFilename);
+							if (($GLOBALS['useLoki']) || ($GLOBALS['useTor'])) {
+								if ($GLOBALS['useLoki']) {
+									$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+									downloadMediaFile($thisDownload, $thisStorageFilename);
+								}
+								if ($GLOBALS['useTor']) {
+									$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+									downloadMediaFile($thisDownload, $thisStorageFilename);
+								}								
 							} else {
 								$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 								downloadMediaFile($thisDownload, $thisStorageFilename);
@@ -508,9 +532,15 @@ function getReferencesObject($searchStr, $digDeeper) {
 										array_push($post_referencesMedia, $thisPostReferenceMedia);
 
 										$thisStorageFilename = $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
-										if ($GLOBALS['useLoki']) {
-											$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
-											downloadMediaFile($thisDownload, $thisStorageFilename);
+										if (($GLOBALS['useLoki']) || ($GLOBALS['useTor'])) {
+											if ($GLOBALS['useLoki']) {
+												$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['lokiKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+												downloadMediaFile($thisDownload, $thisStorageFilename);
+											}
+											if ($GLOBALS['useTor']) {
+												$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+												downloadMediaFile($thisDownload, $thisStorageFilename);
+											}
 										} else {
 											$thisDownload = "https://media." . $GLOBALS['domain8Kun'] . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 											downloadMediaFile($thisDownload, $thisStorageFilename);
@@ -685,6 +715,8 @@ do {
 
 	echo "   \e[1;34mInternet Domain:\e[0m $domain8Kun\n";
 	echo "   \e[1;34mInternet Domain for Links in JSON:\e[0m $domain8KunForLinks\n";
+	echo "   \e[1;34mUse Tor Network:\e[0m $useTor\n";
+	echo "   \e[1;34mTor Network Address:\e[0m $torKun\n";
 	echo "   \e[1;34mUse Loki.Network:\e[0m $useLoki\n";
 	echo "   \e[1;34mLoki.Network Address:\e[0m $lokiKun\n";
 	echo "   \e[1;34mProduction JSON Filename:\e[0m $productionPostsJSONFilename\n";
@@ -774,15 +806,25 @@ do {
 			if (file_exists($productionJSONFolder . $board . "/catalog.json")) {
 				$boardCatalogUrl = $productionJSONFolder . $board . "/catalog.json";					
 			} else {
-				if ($useLoki) {
-					$boardCatalogUrl = "$lokiKun/$board/catalog.json";
+				if (($useLoki) || ($useTor)) {
+					if ($useLoki) {
+						$boardCatalogUrl = "$lokiKun/$board/catalog.json";
+					}
+					if ($useTor) {
+						$boardCatalogUrl = "$torKun/$board/catalog.json";
+					}
 				} else {
 					$boardCatalogUrl = "https://$domain8Kun/$board/catalog.json";		
 				}				
 			}				
 		} else {
-			if ($useLoki) {
-				$boardCatalogUrl = "$lokiKun/$board/catalog.json";
+			if (($useLoki) || ($useTor)) {
+				if ($useLoki) {
+					$boardCatalogUrl = "$lokiKun/$board/catalog.json";
+				}
+				if ($useTor) {
+					$boardCatalogUrl = "$torKun/$board/catalog.json";
+				}
 			} else {
 				$boardCatalogUrl = "https://$domain8Kun/$board/catalog.json";		
 			}
@@ -853,15 +895,25 @@ do {
 									if (file_exists($productionJSONFolder . $board . "/" . $threadNo . ".json")) {
 										$threadUrl = $productionJSONFolder . $board . "/" . $threadNo . ".json";					
 									} else {
-										if ($useLoki) {
-											$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
+										if (($useLoki) || ($useTor)) {
+											if ($useLoki) {
+												$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
+											}
+											if ($useTor) {
+												$threadUrl = "$torKun/$board/res/$threadNo.json";							
+											}
 										} else {
 											$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";							
 										}							
 									}				
 								} else {
-									if ($useLoki) {
-										$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
+									if (($useLoki) || ($useTor)) {
+										if ($useLoki) {
+											$threadUrl = "$lokiKun/$board/res/$threadNo.json";							
+										}
+										if ($useTor) {
+											$threadUrl = "$torKun/$board/res/$threadNo.json";							
+										}
 									} else {
 										$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";							
 									}							
