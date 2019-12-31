@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This is just a sample of the file startup.sh which I placed in my ~/ (home) folder on the Linux Server installation.
 # sudo nano ~/startup.sh
@@ -11,16 +11,37 @@
 
 # Keep in mind Ubuntu Server LTS is terminal console only (no GUI desktop). It starts everything I need once I login.
 
-# Start the Loki network.
-mypassword | sudo -S systemctl start lokinet
-
 # I set the terminal to blank the screen after 5 minutes.
-setterm -blank 5
+setterm -blank 30
 
-# Just so I have a chance to visually review anything that may pop up or CTRL-C to make any changes.
-sleep 15
+number=0
 
-# Start the sqraper.
-(cd ~/sqraper && php ~/sqraper/sqraper.php)
+# echo -n Choose Network to Start and press ENTER: 0 for Loki or 1 for Tor >
+read -t 15 -p "Choose Network to Start and press ENTER: 0 for Loki or 1 for Tor > " number
 
-# Reboot, login and sqrape some Q!
+if [ $((number % 2)) -eq 0 ]; then
+
+        # Start the Loki network.
+        echo "Starting Loki..."
+        echo frus5405 | sudo -S systemctl start lokinet
+        echo
+        echo
+        echo "Waiting 15 seconds to start Sqraper (Loki)..."
+        sleep 15
+        # Start the sqraper.
+        (cd ~/Sqraper && php ~/Sqraper/sqraper.php)
+
+
+else
+
+        # Start the Tor network.
+        echo "Starting Tor..."
+        echo frus5405 | sudo -S systemctl start tor
+        echo
+        echo
+        echo "Waiting 15 seconds to start Sqraper (Tor)..."
+        sleep 15
+        # Start the sqraper.
+        (cd ~/Sqraper && torsocks php ~/Sqraper/sqraper.php)
+
+fi
