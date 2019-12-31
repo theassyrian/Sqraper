@@ -54,7 +54,9 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "domain8Kun": "8kun.top",
   "domain8KunForLinks": "8kun.top",
   "lokiKun": "http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki",
-  "useLoki": true,
+  "useLoki": true,  
+  "useTor": false,
+  "torKun": "http://www.jthnx5wyvjvzsxtu.onion",  
   "saveRemoteFilesToLocal": true,
   "readFromLocal8KunFiles": false,
   "sleepBetweenNewQPostChecks": 150,
@@ -121,18 +123,29 @@ bogusTrips:
     posts.json file, they are generated. Therefore, this setting only is applied to newly added posts. You may want
     to consider just using "8kun.net" and then do a search and replace in the user facing interface to switch it
     to the current 8kun flavor of the week :).
-    
-  lokiKun:
-    Type: String
-    Default: "http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki"
-    Simply the fully qualified URL to 8kun over LokiNet with no trailing /.
-
+      
   useLoki:
     Type: Boolean
     Default: true
     If true, causes the sqraper to scrape for new Q over the Loki network (uses "lokiKun" URL setting"). If false,
     causes the sqraper to scrape new Q over the normal Internet (uses "domain8Kun" setting).
     
+  lokiKun:
+    Type: String
+    Default: "http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki"
+    Simply the fully qualified URL to 8kun over LokiNet with no trailing /.
+    
+  useTor:
+    Type: Boolean    
+    Default: false
+    If true, causes sqraper to scrape for new Q over the Tor network (uses "torKun" URL setting).
+    See TOR-Notes.md for setup instructions.
+  
+  torKun:
+    Type: String
+    Default: "http://www.jthnx5wyvjvzsxtu.onion"
+    Simply the fully qualified URL to 8kun over Tor with no trailing /.
+
   saveRemoteFilesToLocal:
     Type: Boolean
     Default: true
