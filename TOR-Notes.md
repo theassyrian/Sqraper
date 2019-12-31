@@ -2,13 +2,13 @@ Tor Setup on Linux via Terminal
 
 https://wildcardcorp.com/blogs/tor-torify-torsocks
 
-$ sudo apt-get install tor
+sudo apt-get install tor
 
 sudo vi /etc/tor/torrc or sudo nano /etc/tor/torrc
 
 Uncomment the ControlPort 9051 and CookieAuthentication 1 lines, then change CookieAuthentication 1 to CookieAuthentication 0 to disable authentication. DO NOT do this on a shared computer. Then restart tor:
 
-$ sudo /etc/init.d/tor restart 
+sudo /etc/init.d/tor restart 
 
 Make a New Session:
   echo -e 'AUTHENTICATE ""\r\nsignal NEWNYM\r\nQUIT' | nc 127.0.0.1 9051
@@ -17,11 +17,11 @@ Test torify:
 
 This should show you your public IP:
 
-  $ curl ifconfig.me 
+  curl ifconfig.me 
 
 This should show a completely different IP (and outputs torify error messages to /dev/null):
 
-  $ torify curl ifconfig.me 2> /dev/null 
+  torify curl ifconfig.me 2> /dev/null 
 
 https://www.linuxuprising.com/2018/10/how-to-install-and-use-tor-as-proxy-in.html
 
