@@ -23,7 +23,7 @@ if [ $((number % 2)) -eq 0 ]; then
 
         # Start the Loki network.
         echo "Starting Loki..."
-        echo frus5405 | sudo -S systemctl start lokinet
+        echo YOURPASSWORD | sudo -S systemctl start lokinet
         echo
         echo
         echo "Waiting 15 seconds to start Sqraper (Loki)..."
@@ -36,7 +36,7 @@ else
 
         # Start the Tor network.
         echo "Starting Tor..."
-        echo frus5405 | sudo -S systemctl start tor
+        echo YOURPASSWORD | sudo -S systemctl start tor
         echo
         echo
         echo "Waiting 15 seconds to start Sqraper (Tor)..."
