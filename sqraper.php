@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 1.9.0
-Last Updated: December 29, 2019
+Version: 1.9.1
+Last Updated: January 21, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.9.0";
-$scriptUpdated = "Last Updated: December 29, 2019";
+$scriptVersion = "1.9.1";
+$scriptUpdated = "Last Updated: January 21, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -634,7 +634,7 @@ function hasThreadUpdated($varNo, $varLastModified) {
 				if ($entry['last_modified'] == $varLastModified) {
 					$entryUpdated = false;		
 				} else {
-					$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
+					//$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
 					$entryUpdated = true;
 				}						
 				break;					
@@ -648,16 +648,48 @@ function hasThreadUpdated($varNo, $varLastModified) {
 		return true;
 	} else {
 		if (!$foundEntry) {
+			/*
 			array_push($GLOBALS['threadMap'], array(
 				'no' => $varNo,
 				'last_modified' => $varLastModified
 			));
+			*/
 			$entryUpdated = true;
 		}
 		return $entryUpdated;		
 	}
 
 }	
+
+function setThreadUpdated($varNo, $varLastModified) {
+
+	$foundEntry = false;
+
+	foreach($GLOBALS['threadMap'] as $key => $entry) {					
+		if (isset($entry['no']) && isset($entry['last_modified'])) {
+			if ($entry['no'] == $varNo) {
+				$foundEntry = true;
+				if ($entry['last_modified'] != $varLastModified) {
+					$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
+				}						
+				break;					
+			}					
+		}			
+	}
+
+	if (($GLOBALS['debugWithAPost']) && ($varNo == $GLOBALS['debugThreadNo']))    {
+		// return true;
+	} else {
+		if (!$foundEntry) {
+			array_push($GLOBALS['threadMap'], array(
+				'no' => $varNo,
+				'last_modified' => $varLastModified
+			));
+		}
+	}
+
+}	
+
 
 /* ============================= */
 
@@ -1118,6 +1150,9 @@ do {
 											/* ============================================= */
 
 										} // End of loop through all of the posts in the current thread of the current catalog.
+										
+										
+										setThreadUpdated($threadNo, $threadLastModified);
 
 										unset($jsonThreads);							
 									
