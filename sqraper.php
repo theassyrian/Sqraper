@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.2
+Version: 2.0.4
 Last Updated: January 21, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.2";
+$scriptVersion = "2.0.4";
 $scriptUpdated = "Last Updated: January 21, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -150,6 +150,8 @@ function getConfig() {
 			'readFromLocal8KunFiles' => false,
 			'sleepBetweenNewQPostChecks' => 150,
 			'offPeakSleepBetweenNewQPostChecks' => 300,
+			'maxDownloadAttempts' => 10,
+			'pauseBetweenDownloadAttempts' => 1,			
 			'productionPostsJSONFilename' => 'posts.json',
 			'productionJSONFolder' => 'json/',
 			'productionMediaFolder' => 'media/',
@@ -175,6 +177,8 @@ function getConfig() {
 		$GLOBALS['readFromLocal8KunFiles'] = $defaultConfig['readFromLocal8KunFiles'];
 		$GLOBALS['sleepBetweenNewQPostChecks'] = $defaultConfig['sleepBetweenNewQPostChecks'];
 		$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $defaultConfig['offPeakSleepBetweenNewQPostChecks'];		
+		$GLOBALS['maxDownloadAttempts'] = $defaultConfig['maxDownloadAttempts'];		
+		$GLOBALS['pauseBetweenDownloadAttempts'] = $defaultConfig['pauseBetweenDownloadAttempts'];		
 		$GLOBALS['productionPostsJSONFilename'] = $defaultConfig['productionPostsJSONFilename'];
 		$GLOBALS['productionMediaFolder'] = $defaultConfig['productionMediaFolder'];
 		$GLOBALS['productionMediaURL'] = $defaultConfig['productionMediaURL'];
@@ -203,6 +207,7 @@ function getConfig() {
 				displayError("getConfig unable to parse JSON. Halting.");
 				exit;
 			} else {
+				
 				$GLOBALS['qTrips'] = $currentConfigJSON['qTrips'];
 				$GLOBALS['bogusTrips'] = $currentConfigJSON['bogusTrips'];
 				$GLOBALS['boards'] = $currentConfigJSON['boards'];
@@ -216,6 +221,19 @@ function getConfig() {
 				$GLOBALS['readFromLocal8KunFiles'] = $currentConfigJSON['readFromLocal8KunFiles'];
 				$GLOBALS['sleepBetweenNewQPostChecks'] = $currentConfigJSON['sleepBetweenNewQPostChecks'];
 				$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $currentConfigJSON['offPeakSleepBetweenNewQPostChecks'];
+
+				if ($currentConfigJSON['maxDownloadAttempts']) {
+					$GLOBALS['maxDownloadAttempts'] = $currentConfigJSON['maxDownloadAttempts'];					
+				} else {
+					$GLOBALS['maxDownloadAttempts'] = 10;
+				}
+
+				if ($currentConfigJSON['pauseBetweenDownloadAttempts']) {
+					$GLOBALS['pauseBetweenDownloadAttempts'] = $currentConfigJSON['pauseBetweenDownloadAttempts'];					
+				} else {
+					$GLOBALS['pauseBetweenDownloadAttempts'] = 1;
+				}
+
 				$GLOBALS['productionPostsJSONFilename'] = $currentConfigJSON['productionPostsJSONFilename'];	
 				$GLOBALS['productionMediaFolder'] = $currentConfigJSON['productionMediaFolder'];
 				$GLOBALS['productionMediaURL'] = $currentConfigJSON['productionMediaURL'];
@@ -227,6 +245,7 @@ function getConfig() {
 				$GLOBALS['ftpServer'] = $currentConfigJSON['ftpServer'];
 				$GLOBALS['ftpLoginID'] = $currentConfigJSON['ftpLoginID'];
 				$GLOBALS['ftpPassword'] = $currentConfigJSON['ftpPassword'];
+								
 			}
 		}
 
@@ -297,9 +316,26 @@ function downloadMediaFile($thisUrl, $thisStorageFilename) {
 			
 		} else {
 
-			echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";	
+			// echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";				
+			// $thisMedia = @file_get_contents($thisUrl);
 			
-			$thisMedia = @file_get_contents($thisUrl);
+			$currentDownloadAttempt = 1;
+			//$maxDownloadAttempts = 10;
+			//$pauseBetweenDownloadAttempts = 1; //time between 2 attempts
+			
+			do {
+				if($currentDownloadAttempt <= $GLOBALS['maxDownloadAttempts'])
+					sleep($GLOBALS['pauseBetweenDownloadAttempts']);
+				if ($currentDownloadAttempt > 1) {
+					echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl. Attempt $currentDownloadAttempt of " . $GLOBALS['maxDownloadAttempts'] . "\n";
+					echo "\e[1;33m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . " Attempt $currentDownloadAttempt of " . $GLOBALS['maxDownloadAttempts'] . "\e[0m\n";
+				} else {
+					echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";
+				}
+				$thisMedia = @file_get_contents($thisUrl);
+			}
+			while($thisMedia === false && $currentDownloadAttempt++);								
+			
 			if (!$thisMedia) {				
 				displayError("Could not get media from URL \"$thisUrl");				
 			} else {
@@ -684,6 +720,9 @@ function setThreadUpdated($varNo, $varLastModified) {
 			if ($entry['no'] == $varNo) {
 				$foundEntry = true;
 				if ($entry['last_modified'] != $varLastModified) {
+					//echo "\e[1;31m>>>\e[0m DEBUG: " . $GLOBALS['threadMap'][$key]['last_modified'] . " TO " . $varLastModified . "\n";
+					echo "--------- \e[1;32mUPDATE THREAD MAP:\e[0m ThreadId: $varNo, Prior last_modified: " . $GLOBALS['threadMap'][$key]['last_modified'] . ", New last_modified: $varLastModified\n";
+					//hereherehere
 					$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
 				}						
 				break;					
@@ -778,6 +817,8 @@ do {
 	echo "   \e[1;34mFTP Upload JSON Posts Folder:\e[0m $ftpUploadJSONFolder\n";
 	echo "   \e[1;34mFTP Upload Media:\e[0m $ftpUploadMedia\n";
 	echo "   \e[1;34mFTP Upload Media Folder:\e[0m $ftpUploadMediaFolder\n";
+	echo "   \e[1;34mMax Download Attempts:\e[0m $maxDownloadAttempts\n";
+	echo "   \e[1;34mPause Between Download Attempts:\e[0m $pauseBetweenDownloadAttempts\n";
 	echo "   \e[1;34mSleep Between Loops:\e[0m $sleepBetweenNewQPostChecks\n";
 	echo "   \e[1;34mOff Peak Sleep Between Loops:\e[0m $offPeakSleepBetweenNewQPostChecks\n";
 	
@@ -834,7 +875,7 @@ do {
 			));			
 			file_put_contents($threadMapFile, json_encode($threadMap, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 		}			
-		echo "\e[1;32mREAD FILE:\e[0m $threadMapFile.\n";		
+		echo "\e[1;32mREAD:\e[0m $threadMapFile.\n";		
 		$threadMapContent = @file_get_contents($threadMapFile);			
 				
 		if (!$threadMapContent) {		
@@ -881,8 +922,24 @@ do {
 			}
 		}
 		
-		echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
-		$boardCatalogContents = @file_get_contents($boardCatalogUrl);
+		// echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
+		// $boardCatalogContents = @file_get_contents($boardCatalogUrl);
+
+		$currentDownloadAttempt = 1;
+		//$maxDownloadAttempts = 10;
+		//$pauseBetweenDownloadAttempts = 1; //time between 2 attempts
+		
+		do {
+			if($currentDownloadAttempt <= $maxDownloadAttempts)
+				sleep($pauseBetweenDownloadAttempts);
+			if ($currentAttempt > 1) {
+				echo "\e[1;33mDOWNLOAD:\e[0m $boardCatalogUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
+			} else {
+				echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
+			}
+			$boardCatalogContents = @file_get_contents($boardCatalogUrl);
+		}
+		while($boardCatalogContents === false && $currentDownloadAttempt++);								
 
 		if (!$boardCatalogContents) {
 			
@@ -932,7 +989,7 @@ do {
 							// This is where we check the thread dates and then conditionally continue.	
 							if (hasThreadUpdated($threadNo, $threadLastModified)) {
 
-								echo "------ \e[1;32mThread No\e[0m $threadNo, \e[1;32mLast Modified\e[0m " . date("M d, Y g:i:s A", $threadLastModified) . ".\n";						
+								echo "------ \e[1;32mThread No\e[0m $threadNo, \e[1;32mLast Modified\e[0m " . date("M d, Y g:i:s A", $threadLastModified) . " ($threadLastModified).\n";						
 								echo "--------- \e[1;32mThread HAS Changed.\e[0m\n";
 
 								$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";
@@ -971,9 +1028,25 @@ do {
 									}							
 								}
 
-								echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";
-								$threadContents = @file_get_contents($threadUrl);
+								//echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";
+								//$threadContents = @file_get_contents($threadUrl);
+															
+								$currentDownloadAttempt = 1;
+								// $maxDownloadAttempts = 10;
+								// $pauseBetweenDownloadAttempts = 1; //time between 2 attempts
 								
+								do {
+									if($currentDownloadAttempt <= $maxDownloadAttempts)
+										sleep($pauseBetweenDownloadAttempts);
+									if ($currentDownloadAttempt > 1) {
+										echo "--------- \e[1;33mDOWNLOAD:\e[0m $threadUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
+									} else {
+										echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";									
+									}
+									$threadContents = @file_get_contents($threadUrl);
+								}
+								while($threadContents === false && $currentDownloadAttempt++);								
+																
 								if ($threadContents == FALSE) {
 
 									displayError('Could not get thread "' . $threadNo . '" for board "' . $board . '", URL ' . $threadUrl . '. WILL RETRY on next loop.');
