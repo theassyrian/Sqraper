@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.5
+Version: 2.0.6
 Last Updated: January 21, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.5";
+$scriptVersion = "2.0.6";
 $scriptUpdated = "Last Updated: January 21, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -316,25 +316,20 @@ function downloadMediaFile($thisUrl, $thisStorageFilename) {
 			
 		} else {
 
-			// echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";				
-			// $thisMedia = @file_get_contents($thisUrl);
-			
-			$currentDownloadAttempt = 1;
-			//$maxDownloadAttempts = 10;
-			//$pauseBetweenDownloadAttempts = 1; //time between 2 attempts
-			
+			$currentDownloadAttempt = 1;			
 			do {
-				if($currentDownloadAttempt <= $GLOBALS['maxDownloadAttempts'])
-					sleep($GLOBALS['pauseBetweenDownloadAttempts']);
 				if ($currentDownloadAttempt > 1) {
-					echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl. Attempt $currentDownloadAttempt of " . $GLOBALS['maxDownloadAttempts'] . "\n";
 					echo "\e[1;33m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . " Attempt $currentDownloadAttempt of " . $GLOBALS['maxDownloadAttempts'] . "\e[0m\n";
 				} else {
 					echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";
-				}
+				}				
 				$thisMedia = @file_get_contents($thisUrl);
+				if (!$thisMedia) {
+					sleep($GLOBALS['pauseBetweenDownloadAttempts']);
+				}
+				$currentDownloadAttempt++;
 			}
-			while($thisMedia === false && $currentDownloadAttempt++);								
+			while ( ($thisMedia === false) && ($currentDownloadAttempt <= $GLOBALS['maxDownloadAttempts']) );
 			
 			if (!$thisMedia) {				
 				displayError("Could not get media from URL \"$thisUrl");				
@@ -720,9 +715,7 @@ function setThreadUpdated($varNo, $varLastModified) {
 			if ($entry['no'] == $varNo) {
 				$foundEntry = true;
 				if ($entry['last_modified'] != $varLastModified) {
-					//echo "\e[1;31m>>>\e[0m DEBUG: " . $GLOBALS['threadMap'][$key]['last_modified'] . " TO " . $varLastModified . "\n";
 					echo "--------- \e[1;32mUPDATE THREAD MAP:\e[0m ThreadId: $varNo, Prior last_modified: " . $GLOBALS['threadMap'][$key]['last_modified'] . ", New last_modified: $varLastModified\n";
-					//hereherehere
 					$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
 				}						
 				break;					
@@ -922,24 +915,20 @@ do {
 			}
 		}
 		
-		// echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
-		// $boardCatalogContents = @file_get_contents($boardCatalogUrl);
-
-		$currentDownloadAttempt = 1;
-		//$maxDownloadAttempts = 10;
-		//$pauseBetweenDownloadAttempts = 1; //time between 2 attempts
-		
+		$currentDownloadAttempt = 1;			
 		do {
-			if($currentDownloadAttempt <= $maxDownloadAttempts)
-				sleep($pauseBetweenDownloadAttempts);
 			if ($currentDownloadAttempt > 1) {
 				echo "\e[1;33mDOWNLOAD:\e[0m $boardCatalogUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 			} else {
 				echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
-			}
+			}				
 			$boardCatalogContents = @file_get_contents($boardCatalogUrl);
+			if (!$boardCatalogContents) {
+				sleep($pauseBetweenDownloadAttempts);
+			}
+			$currentDownloadAttempt++;
 		}
-		while($boardCatalogContents === false && $currentDownloadAttempt++);								
+		while ( ($boardCatalogContents === false) && ($currentDownloadAttempt <= $maxDownloadAttempts) );
 
 		if (!$boardCatalogContents) {
 			
@@ -1028,25 +1017,21 @@ do {
 									}							
 								}
 
-								//echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";
-								//$threadContents = @file_get_contents($threadUrl);
-															
-								$currentDownloadAttempt = 1;
-								// $maxDownloadAttempts = 10;
-								// $pauseBetweenDownloadAttempts = 1; //time between 2 attempts
-								
+								$currentDownloadAttempt = 1;			
 								do {
-									if($currentDownloadAttempt <= $maxDownloadAttempts)
-										sleep($pauseBetweenDownloadAttempts);
 									if ($currentDownloadAttempt > 1) {
 										echo "--------- \e[1;33mDOWNLOAD:\e[0m $threadUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 									} else {
 										echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";									
-									}
+									}				
 									$threadContents = @file_get_contents($threadUrl);
+									if (!$threadContents) {
+										sleep($pauseBetweenDownloadAttempts);
+									}
+									$currentDownloadAttempt++;
 								}
-								while($threadContents === false && $currentDownloadAttempt++);								
-																
+								while ( ($threadContents === false) && ($currentDownloadAttempt <= $maxDownloadAttempts) );
+															
 								if ($threadContents == FALSE) {
 
 									displayError('Could not get thread "' . $threadNo . '" for board "' . $board . '", URL ' . $threadUrl . '. WILL RETRY on next loop.');
