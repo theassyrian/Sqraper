@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 1.9.1
+Version: 2.0.0
 Last Updated: January 21, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "1.9.1";
+$scriptVersion = "2.0.0";
 $scriptUpdated = "Last Updated: January 21, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -634,7 +634,15 @@ function hasThreadUpdated($varNo, $varLastModified) {
 				if ($entry['last_modified'] == $varLastModified) {
 					$entryUpdated = false;		
 				} else {
-					//$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
+
+					/* 					
+					Commented line below and added function setThreadUpdated since before, if
+					the download failed, it would still update the thread as processed and thus
+					would not catch changes until the thread changed again.					
+					*/
+					
+					// $GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified; 
+
 					$entryUpdated = true;
 				}						
 				break;					
@@ -648,12 +656,18 @@ function hasThreadUpdated($varNo, $varLastModified) {
 		return true;
 	} else {
 		if (!$foundEntry) {
+
 			/*
-			array_push($GLOBALS['threadMap'], array(
-				'no' => $varNo,
-				'last_modified' => $varLastModified
-			));
+			Commented below and added function setThreadUpdated since before, if
+			the download failed, it would still update the thread as processed and thus
+			would not catch changes until the thread changed again.					
 			*/
+
+			// array_push($GLOBALS['threadMap'], array(
+			// 	'no' => $varNo,
+			// 	'last_modified' => $varLastModified
+			// ));
+
 			$entryUpdated = true;
 		}
 		return $entryUpdated;		
@@ -678,7 +692,7 @@ function setThreadUpdated($varNo, $varLastModified) {
 	}
 
 	if (($GLOBALS['debugWithAPost']) && ($varNo == $GLOBALS['debugThreadNo']))    {
-		// return true;
+		// Do nothing
 	} else {
 		if (!$foundEntry) {
 			array_push($GLOBALS['threadMap'], array(
@@ -792,6 +806,8 @@ do {
 
 	foreach($boards as $board) { // Loop through all boards defined in the array in the configuration section at the top of the page.
 		
+		
+		// echo getcwd();
 		/*
 		You can add a ^ to the end of a board name in the config file sqraper_config.json to allow searching for Q posts that do not
 		have a trip. Used on Q private boards. CAUTION: Do NOT attempt this on a public board!
@@ -808,6 +824,7 @@ do {
 		
 		$threadMap = [];
 		$threadMapFile = $productionJSONFolder . $board . '_checked_threads.json';
+		
 		if (!file_exists($threadMapFile)) {
 			echo "\e[1;31mCREATE FILE:\e[0m $threadMapFile did not exist. Creating empty JSON file.\n";
 			$threadMap = array();			
@@ -817,7 +834,9 @@ do {
 			));			
 			file_put_contents($threadMapFile, json_encode($threadMap, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 		}			
+		echo "\e[1;31mREAD FILE:\e[0m $threadMapFile.\n";		
 		$threadMapContent = @file_get_contents($threadMapFile);			
+				
 		if (!$threadMapContent) {		
 			displayError("!threadMapContent.");
 		} else {
@@ -876,6 +895,7 @@ do {
 					echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
 					mkdir($productionJSONFolder . $board, 0777, true);
 				}
+				echo "\e[1;31mWRITE:\e[0m " . $productionJSONFolder . $board . '/' . basename($boardCatalogUrl) . ".\n";
 				file_put_contents($productionJSONFolder . $board . '/' . basename($boardCatalogUrl), $boardCatalogContents, LOCK_EX);
 			}
 			
