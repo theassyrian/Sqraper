@@ -71,7 +71,9 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "ftpServer": "ftp.yourserver.com",
   "ftpLoginID": "somePatriot",
   "ftpPassword": "yourPassword",
-  "productionMediaURL": "https://yourserver.com/media/"
+  "productionMediaURL": "https://yourserver.com/media/",
+  "maxDownloadAttempts":10,
+  "pauseBetweenDownloadAttempts":1
 }
 
 -----------------
@@ -229,6 +231,16 @@ bogusTrips:
     Default: "https://yourserver.com/media/"
     When media (images/videos) are present in a scraped post, this is the URL that will be prepended to the filename
     in the posts.json file. It should be a valid URL on your web server.
+  
+  maxDownloadAttempts:
+    Type: Integer
+    Default: 10
+    Max number of times to retry on a failed JSON download from 8kun.
+
+  pauseBetweenDownloadAttempts:
+    Type: Integer
+    Default: 1
+    Delay in seconds between each retry on a JSON download from 8kun.  
 
 -----------------
 
