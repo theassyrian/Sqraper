@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.4
+Version: 2.0.5
 Last Updated: January 21, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.4";
+$scriptVersion = "2.0.5";
 $scriptUpdated = "Last Updated: January 21, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -932,7 +932,7 @@ do {
 		do {
 			if($currentDownloadAttempt <= $maxDownloadAttempts)
 				sleep($pauseBetweenDownloadAttempts);
-			if ($currentAttempt > 1) {
+			if ($currentDownloadAttempt > 1) {
 				echo "\e[1;33mDOWNLOAD:\e[0m $boardCatalogUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 			} else {
 				echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
