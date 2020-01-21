@@ -834,7 +834,7 @@ do {
 			));			
 			file_put_contents($threadMapFile, json_encode($threadMap, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 		}			
-		echo "\e[1;31mREAD FILE:\e[0m $threadMapFile.\n";		
+		echo "\e[1;32mREAD FILE:\e[0m $threadMapFile.\n";		
 		$threadMapContent = @file_get_contents($threadMapFile);			
 				
 		if (!$threadMapContent) {		
@@ -895,7 +895,7 @@ do {
 					echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
 					mkdir($productionJSONFolder . $board, 0777, true);
 				}
-				echo "\e[1;31mWRITE:\e[0m " . $productionJSONFolder . $board . '/' . basename($boardCatalogUrl) . ".\n";
+				echo "\e[1;32mWRITE:\e[0m " . $productionJSONFolder . $board . '/' . basename($boardCatalogUrl) . ".\n";
 				file_put_contents($productionJSONFolder . $board . '/' . basename($boardCatalogUrl), $boardCatalogContents, LOCK_EX);
 			}
 			
