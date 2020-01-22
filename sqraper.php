@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.0.7
-Last Updated: January 21, 2020
+Version: 2.0.8
+Last Updated: January 22, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.7";
-$scriptUpdated = "Last Updated: January 21, 2020";
+$scriptVersion = "2.0.8";
+$scriptUpdated = "Last Updated: January 22, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -376,7 +376,7 @@ function getMediaObject($inArray) {
 				downloadMediaFile($thisDownload, $thisStorageFilename);				
 			}
 			if ($GLOBALS['useTor']) {
-				$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
+				$thisDownload = "http://media." . str_replace("http://www.", "", $GLOBALS['torKun']) . "/file_store/" . $inArray['tim'] . $inArray['ext'];
 				downloadMediaFile($thisDownload, $thisStorageFilename);				
 			}			
 		} else {
@@ -406,7 +406,7 @@ function getMediaObject($inArray) {
 							downloadMediaFile($thisDownload, $thisStorageFilename);
 						}
 						if ($GLOBALS['useTor']) {
-							$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
+							$thisDownload = "http://media." . str_replace("http://www.", "", $GLOBALS['torKun']) . "/file_store/" . $extraFile['tim'] . $extraFile['ext'];
 							downloadMediaFile($thisDownload, $thisStorageFilename);
 						}						
 					} else {
@@ -537,7 +537,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 									downloadMediaFile($thisDownload, $thisStorageFilename);
 								}
 								if ($GLOBALS['useTor']) {
-									$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
+									$thisDownload = "http://media." . str_replace("http://www.", "", $GLOBALS['torKun']) . "/file_store/" . $postReference['tim'] . $postReference['ext'];
 									downloadMediaFile($thisDownload, $thisStorageFilename);
 								}								
 							} else {
@@ -569,7 +569,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 												downloadMediaFile($thisDownload, $thisStorageFilename);
 											}
 											if ($GLOBALS['useTor']) {
-												$thisDownload = "http://media." . str_replace("http://", "", $GLOBALS['torKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
+												$thisDownload = "http://media." . str_replace("http://www.", "", $GLOBALS['torKun']) . "/file_store/" . $extraPostReferenceFile['tim'] . $extraPostReferenceFile['ext'];
 												downloadMediaFile($thisDownload, $thisStorageFilename);
 											}
 										} else {
