@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.8
+Version: 2.0.9
 Last Updated: January 22, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.8";
+$scriptVersion = "2.0.9";
 $scriptUpdated = "Last Updated: January 22, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -1301,7 +1301,7 @@ do {
 
 	} // End of loop through all boards defined in the array in the configuration section at the top of the page.	
 
-	echo "\n\e[1;32mNEW Q DROPS:\e[0m $newQSinceStart (since Sqraper started $sqraperStarted).\n";
+	echo "\n\e[1;32mNEW Q DROPS:\e[0m $newQSinceStart (since Sqraper v$scriptVersion started $sqraperStarted).\n";
 	$timeFinished  = strtotime(date('m/d/Y h:i:s a', time()));
 	$differenceInSeconds = $timeFinished - $timeStarted;
 	echo "\e[1;32mFINISHED:\e[0m " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete.\n";
