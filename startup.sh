@@ -42,6 +42,6 @@ else
         echo "Waiting 15 seconds to start Sqraper (Tor)..."
         sleep 15
         # Start the sqraper.
-        (cd ~/Sqraper && torsocks php ~/Sqraper/sqraper.php)
+        (cd ~/Sqraper && torsocks php ~/Sqraper/sqraper.php --passive-ftp)
 
 fi
