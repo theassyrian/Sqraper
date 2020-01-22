@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.6
+Version: 2.0.7
 Last Updated: January 21, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.6";
+$scriptVersion = "2.0.7";
 $scriptUpdated = "Last Updated: January 21, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -757,6 +757,8 @@ echo "\n";
 
 do {
 	
+	$noCache = time();
+	
 	$timeStarted  = strtotime(date('m/d/Y h:i:s a', time()));
 	
 	echo "============================================================\n";
@@ -918,11 +920,11 @@ do {
 		$currentDownloadAttempt = 1;			
 		do {
 			if ($currentDownloadAttempt > 1) {
-				echo "\e[1;33mDOWNLOAD:\e[0m $boardCatalogUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
+				echo "\e[1;33mDOWNLOAD:\e[0m $boardCatalogUrl?sqraper_nocache=" . $noCache . ". Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 			} else {
-				echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl.\n";
+				echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl?sqraper_nocache=" . $noCache . ".\n";
 			}				
-			$boardCatalogContents = @file_get_contents($boardCatalogUrl);
+			$boardCatalogContents = @file_get_contents($boardCatalogUrl . "?sqraper_nocache=" . $noCache);
 			if (!$boardCatalogContents) {
 				sleep($pauseBetweenDownloadAttempts);
 			}
@@ -1020,11 +1022,12 @@ do {
 								$currentDownloadAttempt = 1;			
 								do {
 									if ($currentDownloadAttempt > 1) {
-										echo "--------- \e[1;33mDOWNLOAD:\e[0m $threadUrl. Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
+										echo "--------- \e[1;33mDOWNLOAD:\e[0m $threadUrl?sqraper_nocache=" . $noCache . ". Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 									} else {
-										echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl.\n";									
+										echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl?sqraper_nocache=" . $noCache . ".\n";									
 									}				
-									$threadContents = @file_get_contents($threadUrl);
+									
+									$threadContents = @file_get_contents($threadUrl . "?sqraper_nocache=" . $noCache);
 									if (!$threadContents) {
 										sleep($pauseBetweenDownloadAttempts);
 									}
