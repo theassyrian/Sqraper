@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.11
+Version: 2.0.12
 Last Updated: January 23, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.11";
+$scriptVersion = "2.0.12";
 $scriptUpdated = "Last Updated: January 23, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -111,28 +111,40 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 		$localFilePath = $GLOBALS['productionJSONFolder'] . $localFile;
 		$remoteFilePath = $GLOBALS['ftpUploadJSONFolder'] . $remoteFile;
 	}
-	
-	echo "\e[1;32m--- FTP CONNECT.\e[0m\n";	
-	$ftpConnection = ftp_connect($GLOBALS['ftpServer']);
-	$login_result = ftp_login($ftpConnection, $GLOBALS['ftpLoginID'], $GLOBALS['ftpPassword']);
+
 	if ($GLOBALS['useTor']) {
-		// Tor requires PASV mode for outbound FTP. When launching Sqraper with "torsocks php ~/Sqraper/sqraper.php"
-		// you also need to include --passive-ftp at the end. Example: "torsocks php ~/Sqraper/sqraper.php --passive-ftp"
-		echo "\e[1;32m--- FTP PASV.\e[0m\n";	
-		ftp_pasv($ftpConnection, true); 
-	}
 
-	echo "\e[1;32m--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
+		echo "\e[1;32m--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";				
+		$curlScriptContent = "curl -u " . $GLOBALS['ftpLoginID'] . ":" . $GLOBALS['ftpPassword'] . " -T " . $localFilePath . " ftp://" . $GLOBALS['ftpServer'] . $remoteFilePath;
+		file_put_contents("curlScriptTemp.sh", $curlScriptContent, LOCK_EX);
+        chmod("curlScriptTemp.sh", 0777);
+        echo shell_exec("./curlScriptTemp.sh&1");
 
-	if (ftp_put($ftpConnection, $remoteFilePath, $localFilePath, $dataType)) {
-		echo "\e[1;32m--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
 	} else {
-		$last_error = error_get_last();
-		echo "\e[1;31m--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . ".\e[0m\n";
-	}
 
-	echo "\e[1;32m--- FTP CLOSE.\e[0m\n";	
-	ftp_close($ftpConnection);	
+		echo "\e[1;32m--- FTP CONNECT.\e[0m\n";	
+		$ftpConnection = ftp_connect($GLOBALS['ftpServer']);
+		$login_result = ftp_login($ftpConnection, $GLOBALS['ftpLoginID'], $GLOBALS['ftpPassword']);
+		if ($GLOBALS['useTor']) {
+			// Tor requires PASV mode for outbound FTP. When launching Sqraper with "torsocks php ~/Sqraper/sqraper.php"
+			// you also need to include --passive-ftp at the end. Example: "torsocks php ~/Sqraper/sqraper.php --passive-ftp"
+			echo "\e[1;32m--- FTP PASV.\e[0m\n";	
+			ftp_pasv($ftpConnection, true); 
+		}
+
+		echo "\e[1;32m--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
+
+		if (ftp_put($ftpConnection, $remoteFilePath, $localFilePath, $dataType)) {
+			echo "\e[1;32m--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
+		} else {
+			$last_error = error_get_last();
+			echo "\e[1;31m--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . ".\e[0m\n";
+		}
+
+		echo "\e[1;32m--- FTP CLOSE.\e[0m\n";	
+		ftp_close($ftpConnection);	
+		
+	}
 	
 }
 
