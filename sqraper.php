@@ -37,7 +37,7 @@ config changes as the config file is re-read at the end of each loop.
 
 $scriptTitle = "Sqraper";
 $scriptVersion = "2.0.11";
-$scriptUpdated = "Last Updated: January 22, 2020";
+$scriptUpdated = "Last Updated: January 23, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
