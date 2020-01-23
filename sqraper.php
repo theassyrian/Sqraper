@@ -113,12 +113,15 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 	}
 
 	if ($GLOBALS['useTor']) {
-
+		
 		echo "\e[1;32m--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";				
 		$curlScriptContent = "curl -u " . $GLOBALS['ftpLoginID'] . ":" . $GLOBALS['ftpPassword'] . " -T " . $localFilePath . " ftp://" . $GLOBALS['ftpServer'] . $remoteFilePath;
+		echo "\e[1;32m--- WRITE: curlScriptTemp.\e[0m\n";				
 		file_put_contents("curlScriptTemp.sh", $curlScriptContent, LOCK_EX);
-        chmod("curlScriptTemp.sh", 0777);
-        echo shell_exec("./curlScriptTemp.sh&1");
+		echo "\e[1;32m--- CHMOD.\e[0m\n";				
+        	chmod("curlScriptTemp.sh", 0777);
+		echo "\e[1;32m--- EXEC.\e[0m\n";				
+        	echo shell_exec("./curlScriptTemp.sh");
 
 	} else {
 
