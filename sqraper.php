@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.0.10
-Last Updated: January 22, 2020
+Version: 2.0.11
+Last Updated: January 23, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.10";
+$scriptVersion = "2.0.11";
 $scriptUpdated = "Last Updated: January 22, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -118,7 +118,8 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 	if ($GLOBALS['useTor']) {
 		// Tor requires PASV mode for outbound FTP. When launching Sqraper with "torsocks php ~/Sqraper/sqraper.php"
 		// you also need to include --passive-ftp at the end. Example: "torsocks php ~/Sqraper/sqraper.php --passive-ftp"
-		ftp_pasv($ftpConnection_id, true); 
+		echo "\e[1;32m--- FTP PASV.\e[0m\n";	
+		ftp_pasv($ftpConnection, true); 
 	}
 
 	echo "\e[1;32m--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
