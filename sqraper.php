@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.13
+Version: 2.0.14
 Last Updated: January 23, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.13";
+$scriptVersion = "2.0.14";
 $scriptUpdated = "Last Updated: January 23, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -116,7 +116,7 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 		
 		echo "\e[1;32m--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";				
 		$curlScriptContent = "curl -u " . $GLOBALS['ftpLoginID'] . ":" . $GLOBALS['ftpPassword'] . " -T " . $localFilePath . " ftp://" . $GLOBALS['ftpServer'] . $remoteFilePath;
-		echo "\e[1;32m--- WRITE: curlScriptTemp.\e[0m\n";				
+		echo "\e[1;32m--- WRITE: curlScriptTemp.sh.\e[0m\n";				
 		file_put_contents("curlScriptTemp.sh", $curlScriptContent, LOCK_EX);
 		echo "\e[1;32m--- CHMOD.\e[0m\n";				
         	chmod("curlScriptTemp.sh", 0777);
