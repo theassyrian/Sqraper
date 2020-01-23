@@ -15,33 +15,51 @@
 setterm -blank 30
 
 number=0
+read -t 15 -p "Choose Network to Start and press ENTER: 0 for Clearnet, 1 for Loki or 2 for Tor > " number
+case $((number % 3)) in
 
-# echo -n Choose Network to Start and press ENTER: 0 for Loki or 1 for Tor >
-read -t 15 -p "Choose Network to Start and press ENTER: 0 for Loki or 1 for Tor > " number
+        0)
+                # Start the Clear network.
+                echo "Clearnet..."
+                echo
+                echo "Waiting 15 seconds to start Sqraper (Clear)..."
+                sleep 15
+                # Start the sqraper.
+                (cd ~/Sqraper && php ~/Sqraper/sqraper.php)
+                ;;
 
-if [ $((number % 2)) -eq 0 ]; then
+        1)
+                # Start the Loki network.
+                echo "Starting Loki..."
+                echo YOURPASSWORD | sudo -S systemctl start lokinet
+                echo
+                echo
+                echo "Waiting 15 seconds to start Sqraper (Loki)..."
+                sleep 15
+                # Start the sqraper.
+                (cd ~/Sqraper && php ~/Sqraper/sqraper.php)
+                ;;
 
-        # Start the Loki network.
-        echo "Starting Loki..."
-        echo YOURPASSWORD | sudo -S systemctl start lokinet
-        echo
-        echo
-        echo "Waiting 15 seconds to start Sqraper (Loki)..."
-        sleep 15
-        # Start the sqraper.
-        (cd ~/Sqraper && php ~/Sqraper/sqraper.php)
+        2)
+                # Start the Tor network.
+                echo "Starting Tor..."
+                echo YOURPASSWORD | sudo -S systemctl start tor
+                echo
+                echo
+                echo "Waiting 15 seconds to start Sqraper (Tor)..."
+                sleep 15
+                # Start the sqraper.
+                (cd ~/Sqraper && torsocks php ~/Sqraper/sqraper.php --passive-ftp)
+                ;;
 
+        *)
+                # Start the Clear network (default).
+                echo "Clearnet (defaulted)..."
+                echo
+                echo "Waiting 15 seconds to start Sqraper (Clear)..."
+                sleep 15
+                # Start the sqraper.
+                (cd ~/Sqraper && php ~/Sqraper/sqraper.php)
+                ;;
 
-else
-
-        # Start the Tor network.
-        echo "Starting Tor..."
-        echo YOURPASSWORD | sudo -S systemctl start tor
-        echo
-        echo
-        echo "Waiting 15 seconds to start Sqraper (Tor)..."
-        sleep 15
-        # Start the sqraper.
-        (cd ~/Sqraper && torsocks php ~/Sqraper/sqraper.php --passive-ftp)
-
-fi
+esac
