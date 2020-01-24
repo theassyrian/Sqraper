@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.0.14
+Version: 2.0.15
 Last Updated: January 23, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,10 +36,16 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.14";
+$scriptVersion = "2.0.15";
 $scriptUpdated = "Last Updated: January 23, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
+
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    $GLOBALS['isWindows'] = true;
+} else {
+    $GLOBALS['isWindows'] = false;
+}
 
 date_default_timezone_set("America/New_York");
 getConfig();
@@ -113,15 +119,31 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 	}
 
 	if ($GLOBALS['useTor']) {
+		
+		/*
+		We have to spawn a shell outside of the TorSock and use cURL (or something else via a shell),
+		otherwise, FTP will send ONE file and will then error out beyond that. Something to do with Tor.
+		*/
 
+		if (!$GLOBALS['isWindows']) {
+			$curlFilename = "curlScriptTemp.sh";
+		} else {
+			// For Windows, make sure you have downloaded cURL, and that curl.exe is in your path!
+			$curlFilename = "curlScriptTemp.bat";			
+		}
+		
 		echo "\e[1;32m--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";				
 		$curlScriptContent = "curl -u " . $GLOBALS['ftpLoginID'] . ":" . $GLOBALS['ftpPassword'] . " -T " . $localFilePath . " ftp://" . $GLOBALS['ftpServer'] . $remoteFilePath;
-		echo "\e[1;32m--- WRITE: curlScriptTemp.sh.\e[0m\n";				
-		file_put_contents("curlScriptTemp.sh", $curlScriptContent, LOCK_EX);
-		echo "\e[1;32m--- CHMOD.\e[0m\n";				
-        chmod("curlScriptTemp.sh", 0777);
+		echo "\e[1;32m--- WRITE: $curlFilename.\e[0m\n";				
+		file_put_contents($curlFilename, $curlScriptContent, LOCK_EX);		
 		echo "\e[1;32m--- EXEC.\e[0m\n";				
-        echo shell_exec("./curlScriptTemp.sh");
+		if (!$GLOBALS['isWindows']) {
+			echo "\e[1;32m--- CHMOD.\e[0m\n";				
+			chmod($curlFilename, 0777);
+			echo shell_exec("./" . $curlFilename);
+		} else {
+			echo shell_exec($curlFilename);
+		}
 
 	} else {
 
