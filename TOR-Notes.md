@@ -1,4 +1,13 @@
-Tor Setup on Linux via Terminal
+Tor Setup and TorSock on Windows:
+
+I have not yet done this on Windows. Assuming it is able to be done, the Sqraper will have to be
+launched via TorSocks, much like the Linux notes. Example: "torsocks php sqraper.php"
+One thing is for sure, if uploading JSON and media via FTP, when using Tor, you will have to also
+install CURL and make sure curl.exe is in your environmental variables path. https://curl.haxx.se/
+This is because we have to spawn a shell outside of the TorSock and use cURL (or something else via a shell),
+otherwise, FTP will send ONE file and will then error out beyond that. Something to do with Tor.
+
+Tor Setup on Linux via Terminal:
 
 https://wildcardcorp.com/blogs/tor-torify-torsocks
 
