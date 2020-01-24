@@ -248,8 +248,15 @@ PREREQUISITES:
 
 You MUST have PHP installed. I have tested the script with PHP on both Windows 10 as well as Linux Ubuntu Server LTS.
 
-As of the writing of this, you will have to install LOKINET from https://loki.network/ and run this script with "lokiKun"
-set to true. This is because 8kun DDoS protection is blocking scripts.
+ClearNet: The script runs great over the regular Internet. However, when 8kun comes under DDoS attack, they will have
+to turn off ClearNet access and you will have to use Loki.Network or Tor. This is because 8kun DDoS protection blocks 
+scripts. To run over the regular Internet, set both lokiKun and torKun to false.
+
+Loki.Network: You will have to install LOKINET from https://loki.network/ and run this script with "lokiKun"
+set to true and torKun set to false.
+
+Tor: The script works with Tor. See TOR-Notes.md for important information on using with TorSocks.
+Set torKun to true and lokiKun to false.
 
 The first time you run the script it will create the configuration file "sqraper_config.json" in the same folder as
 sqraper.php lives in. You can then edit the file to set your configuration (or you can create it from scratch prior).
