@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.0.15
-Last Updated: January 23, 2020
+Version: 2.0.17
+Last Updated: January 27, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.15";
-$scriptUpdated = "Last Updated: January 23, 2020";
+$scriptVersion = "2.0.17";
+$scriptUpdated = "Last Updated: January 27, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -80,10 +80,10 @@ $sqraperStarted  = date('m/d/Y h:i:s a', time());
 
 function displayError($errDescription) {
 	
-	echo "\n\e[1;31m>>>\e[0m ========================================\n";
-	echo "\e[1;31m>>>\e[0m ERROR: $errDescription\n";			
-	echo "\e[1;31m>>>\e[0m SLEEP: 5 seconds.\n";			
-	echo "\e[1;31m>>>\e[0m ========================================\n\n";		
+	echo "\n" . $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " ========================================\n";
+	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " ERROR: $errDescription\n";			
+	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " SLEEP: 5 seconds.\n";			
+	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " ========================================\n\n";		
 	sleep(5);
 	
 }
@@ -103,7 +103,7 @@ function mask ($str, $start = 0, $length = null) {
 function createBlueBGText($text) {
 	$l = strlen($text);	
 	$a = (60 - $l);
-	return "\e[0;37;44m" . $text . str_repeat(' ', $a) . "\e[0m";
+	return $GLOBALS['fgGreyBGBlue'] . $text . str_repeat(' ', $a) . $GLOBALS['colorEnd'];
 }
 
 function uploadViaFTP($localFile, $remoteFile, $isMedia) {
@@ -132,13 +132,13 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 			$curlFilename = "curlScriptTemp.bat";			
 		}
 		
-		echo "\e[1;32m--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";				
+		echo $GLOBALS['fgGreen'] . "--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";				
 		$curlScriptContent = "curl -u " . $GLOBALS['ftpLoginID'] . ":" . $GLOBALS['ftpPassword'] . " -T " . $localFilePath . " ftp://" . $GLOBALS['ftpServer'] . $remoteFilePath;
-		echo "\e[1;32m--- WRITE: $curlFilename.\e[0m\n";				
+		echo $GLOBALS['fgGreen'] . "--- WRITE: $curlFilename." . $GLOBALS['colorEnd'] . "\n";				
 		file_put_contents($curlFilename, $curlScriptContent, LOCK_EX);		
-		echo "\e[1;32m--- EXEC.\e[0m\n";				
+		echo $GLOBALS['fgGreen'] . "--- EXEC." . $GLOBALS['colorEnd'] . "\n";				
 		if (!$GLOBALS['isWindows']) {
-			echo "\e[1;32m--- CHMOD.\e[0m\n";				
+			echo $GLOBALS['fgGreen'] . "--- CHMOD." . $GLOBALS['colorEnd'] . "\n";				
 			chmod($curlFilename, 0777);
 			echo shell_exec("./" . $curlFilename);
 		} else {
@@ -147,29 +147,59 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 
 	} else {
 
-		echo "\e[1;32m--- FTP CONNECT.\e[0m\n";	
+		echo $GLOBALS['fgGreen'] . "--- FTP CONNECT." . $GLOBALS['colorEnd'] . "\n";	
 		$ftpConnection = ftp_connect($GLOBALS['ftpServer']);
 		$login_result = ftp_login($ftpConnection, $GLOBALS['ftpLoginID'], $GLOBALS['ftpPassword']);
 		if ($GLOBALS['useTor']) {
 			// Tor requires PASV mode for outbound FTP. When launching Sqraper with "torsocks php ~/Sqraper/sqraper.php"
 			// you also need to include --passive-ftp at the end. Example: "torsocks php ~/Sqraper/sqraper.php --passive-ftp"
-			echo "\e[1;32m--- FTP PASV.\e[0m\n";	
+			echo $GLOBALS['fgGreen'] . "--- FTP PASV." . $GLOBALS['colorEnd'] . "\n";	
 			ftp_pasv($ftpConnection, true); 
 		}
 
-		echo "\e[1;32m--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
+		echo $GLOBALS['fgGreen'] . "--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";
 
 		if (ftp_put($ftpConnection, $remoteFilePath, $localFilePath, $dataType)) {
-			echo "\e[1;32m--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . ".\e[0m\n";
+			echo $GLOBALS['fgGreen'] . "--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";
 		} else {
 			$last_error = error_get_last();
-			echo "\e[1;31m--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . ".\e[0m\n";
+			echo $GLOBALS['fgRed'] . "--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . "." . $GLOBALS['colorEnd'] . "\n";
 		}
 
-		echo "\e[1;32m--- FTP CLOSE.\e[0m\n";	
+		echo $GLOBALS['fgGreen'] . "--- FTP CLOSE." . $GLOBALS['colorEnd'] . "\n";	
 		ftp_close($ftpConnection);	
 		
 	}
+	
+}
+
+function assignColors($useColors) {
+
+	if ($useColors == true) {
+
+		$GLOBALS['fgGrey'] = "\e[1;30m";
+		$GLOBALS['fgRed'] = "\e[1;31m";
+		$GLOBALS['fgGreen'] = "\e[1;32m";
+		$GLOBALS['fgYellow'] = "\e[1;33m";
+		$GLOBALS['fgBlue'] = "\e[1;34m";
+		$GLOBALS['fgGreyBGRed'] = "\e[0;37;41m";
+		$GLOBALS['fgGreyBGBlue'] = "\e[0;37;44m";
+		$GLOBALS['fgGreyBGGreen'] = "\e[0;37;42m";
+		$GLOBALS['colorEnd'] = "\e[0m";		
+		
+	} else {
+
+		$GLOBALS['fgGrey'] = "";
+		$GLOBALS['fgRed'] = "";
+		$GLOBALS['fgGreen'] = "";
+		$GLOBALS['fgYellow'] = "";
+		$GLOBALS['fgBlue'] = "";
+		$GLOBALS['fgGreyBGRed'] = "";
+		$GLOBALS['fgGreyBGBlue'] = "";
+		$GLOBALS['fgGreyBGGreen'] = "";
+		$GLOBALS['colorEnd'] = "";
+		
+	}	
 	
 }
 
@@ -177,7 +207,9 @@ function getConfig() {
 
 	if (!file_exists('sqraper_config.json')) {
 
-		echo "\e[1;31mCREATE FILE:\e[0m sqraper_config.json did not exist. Creating and reading default configuration JSON file.\n";
+		assignColors(true);
+
+		echo $GLOBALS['fgRed'] . "CREATE FILE:" . $GLOBALS['colorEnd'] . " sqraper_config.json did not exist. Creating and reading default configuration JSON file.\n";
 
 		$defaultConfig = array(
 			'qTrips' => ['!!mG7VJxZNCI','!!Hs1Jq13jV6'],
@@ -205,7 +237,8 @@ function getConfig() {
 			'ftpUploadMediaFolder' => '/data/media/', // Folder must already exist on the remote server.
 			'ftpServer' => 'ftp.yourserver.com',
 			'ftpLoginID' => 'your_user_name',
-			'ftpPassword' => 'your_password' // BEWARE placing this script in an Internet acccessible folder. Someone could easily view your sqraper.json file and access your FTP password!
+			'ftpPassword' => 'your_password', // BEWARE placing this script in an Internet acccessible folder. Someone could easily view your sqraper.json file and access your FTP password!
+			'useColors' => true
 		);		
 		$GLOBALS['qTrips'] = $defaultConfig['qTrips'];
 		$GLOBALS['bogusTrips'] = $defaultConfig['bogusTrips'];
@@ -233,11 +266,16 @@ function getConfig() {
 		$GLOBALS['ftpServer'] = $defaultConfig['ftpServer'];
 		$GLOBALS['ftpLoginID'] = $defaultConfig['ftpLoginID'];
 		$GLOBALS['ftpPassword'] = $defaultConfig['ftpPassword'];
+		$GLOBALS['useColors'] = $defaultConfig['useColors'];
 		file_put_contents('sqraper_config.json', json_encode($defaultConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 
 	} else {
+
+		if (!isset($GLOBALS['useColors'])) {
+			assignColors(true);
+		}
 		
-		echo "\e[1;32mREAD CONFIG:\e[0m sqraper_config.json.\n";
+		echo $GLOBALS['fgGreen'] . "READ CONFIG:" . $GLOBALS['colorEnd'] . " sqraper_config.json.\n";
 		
 		$currentConfig = @file_get_contents('sqraper_config.json');	
 
@@ -265,18 +303,18 @@ function getConfig() {
 				$GLOBALS['sleepBetweenNewQPostChecks'] = $currentConfigJSON['sleepBetweenNewQPostChecks'];
 				$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $currentConfigJSON['offPeakSleepBetweenNewQPostChecks'];
 
-				if ($currentConfigJSON['maxDownloadAttempts']) {
-					$GLOBALS['maxDownloadAttempts'] = $currentConfigJSON['maxDownloadAttempts'];					
-				} else {
+				if (!isset($currentConfigJSON['maxDownloadAttempts'])) {
 					$GLOBALS['maxDownloadAttempts'] = 10;
-				}
-
-				if ($currentConfigJSON['pauseBetweenDownloadAttempts']) {
-					$GLOBALS['pauseBetweenDownloadAttempts'] = $currentConfigJSON['pauseBetweenDownloadAttempts'];					
 				} else {
-					$GLOBALS['pauseBetweenDownloadAttempts'] = 1;
+					$GLOBALS['maxDownloadAttempts'] = $currentConfigJSON['maxDownloadAttempts'];					
 				}
 
+				if (!isset($currentConfigJSON['pauseBetweenDownloadAttempts'])) {
+					$GLOBALS['pauseBetweenDownloadAttempts'] = 1;				
+				} else {
+					$GLOBALS['pauseBetweenDownloadAttempts'] = $currentConfigJSON['pauseBetweenDownloadAttempts'];					
+				}
+				
 				$GLOBALS['productionPostsJSONFilename'] = $currentConfigJSON['productionPostsJSONFilename'];	
 				$GLOBALS['productionMediaFolder'] = $currentConfigJSON['productionMediaFolder'];
 				$GLOBALS['productionMediaURL'] = $currentConfigJSON['productionMediaURL'];
@@ -288,11 +326,19 @@ function getConfig() {
 				$GLOBALS['ftpServer'] = $currentConfigJSON['ftpServer'];
 				$GLOBALS['ftpLoginID'] = $currentConfigJSON['ftpLoginID'];
 				$GLOBALS['ftpPassword'] = $currentConfigJSON['ftpPassword'];
+
+				if (!isset($currentConfigJSON['useColors'])) {
+					$GLOBALS['useColors'] = true;					
+				} else {
+					$GLOBALS['useColors'] = $currentConfigJSON['useColors'];					
+				}
+
+				assignColors($GLOBALS['useColors']);
 								
 			}
 		}
 
-	}		
+	}
 
 }
 
@@ -355,16 +401,16 @@ function downloadMediaFile($thisUrl, $thisStorageFilename) {
 
 		if (file_exists($GLOBALS['productionMediaFolder'] . $thisStorageFilename)) {
 
-			echo "\e[1;33m--- SKIP DOWNLOAD MEDIA (ALREADY EXISTS): \n    " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";	
+			echo $GLOBALS['fgYellow'] . "--- SKIP DOWNLOAD MEDIA (ALREADY EXISTS): \n    " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . $GLOBALS['colorEnd'] . "\n";	
 			
 		} else {
 
 			$currentDownloadAttempt = 1;			
 			do {
 				if ($currentDownloadAttempt > 1) {
-					echo "\e[1;33m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . " Attempt $currentDownloadAttempt of " . $GLOBALS['maxDownloadAttempts'] . "\e[0m\n";
+					echo $GLOBALS['fgYellow'] . "--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . " Attempt $currentDownloadAttempt of " . $GLOBALS['maxDownloadAttempts'] . $GLOBALS['colorEnd'] . "\n";
 				} else {
-					echo "\e[1;32m--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . "\e[0m\n";
+					echo $GLOBALS['fgGreen'] . "--- DOWNLOAD MEDIA: " . $thisUrl . " > " . $GLOBALS['productionMediaFolder'] . $thisStorageFilename . $GLOBALS['colorEnd'] . "\n";
 				}				
 				$thisMedia = @file_get_contents($thisUrl);
 				if (!$thisMedia) {
@@ -378,7 +424,7 @@ function downloadMediaFile($thisUrl, $thisStorageFilename) {
 				displayError("Could not get media from URL \"$thisUrl");				
 			} else {
 				if (!file_exists($GLOBALS['productionMediaFolder'])) {
-					echo "\e[1;31mCREATE FOLDER:\e[0m " . $GLOBALS['productionMediaFolder'] . "\n";
+					echo $GLOBALS['fgRed'] . "CREATE FOLDER:" . $GLOBALS['colorEnd'] . " " . $GLOBALS['productionMediaFolder'] . "\n";
 					mkdir($GLOBALS['productionMediaFolder'], 0777, true);
 				}
 				file_put_contents($GLOBALS['productionMediaFolder'] . $thisStorageFilename, $thisMedia, LOCK_EX);
@@ -486,7 +532,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 
 					if ($postReference['no'] == $match) {
 
-						echo "--------- \e[1;32mREFERENCE POST FOUND: $match\e[0m\n";
+						echo "--------- " . $GLOBALS['fgGreen'] . "REFERENCE POST FOUND: $match" . $GLOBALS['colorEnd'] . "\n";
 
 						if (isset($postReference['email'])) {
 							$postReference_email = $postReference['email'];	
@@ -758,7 +804,7 @@ function setThreadUpdated($varNo, $varLastModified) {
 			if ($entry['no'] == $varNo) {
 				$foundEntry = true;
 				if ($entry['last_modified'] != $varLastModified) {
-					echo "--------- \e[1;32mUPDATE THREAD MAP:\e[0m ThreadId: $varNo, Prior last_modified: " . $GLOBALS['threadMap'][$key]['last_modified'] . ", New last_modified: $varLastModified\n";
+					echo "--------- " . $GLOBALS['fgGreen'] . "UPDATE THREAD MAP:" . $GLOBALS['colorEnd'] . " ThreadId: $varNo, Prior last_modified: " . $GLOBALS['threadMap'][$key]['last_modified'] . ", New last_modified: $varLastModified\n";
 					$GLOBALS['threadMap'][$key]['last_modified'] = $varLastModified;
 				}						
 				break;					
@@ -787,15 +833,15 @@ function setThreadUpdated($varNo, $varLastModified) {
 /* ======== Main Routine ======= */
 /* ============================= */
 
-/* Color codes: https://joshtronic.com/2013/09/02/how-to-use-colors-in-command-line-output/ */
+/* Color codes: https://joshtronic.com/2013/09/02/how-to-use-colors-in-command-line-output */
 
-echo "\n\e[0;37;41m************************************************************\e[0m\n";
+echo "\n$fgGreyBGRed************************************************************$colorEnd\n";
 echo createBlueBGText($scriptTitle) . "\n";
 echo createBlueBGText("Version: " . $scriptVersion) . "\n";
 echo createBlueBGText("Updated: " . $scriptUpdated) . "\n";
 echo createBlueBGText("Author: " . $scriptAuthor) . "\n";
 echo createBlueBGText("Email: " . $scriptAuthorEmail) . "\n";
-echo "\e[0;37;41m************************************************************\e[0m\n";
+echo "$fgGreyBGRed************************************************************$colorEnd\n";
 echo "\n";
 
 do {
@@ -821,64 +867,64 @@ do {
 		$strBogusTrips = $strBogusTrips . $bogusTrip . " ";
 	}
 
-	echo "\e[1;34mSqraper Started:\e[0m $sqraperStarted\n";
-	echo "\e[1;34mNew Q Drops Since Start:\e[0m $newQSinceStart\n";
-	echo "\e[1;34mConfiguration:\e[0m\n";
-	echo "   \e[1;34mTrips:\e[0m $strQTrips\n";
-	echo "   \e[1;34mBogus Trips:\e[0m $strBogusTrips\n";
-	echo "   \e[1;34mBoards:\e[0m " . trim($strBoards) . "\n";
+	echo $fgBlue . "Sqraper Started:" . $colorEnd . " $sqraperStarted\n";
+	echo $fgBlue . "New Q Drops Since Start:" . $colorEnd . " $newQSinceStart\n";
+	echo $fgBlue . "Configuration:" . $colorEnd . "\n";
+	echo "   " . $fgBlue . "Trips:" . $colorEnd . " $strQTrips\n";
+	echo "   " . $fgBlue . "Bogus Trips:" . $colorEnd . " $strBogusTrips\n";
+	echo "   " . $fgBlue . "Boards:" . $colorEnd . " " . trim($strBoards) . "\n";
 
 	if (file_exists('search_replace.json')) {	
 		$searchReplace = @file_get_contents('search_replace.json');
 		if ($searchReplace) {		
-			echo "   \e[1;34msearch_replace.json:\e[0m " . trim($searchReplace) . "\n";
+			echo "   " . $fgBlue . "msearch_replace.json:" . $colorEnd . " " . trim($searchReplace) . "\n";
 
 		}	
 	}	
 
-	echo "   \e[1;34mInternet Domain:\e[0m $domain8Kun\n";
-	echo "   \e[1;34mInternet Domain for Links in JSON:\e[0m $domain8KunForLinks\n";
-	echo "   \e[1;34mUse Tor Network:\e[0m $useTor\n";
-	echo "   \e[1;34mTor Network Address:\e[0m $torKun\n";
-	echo "   \e[1;34mUse Loki.Network:\e[0m $useLoki\n";
-	echo "   \e[1;34mLoki.Network Address:\e[0m $lokiKun\n";
-	echo "   \e[1;34mProduction JSON Filename:\e[0m $productionPostsJSONFilename\n";
-	echo "   \e[1;34mProduction JSON (Local) Folder:\e[0m $productionJSONFolder\n";
-	echo "   \e[1;34mProduction Media (Local) Folder:\e[0m $productionMediaFolder (if blank photos/videos will not be downloaded)\n";
-	echo "   \e[1;34mProduction Media (Remote) URL:\e[0m $productionMediaURL\n";
-	echo "   \e[1;34mSave Downloaded 8kun JSON Files To Local:\e[0m $saveRemoteFilesToLocal\n";
-	echo "   \e[1;34mRead From Local 8Kun Files (for debugging/testing):\e[0m $readFromLocal8KunFiles\n";
-	echo "   \e[1;34mFTP Server:\e[0m " . mask($ftpServer) . "\n";
-	echo "   \e[1;34mFTP Login ID:\e[0m " . mask($ftpLoginID) . "\n";
-	echo "   \e[1;34mFTP Password:\e[0m " . mask($ftpPassword) . "\n";
-	echo "   \e[1;34mFTP Upload JSON Posts:\e[0m $ftpUploadJSON\n";
-	echo "   \e[1;34mFTP Upload JSON Posts Folder:\e[0m $ftpUploadJSONFolder\n";
-	echo "   \e[1;34mFTP Upload Media:\e[0m $ftpUploadMedia\n";
-	echo "   \e[1;34mFTP Upload Media Folder:\e[0m $ftpUploadMediaFolder\n";
-	echo "   \e[1;34mMax Download Attempts:\e[0m $maxDownloadAttempts\n";
-	echo "   \e[1;34mPause Between Download Attempts:\e[0m $pauseBetweenDownloadAttempts\n";
-	echo "   \e[1;34mSleep Between Loops:\e[0m $sleepBetweenNewQPostChecks\n";
-	echo "   \e[1;34mOff Peak Sleep Between Loops:\e[0m $offPeakSleepBetweenNewQPostChecks\n";
+	echo "   " . $fgBlue . "Internet Domain:" . $colorEnd . " $domain8Kun\n";
+	echo "   " . $fgBlue . "Internet Domain for Links in JSON:" . $colorEnd . " $domain8KunForLinks\n";
+	echo "   " . $fgBlue . "Use Tor Network:" . $colorEnd . " $useTor\n";
+	echo "   " . $fgBlue . "Tor Network Address:" . $colorEnd . " $torKun\n";
+	echo "   " . $fgBlue . "Use Loki.Network:" . $colorEnd . " $useLoki\n";
+	echo "   " . $fgBlue . "Loki.Network Address:" . $colorEnd . " $lokiKun\n";
+	echo "   " . $fgBlue . "Production JSON Filename:" . $colorEnd . " $productionPostsJSONFilename\n";
+	echo "   " . $fgBlue . "Production JSON (Local) Folder:" . $colorEnd . " $productionJSONFolder\n";
+	echo "   " . $fgBlue . "Production Media (Local) Folder:" . $colorEnd . " $productionMediaFolder (if blank photos/videos will not be downloaded)\n";
+	echo "   " . $fgBlue . "Production Media (Remote) URL:" . $colorEnd . " $productionMediaURL\n";
+	echo "   " . $fgBlue . "Save Downloaded 8kun JSON Files To Local:" . $colorEnd . " $saveRemoteFilesToLocal\n";
+	echo "   " . $fgBlue . "Read From Local 8Kun Files (for debugging/testing):" . $colorEnd . " $readFromLocal8KunFiles\n";
+	echo "   " . $fgBlue . "FTP Server:" . $colorEnd . " " . mask($ftpServer) . "\n";
+	echo "   " . $fgBlue . "FTP Login ID:" . $colorEnd . " " . mask($ftpLoginID) . "\n";
+	echo "   " . $fgBlue . "FTP Password:" . $colorEnd . " " . mask($ftpPassword) . "\n";
+	echo "   " . $fgBlue . "FTP Upload JSON Posts:" . $colorEnd . " $ftpUploadJSON\n";
+	echo "   " . $fgBlue . "FTP Upload JSON Posts Folder:" . $colorEnd . " $ftpUploadJSONFolder\n";
+	echo "   " . $fgBlue . "FTP Upload Media:" . $colorEnd . " $ftpUploadMedia\n";
+	echo "   " . $fgBlue . "FTP Upload Media Folder:" . $colorEnd . " $ftpUploadMediaFolder\n";
+	echo "   " . $fgBlue . "Max Download Attempts:" . $colorEnd . " $maxDownloadAttempts\n";
+	echo "   " . $fgBlue . "Pause Between Download Attempts:" . $colorEnd . " $pauseBetweenDownloadAttempts\n";
+	echo "   " . $fgBlue . "Sleep Between Loops:" . $colorEnd . " $sleepBetweenNewQPostChecks\n";
+	echo "   " . $fgBlue . "Off Peak Sleep Between Loops:" . $colorEnd . " $offPeakSleepBetweenNewQPostChecks\n";
 	
-	echo "\e[1;34mLoop Started:\e[0m " . date("m/d/Y h:i:s a") . "\n";
+	echo $fgBlue . "Loop Started:" . $colorEnd . " " . date("m/d/Y h:i:s a") . "\n";
 	echo "============================================================\n\n";
 
 	if ((isset($productionJSONFolder)) && ($productionJSONFolder !== '')) {
 		if (!file_exists($productionJSONFolder)) {
-			echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder.\n";
+			echo $fgRed . "CREATE FOLDER:" . $colorEnd . " $productionJSONFolder.\n";
 			mkdir($productionJSONFolder, 0777, true);
 		}
 	}
 	
 	if ((isset($productionMediaFolder)) && ($GLOBALS['productionMediaFolder'] != '')) {
 		if (!file_exists($productionMediaFolder)) {
-			echo "\e[1;31mCREATE FOLDER:\e[0m $productionMediaFolder.\n";
+			echo $fgRed . "CREATE FOLDER:" . $colorEnd . " $productionMediaFolder.\n";
 			mkdir($productionMediaFolder, 0777, true);
 		}
 	}
 	
 	if (!file_exists($productionJSONFolder . $productionPostsJSONFilename)) {
-		echo "\e[1;31mCREATE FILE:\e[0m $productionJSONFolder$productionPostsJSONFilename did not exist. Creating empty JSON file.\n";
+		echo $fgRed . "CREATE FILE:" . $colorEnd . " $productionJSONFolder$productionPostsJSONFilename did not exist. Creating empty JSON file.\n";
 		$blankPosts = array();
 		file_put_contents($productionJSONFolder . $productionPostsJSONFilename, json_encode($blankPosts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 	}			
@@ -905,7 +951,7 @@ do {
 		$threadMapFile = $productionJSONFolder . $board . '_checked_threads.json';
 		
 		if (!file_exists($threadMapFile)) {
-			echo "\e[1;31mCREATE FILE:\e[0m $threadMapFile did not exist. Creating empty JSON file.\n";
+			echo $fgRed . "CREATE FILE:" . $colorEnd . " $threadMapFile did not exist. Creating empty JSON file.\n";
 			$threadMap = array();			
 			array_push($threadMap, array(
 				'no' => 0,
@@ -913,7 +959,7 @@ do {
 			));			
 			file_put_contents($threadMapFile, json_encode($threadMap, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 		}			
-		echo "\e[1;32mREAD:\e[0m $threadMapFile.\n";		
+		echo $fgGreen . "READ:" . $colorEnd . " $threadMapFile.\n";		
 		$threadMapContent = @file_get_contents($threadMapFile);			
 				
 		if (!$threadMapContent) {		
@@ -930,7 +976,7 @@ do {
 
 		if ($readFromLocal8KunFiles) {
 			if (!file_exists($productionJSONFolder . $board)) {
-				echo "\e[1;32mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
+				echo $fgGreen . "CREATE FOLDER:" . $colorEnd . " $productionJSONFolder$board.\n";
 				mkdir($productionJSONFolder . $board, 0777, true);
 			}
 			if (file_exists($productionJSONFolder . $board . "/catalog.json")) {
@@ -963,9 +1009,9 @@ do {
 		$currentDownloadAttempt = 1;			
 		do {
 			if ($currentDownloadAttempt > 1) {
-				echo "\e[1;33mDOWNLOAD:\e[0m $boardCatalogUrl?sqraper_nocache=" . $noCache . ". Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
+				echo $fgYellow . "DOWNLOAD:" . $colorEnd . " $boardCatalogUrl?sqraper_nocache=" . $noCache . ". Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 			} else {
-				echo "\e[1;32mDOWNLOAD:\e[0m $boardCatalogUrl?sqraper_nocache=" . $noCache . ".\n";
+				echo $fgGreen . "DOWNLOAD:" . $colorEnd . " $boardCatalogUrl?sqraper_nocache=" . $noCache . ".\n";
 			}				
 			$boardCatalogContents = @file_get_contents($boardCatalogUrl . "?sqraper_nocache=" . $noCache);
 			if (!$boardCatalogContents) {
@@ -983,14 +1029,14 @@ do {
 
 			if ($saveRemoteFilesToLocal) {
 				if (!file_exists($productionJSONFolder . $board)) {
-					echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
+					echo $fgRed . "CREATE FOLDER:" . $colorEnd . " $productionJSONFolder$board.\n";
 					mkdir($productionJSONFolder . $board, 0777, true);
 				}
-				echo "\e[1;32mWRITE:\e[0m " . $productionJSONFolder . $board . '/' . basename($boardCatalogUrl) . ".\n";
+				echo $fgGreen . "WRITE:" . $colorEnd . " " . $productionJSONFolder . $board . '/' . basename($boardCatalogUrl) . ".\n";
 				file_put_contents($productionJSONFolder . $board . '/' . basename($boardCatalogUrl), $boardCatalogContents, LOCK_EX);
 			}
 			
-			echo "--- \e[1;32mJSON DECODE.\e[0m\n";
+			echo "--- " . $fgGreen . "JSON DECODE." . $colorEnd . "\n";
 			$jsonBoardCatalog = json_decode($boardCatalogContents, true);
 
 			if ($jsonBoardCatalog == FALSE) {
@@ -1004,7 +1050,7 @@ do {
 
 					$page = $pages['page'];
 					
-					echo "--- \e[1;32mPARSE:\e[0m Page $page.\n";
+					echo "--- " . $fgGreen . "PARSE:" . $colorEnd . " Page $page.\n";
 					
 					if (!empty($pages['threads'])) {
 						
@@ -1023,8 +1069,8 @@ do {
 							// This is where we check the thread dates and then conditionally continue.	
 							if (hasThreadUpdated($threadNo, $threadLastModified)) {
 
-								echo "------ \e[1;32mThread No\e[0m $threadNo, \e[1;32mLast Modified\e[0m " . date("M d, Y g:i:s A", $threadLastModified) . " ($threadLastModified).\n";						
-								echo "--------- \e[1;32mThread HAS Changed.\e[0m\n";
+								echo "------ " . $fgGreen . "Thread No" . $colorEnd . " $threadNo, " . $fgGreen . "Last Modified" . $colorEnd . " " . date("M d, Y g:i:s A", $threadLastModified) . " ($threadLastModified).\n";						
+								echo "--------- " . $fgGreen . "Thread HAS Changed." . $colorEnd . "\n";
 
 								$threadUrl = "https://$domain8Kun/$board/res/$threadNo.json";
 
@@ -1032,7 +1078,7 @@ do {
 
 								if ($readFromLocal8KunFiles) {
 									if (!file_exists($productionJSONFolder . $board)) {
-										echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
+										echo $fgRed . "CREATE FOLDER:" . $colorEnd . " $productionJSONFolder$board.\n";
 										mkdir($productionJSONFolder . $board, 0777, true);
 									}
 									if (file_exists($productionJSONFolder . $board . "/" . $threadNo . ".json")) {
@@ -1065,9 +1111,9 @@ do {
 								$currentDownloadAttempt = 1;			
 								do {
 									if ($currentDownloadAttempt > 1) {
-										echo "--------- \e[1;33mDOWNLOAD:\e[0m $threadUrl?sqraper_nocache=" . $noCache . ". Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
+										echo "--------- " . $fgYellow . "DOWNLOAD:" . $colorEnd . " $threadUrl?sqraper_nocache=" . $noCache . ". Attempt $currentDownloadAttempt of $maxDownloadAttempts\n";
 									} else {
-										echo "--------- \e[1;32mDOWNLOAD:\e[0m $threadUrl?sqraper_nocache=" . $noCache . ".\n";									
+										echo "--------- " . $fgGreen . "DOWNLOAD:" . $colorEnd . " $threadUrl?sqraper_nocache=" . $noCache . ".\n";									
 									}				
 									
 									$threadContents = @file_get_contents($threadUrl . "?sqraper_nocache=" . $noCache);
@@ -1086,13 +1132,13 @@ do {
 
 									if ($saveRemoteFilesToLocal) {
 										if (!file_exists($productionJSONFolder . $board)) {
-											echo "\e[1;31mCREATE FOLDER:\e[0m $productionJSONFolder$board.\n";
+											echo $fgRed . "CREATE FOLDER:" . $colorEnd . " $productionJSONFolder$board.\n";
 											mkdir($productionJSONFolder . $board, 0777, true);
 										}
 										file_put_contents($productionJSONFolder . $board . '/' . basename($threadUrl), $threadContents, LOCK_EX);	
 									}
 
-									echo "--------- \e[1;32mDECODE.\e[0m\n";
+									echo "--------- " . $fgGreen . "DECODE." . $colorEnd . "\n";
 									$jsonThreads = json_decode($threadContents, true);
 
 									if ($jsonThreads == FALSE) {
@@ -1101,7 +1147,7 @@ do {
 
 									} else {
 
-										echo "--------- \e[1;32mPARSE.\e[0m\n";
+										echo "--------- " . $fgGreen . "PARSE." . $colorEnd . "\n";
 										foreach($jsonThreads['posts'] as $post) { // Loop through all of the posts in the current thread of the current catalog.
 
 											/* ========================================= */
@@ -1152,12 +1198,12 @@ do {
 															$post_text_temp = "---";
 														}
 														file_put_contents("new_trip_eval.txt", "Trip:$trip\nPost:" . $post_text_temp . "\n\n", FILE_APPEND | LOCK_EX);
-														echo "------------ \e[1;33mFound potentially new trip: " . $trip . "\e[0m\n";
-														echo "------------ \e[1;30m$post_text_temp\e[0m\n";
-														echo "------------ \e[1;33mWrote the potentially valid new trip to new_trip_eval.txt\e[0m\n";
-														echo "------------ \e[1;33mWaiting 1 seconds for you to review and possibly press CTRL-C.\e[0m\n";
-														echo "------------ \e[1;33mIf valid, delete " . $board . "_checked_threads.json, update the\e[0m\n";
-														echo "------------ \e[1;33msqraper_config.json file and restart sqraper.\e[0m\n";
+														echo "------------ " . $fgYellow . "Found potentially new trip: " . $trip . $colorEnd . "\n";
+														echo "------------ " . $fgGrey . $post_text_temp . $colorEnd . "\n";
+														echo "------------ " . $fgYellow . "Wrote the potentially valid new trip to new_trip_eval.txt" . $colorEnd . "\n";
+														echo "------------ " . $fgYellow . "Waiting 1 seconds for you to review and possibly press CTRL-C." . $colorEnd . "\n";
+														echo "------------ " . $fgYellow . "If valid, delete " . $board . "_checked_threads.json, update the" . $colorEnd . "\n";
+														echo "------------ " . $fgYellow . "sqraper_config.json file and restart sqraper." . $colorEnd . "\n";
 														sleep(1);
 													}
 												}
@@ -1182,11 +1228,11 @@ do {
 											
 											if ($foundTrip == true) {
 												if (isInPostsJSON($resto, $postNo)) { // If already exists in posts.json then ignore.
-													echo "------------ \e[1;33mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published.\e[0m\n";
+													echo "------------ " . $fgYellow . "TRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): OLD Q. Already Published." . $colorEnd . "\n";
 												} else {
 													$foundAnyNewPosts = true;
-													echo "------------ \e[0;37;42mTRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing.\e[0m\n";												
-													echo "\n\e[1;30m" . $post['com'] . "\e[0m\n\n";
+													echo "------------ " . $fgGreyBGGreen . "TRIP $currentTrip FOUND (Thread No: $resto, Post No: $postNo): NEW Q! Publishing." . $colorEnd . "\n";
+													echo "\n" . $fgGrey . $post['com'] . $colorEnd . "\n\n";
 
 													if (isset($post['email'])) {
 														$post_email = $post['email'];	
@@ -1289,7 +1335,7 @@ do {
 						} // End of loop through all of the threads in the current page of the catalog.			
 						
 					} else {
-						echo "--- \e[1;33mEMPTY:\e[0m Threads object is empty on page $page. Probably no posts yet.\n";
+						echo "--- " . $fgYellow . "EMPTY:" . $colorEnd . " Threads object is empty on page $page. Probably no posts yet.\n";
 					}
 				
 					unset($jsonBoardCatalog);
@@ -1299,9 +1345,9 @@ do {
 				/* ======= Write the ID's of what was checked to JSON file for future runs ======= */
 
 				if ($foundAnyNewPosts) {
-					echo "\n--- \e[1;32mNEW POSTS WERE FOUND. MERGE, SORT AND WRITE THE NEW posts.json FILE.\e[0m\n\n";
+					echo "\n--- " . $fgGreen . "NEW POSTS WERE FOUND. MERGE, SORT AND WRITE THE NEW posts.json FILE." . $colorEnd. "\n\n";
 					if (!empty($newlyAddedQPosts)) {
-						echo "--- \e[1;32mnewlyAddedQPosts is NOT empty. Merging with existing content in $productionJSONFolder$productionPostsJSONFilename.\e[0m\n";						
+						echo "--- " . $fgGreen . "newlyAddedQPosts is NOT empty. Merging with existing content in $productionJSONFolder$productionPostsJSONFilename." . $colorEnd . "\n";
 						$contents = @file_get_contents($productionJSONFolder . $productionPostsJSONFilename);	
 						if (!$contents){		
 							displayError("Read $productionJSONFolder$productionPostsJSONFilename for merging.");
@@ -1316,7 +1362,7 @@ do {
 								array_multisort(array_map(function($element) {
 									  return $element['timestamp'];
 								  }, $mergedArray), SORT_DESC, $mergedArray);
-								echo "\n\e[1;32m--- WRITE " . $productionJSONFolder . $productionPostsJSONFilename . ".\e[0m\n";
+								echo "\n" . $fgGreen . "--- WRITE " . $productionJSONFolder . $productionPostsJSONFilename . "." . $colorEnd . "\n";
 								file_put_contents($productionJSONFolder . $productionPostsJSONFilename, json_encode($mergedArray, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 								unset($mergedArray);
 								unset($jsonContents);	
@@ -1328,7 +1374,7 @@ do {
 						unset($newlyAddedQPosts);
 						$newlyAddedQPosts = [];
 					} else {
-						echo "--- \e[1;33mnewlyAddedQPosts is empty? Should not be? No need to merge.\e[0m\n";
+						echo "--- " . $fgYellow . "newlyAddedQPosts is empty? Should not be? No need to merge." . $colorEnd . "\n";
 					}
 				}
 				
@@ -1344,10 +1390,10 @@ do {
 
 	} // End of loop through all boards defined in the array in the configuration section at the top of the page.	
 
-	echo "\n\e[1;32mNEW Q DROPS:\e[0m $newQSinceStart (since Sqraper v$scriptVersion started $sqraperStarted).\n";
+	echo "\n" . $fgGreen . "NEW Q DROPS:" . $colorEnd . " $newQSinceStart (since Sqraper v$scriptVersion started $sqraperStarted).\n";
 	$timeFinished  = strtotime(date('m/d/Y h:i:s a', time()));
 	$differenceInSeconds = $timeFinished - $timeStarted;
-	echo "\e[1;32mFINISHED:\e[0m " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete.\n";
+	echo $fgGreen . "FINISHED:" . $colorEnd . " " . date("m/d/Y h:i:sa") . ". Took $differenceInSeconds second(s) to complete.\n";
 	
 	/*
 	This allows you to change the sqraper_config.json file to make config changes without stopping and restarting the script.
@@ -1366,10 +1412,10 @@ do {
 	whatever is in the config at 9AM.
 	*/
 	if ((date('H') >= 2) && (date('H') < 9)) {
-		echo "\e[1;32mOFF PEAK TIME SLEEP:\e[0m $offPeakSleepBetweenNewQPostChecks seconds.\n\n";		
+		echo $fgGreen . "OFF PEAK TIME SLEEP:" . $colorEnd . " $offPeakSleepBetweenNewQPostChecks seconds.\n\n";		
 		sleep($offPeakSleepBetweenNewQPostChecks);
 	} else {
-		echo "\e[1;32mPEAK TIME SLEEP:\e[0m $sleepBetweenNewQPostChecks seconds.\n\n";	
+		echo $fgGreen . "PEAK TIME SLEEP:" . $colorEnd . " $sleepBetweenNewQPostChecks seconds.\n\n";	
 		sleep($sleepBetweenNewQPostChecks);
 	}		
 	
