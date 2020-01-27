@@ -73,7 +73,8 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "ftpPassword": "yourPassword",
   "productionMediaURL": "https://yourserver.com/media/",
   "maxDownloadAttempts":10,
-  "pauseBetweenDownloadAttempts":1
+  "pauseBetweenDownloadAttempts":1,
+  "useColors":true
 }
 
 -----------------
@@ -241,6 +242,12 @@ bogusTrips:
     Type: Integer
     Default: 1
     Delay in seconds between each retry on a JSON download from 8kun.  
+
+  useColors:
+    Type: Boolean
+    Default: true
+    Display Sqraper in color. For older Windows Server versions colors will not display so it is useful to set
+    to false in order to clean up readability.
 
 -----------------
 
