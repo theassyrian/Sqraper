@@ -74,6 +74,8 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "productionMediaURL": "https://yourserver.com/media/",
   "maxDownloadAttempts":10,
   "pauseBetweenDownloadAttempts":1,
+  "ftpProtocol":"ftp",
+  "ftpUseCurl":false,
   "useColors":true
 }
 
@@ -225,8 +227,20 @@ bogusTrips:
   ftpPassword:
     Type: String
     Default: "your_password"
-    Self explanitory
-    
+    Self explanitory  
+
+  ftpProtocol:
+    Type: String
+    Default: "ftp"
+    Only applies when using "ftpUseCurl". Either "ftp" or "sftp". Curl must be installed on your OS.
+    See https://curl.haxx.se/ for more information on Curl.
+  
+  ftpUseCurl:
+    Type: Boolean
+    Default: false
+    Changes from using the default PHP FTP library to using Curl. Curl must be installed on your OS.
+    See https://curl.haxx.se/ for more information on Curl.
+      
   productionMediaURL:
     Type: String
     Default: "https://yourserver.com/media/"
