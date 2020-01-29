@@ -9,7 +9,7 @@ function runExtraOnNewQ() {
 	push notifications, etc.	
 	*/	
 
-	echo "\n" . $GLOBALS['fgGreen'] . "EXECUTE SQRAPEREXTA.PHP FUNCTION: " . $GLOBALS['colorEnd'] . "runExtraOnNewQ\n";
+	echo "\n" . $GLOBALS['fgGreen'] . "EXECUTE sqraperextra.php FUNCTION: " . $GLOBALS['colorEnd'] . "runExtraOnNewQ\n";
 	
 	// Insert your custom code here.
 	
@@ -24,7 +24,7 @@ function runExtraAlways() {
 	additional routines.	
 	*/	
 
-	echo "\n" . $GLOBALS['fgGreen'] . "EXECUTE SQRAPEREXTA.PHP FUNCTION: " . $GLOBALS['colorEnd'] . "runExtraAlways\n";
+	echo "\n" . $GLOBALS['fgGreen'] . "EXECUTE sqraperextra.php FUNCTION: " . $GLOBALS['colorEnd'] . "runExtraAlways\n";
 	
 	// Insert your custom code here.
 
