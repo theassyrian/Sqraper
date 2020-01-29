@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.0.17
-Last Updated: January 27, 2020
+Version: 2.0.18
+Last Updated: January 29, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.0.17";
-$scriptUpdated = "Last Updated: January 27, 2020";
+$scriptVersion = "2.0.18";
+$scriptUpdated = "Last Updated: January 29, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -45,6 +45,10 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     $GLOBALS['isWindows'] = true;
 } else {
     $GLOBALS['isWindows'] = false;
+}
+
+if (file_exists('sqraperextra.php')) {
+	include ("sqraperextra.php");
 }
 
 date_default_timezone_set("America/New_York");
@@ -1376,6 +1380,13 @@ do {
 					} else {
 						echo "--- " . $fgYellow . "newlyAddedQPosts is empty? Should not be? No need to merge." . $colorEnd . "\n";
 					}
+										
+					if (file_exists('sqraperextra.php')) {
+						if (function_exists('runExtraOnNewQ')) { 
+							runExtraOnNewQ();
+						}
+					}
+					
 				}
 				
 				/* =============================================================================== */
@@ -1389,6 +1400,12 @@ do {
 		unset($threadMap);		
 
 	} // End of loop through all boards defined in the array in the configuration section at the top of the page.	
+
+	if (file_exists('sqraperextra.php')) {
+		if (function_exists('runExtraAlways')) { 
+			runExtraAlways();
+		}
+	}
 
 	echo "\n" . $fgGreen . "NEW Q DROPS:" . $colorEnd . " $newQSinceStart (since Sqraper v$scriptVersion started $sqraperStarted).\n";
 	$timeFinished  = strtotime(date('m/d/Y h:i:s a', time()));
