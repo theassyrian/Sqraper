@@ -64,18 +64,10 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "productionPostsJSONFilename": "posts.json",
   "productionJSONFolder": "json/",
   "productionMediaFolder": "media/",
-  "ftpUploadJSON": true,
-  "ftpUploadJSONFolder": "/data/json/",
-  "ftpUploadMedia": true,
-  "ftpUploadMediaFolder": "/media/",
-  "ftpServer": "ftp.yourserver.com",
-  "ftpLoginID": "somePatriot",
-  "ftpPassword": "yourPassword",
-  "productionMediaURL": "https://yourserver.com/media/",
+  "ftpServers [{"protocol":"ftp","server":"myserver.com","loginId":"someuser","password":"mypassword","uploadJSON":false,"uploadMedia":false,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true},{"protocol":"ftp","server":"myserver2.com","loginId":"someuser2","password":"mypassword2","uploadJSON":true,"uploadMedia":true,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true}],
+"productionMediaURL": "https://yourserver.com/media/",
   "maxDownloadAttempts":10,
   "pauseBetweenDownloadAttempts":1,
-  "ftpProtocol":"ftp",
-  "ftpUseCurl":false,
   "useColors":true
 }
 
@@ -192,54 +184,59 @@ bogusTrips:
     Default: "media/"
     The folder on your local computer where images/videos referenced in scraped posts are saved to. If empty then media
     will not be downloaded and thus will not be able to be uploaded via FTP if you use the FTP upload options.
-    
-  ftpUploadJSON:
-    Type: Boolean
-    Default: false
-    Whether or not to upload the "posts.json" file via FTP to a remote server when it is updated.
-  
-  ftpUploadJSONFolder:
-    Type: String
-    Default: "/data/json/"
-    The folder on the remote server where the "posts.json" will be FTP uploaded to.
-    
-  ftpUploadMedia:
-    Type: Boolean
-    Default: false
-    Whether or not to upload images/videos via FTP to a remote server when they are found in newly scraped posts.
-    Also requires "productionMediaFolder".
+      
+  ftpServers:
+    Type: Nested Multidimensional Array
+    Default [{"protocol":"ftp","server":"myserver.com","loginId":"someuser","password":"mypassword","uploadJSON":false,"uploadMedia":false,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true},{"protocol":"ftp","server":"myserver2.com","loginId":"someuser2","password":"mypassword2","uploadJSON":true,"uploadMedia":true,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true}]
+    Supports sending to any quantity of FTP servers. Useful for when multiple hosts host data from your scrapes.
 
-  ftpUploadMediaFolder:
-    Type: String
-    Default: "/media/"
-    The folder on the remote server where images/videos will be FTP uploaded to.
-    
-  ftpServer:
-    Type: String
-    Default: "ftp.yourserver.com"
-    Self explanitory.
+	  protocol:
+	    Type: String
+	    Default: "ftp"
+	    Only applies when using "ftpUseCurl". Either "ftp" or "sftp". Curl must be installed on your OS.
+	    See https://curl.haxx.se/ for more information on Curl.
 
-  ftpLoginID:
-    Type: String
-    Default: "your_user_name"
-    Self explanitory.
-    
-  ftpPassword:
-    Type: String
-    Default: "your_password"
-    Self explanitory  
+	  server:
+	    Type: String
+	    Default: "ftp.yourserver.com"
+	    Self explanitory.
 
-  ftpProtocol:
-    Type: String
-    Default: "ftp"
-    Only applies when using "ftpUseCurl". Either "ftp" or "sftp". Curl must be installed on your OS.
-    See https://curl.haxx.se/ for more information on Curl.
-  
-  ftpUseCurl:
-    Type: Boolean
-    Default: false
-    Changes from using the default PHP FTP library to using Curl. Curl must be installed on your OS.
-    See https://curl.haxx.se/ for more information on Curl.
+	  loginId:
+	    Type: String
+	    Default: "your_user_name"
+	    Self explanitory.
+
+	  password:
+	    Type: String
+	    Default: "your_password"
+	    Self explanitory  
+
+	  uploadJSON:
+	    Type: Boolean
+	    Default: false
+	    Whether or not to upload the "posts.json" file via FTP to a remote server when it is updated.
+
+	  uploadMedia:
+	    Type: Boolean
+	    Default: false
+	    Whether or not to upload images/videos via FTP to a remote server when they are found in newly scraped posts.
+	    Also requires "productionMediaFolder".
+
+	  jsonFolder:
+	    Type: String
+	    Default: "/data/json/"
+	    The folder on the remote server where the "posts.json" will be FTP uploaded to.
+
+	  mediaFolder:
+	    Type: String
+	    Default: "/media/"
+	    The folder on the remote server where images/videos will be FTP uploaded to.    
+
+	  useCurl:
+	    Type: Boolean
+	    Default: false
+	    Changes from using the default PHP FTP library to using Curl. Curl must be installed on your OS.
+	    See https://curl.haxx.se/ for more information on Curl.
       
   productionMediaURL:
     Type: String
