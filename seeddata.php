@@ -14,47 +14,52 @@ function getConfig() {
 	if (!file_exists('sqraper_config.json')) {
 		echo "\e[1;31mCREATE FILE:\e[0m sqraper_config.json did not exist. Creating and reading default configuration JSON file.\n";
 		$defaultConfig = array(
-			'qTrips' => ['!!mG7VJxZNCI'],
-			'boards' => ['qresearch'],
+			'qTrips' => ['!!mG7VJxZNCI','!!Hs1Jq13jV6'],
+			'bogusTrips' => [],
+			'boards' => ['projectdcomms','qresearch'],
 			'domain8Kun' => '8kun.top',
-			'domain8KunForLinks' => '8kun.top',
-			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
+			'domain8KunForLinks' => '8kun.net',
 			'useLoki' => true,
+			'lokiKun' => 'http://pijdty5otm38tdex6kkh51dkbkegf31dqgryryz3s3tys8wdegxo.loki',
+			'useTor' => false,
+			'torKun' => 'http://www.jthnx5wyvjvzsxtu.onion',
 			'saveRemoteFilesToLocal' => true,
 			'readFromLocal8KunFiles' => false,
 			'sleepBetweenNewQPostChecks' => 150,
+			'offPeakSleepBetweenNewQPostChecks' => 300,
+			'maxDownloadAttempts' => 10,
+			'pauseBetweenDownloadAttempts' => 1,			
 			'productionPostsJSONFilename' => 'posts.json',
 			'productionJSONFolder' => 'json/',
 			'productionMediaFolder' => 'media/',
-			'productionMediaURL' => 'https://yourserver.com/media/',
-			'ftpUploadJSON' => false,
-			'ftpUploadJSONFolder' => '/data/posts/',
-			'ftpUploadMedia' => false,
-			'ftpUploadMediaFolder' => '/data/media/',
-			'ftpServer' => 'ftp.yourserver.com',
-			'ftpLoginID' => 'your_user_name',
-			'ftpPassword' => 'your_password'
+			'productionMediaURL' => 'https://yourserver.com/media/', // If not blank, the media URL in the file will be build with this domain and path.
+			'ftpServers' => [],
+			'useColors' => true
 		);		
+		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver.com','loginId' => 'your_user_name', 'password' => 'your_password', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false));
+		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver2.com','loginId' => 'your_user_name2', 'password' => 'your_password2', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false));
+		
 		$GLOBALS['qTrips'] = $defaultConfig['qTrips'];
+		$GLOBALS['bogusTrips'] = $defaultConfig['bogusTrips'];
 		$GLOBALS['boards'] = $defaultConfig['boards'];
 		$GLOBALS['domain8Kun'] = $defaultConfig['domain8Kun'];
 		$GLOBALS['domain8KunForLinks'] = $defaultConfig['domain8KunForLinks'];
 		$GLOBALS['lokiKun'] = $defaultConfig['lokiKun'];
+		$GLOBALS['torKun'] = $defaultConfig['torKun'];
 		$GLOBALS['useLoki'] = $defaultConfig['useLoki'];
+		$GLOBALS['useTor'] = $defaultConfig['useTor'];
 		$GLOBALS['saveRemoteFilesToLocal'] = $defaultConfig['saveRemoteFilesToLocal'];
 		$GLOBALS['readFromLocal8KunFiles'] = $defaultConfig['readFromLocal8KunFiles'];
 		$GLOBALS['sleepBetweenNewQPostChecks'] = $defaultConfig['sleepBetweenNewQPostChecks'];
+		$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $defaultConfig['offPeakSleepBetweenNewQPostChecks'];		
+		$GLOBALS['maxDownloadAttempts'] = $defaultConfig['maxDownloadAttempts'];		
+		$GLOBALS['pauseBetweenDownloadAttempts'] = $defaultConfig['pauseBetweenDownloadAttempts'];		
 		$GLOBALS['productionPostsJSONFilename'] = $defaultConfig['productionPostsJSONFilename'];
 		$GLOBALS['productionMediaFolder'] = $defaultConfig['productionMediaFolder'];
 		$GLOBALS['productionMediaURL'] = $defaultConfig['productionMediaURL'];
 		$GLOBALS['productionJSONFolder'] = $defaultConfig['productionJSONFolder'];
-		$GLOBALS['ftpUploadJSON'] = $defaultConfig['ftpUploadJSON'];
-		$GLOBALS['ftpUploadJSONFolder'] = $defaultConfig['ftpUploadJSONFolder'];
-		$GLOBALS['ftpUploadMedia'] = $defaultConfig['ftpUploadMedia'];
-		$GLOBALS['ftpUploadMediaFolder'] = $defaultConfig['ftpUploadMediaFolder'];
-		$GLOBALS['ftpServer'] = $defaultConfig['ftpServer'];
-		$GLOBALS['ftpLoginID'] = $defaultConfig['ftpLoginID'];
-		$GLOBALS['ftpPassword'] = $defaultConfig['ftpPassword'];
+		$GLOBALS['ftpServers'] = $defaultConfig['ftpServers'];		
+		$GLOBALS['useColors'] = $defaultConfig['useColors'];
 		file_put_contents('sqraper_config.json', json_encode($defaultConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 	} else {		
 		echo "\e[1;32mREAD CONFIG:\e[0m sqraper_config.json.\n";		
@@ -68,26 +73,51 @@ function getConfig() {
 				displayError("getConfig unable to parse JSON. Halting.");
 				exit;
 			} else {
+
+
 				$GLOBALS['qTrips'] = $currentConfigJSON['qTrips'];
+				$GLOBALS['bogusTrips'] = $currentConfigJSON['bogusTrips'];
 				$GLOBALS['boards'] = $currentConfigJSON['boards'];
 				$GLOBALS['domain8Kun'] = $currentConfigJSON['domain8Kun'];
 				$GLOBALS['domain8KunForLinks'] = $currentConfigJSON['domain8KunForLinks'];
 				$GLOBALS['lokiKun'] = $currentConfigJSON['lokiKun'];
+				$GLOBALS['torKun'] = $currentConfigJSON['torKun'];
 				$GLOBALS['useLoki'] = $currentConfigJSON['useLoki'];
+				$GLOBALS['useTor'] = $currentConfigJSON['useTor'];
 				$GLOBALS['saveRemoteFilesToLocal'] = $currentConfigJSON['saveRemoteFilesToLocal'];
 				$GLOBALS['readFromLocal8KunFiles'] = $currentConfigJSON['readFromLocal8KunFiles'];
 				$GLOBALS['sleepBetweenNewQPostChecks'] = $currentConfigJSON['sleepBetweenNewQPostChecks'];
+				$GLOBALS['offPeakSleepBetweenNewQPostChecks'] = $currentConfigJSON['offPeakSleepBetweenNewQPostChecks'];
+
+				if (!isset($currentConfigJSON['maxDownloadAttempts'])) {
+					$GLOBALS['maxDownloadAttempts'] = 10;
+				} else {
+					$GLOBALS['maxDownloadAttempts'] = $currentConfigJSON['maxDownloadAttempts'];					
+				}
+
+				if (!isset($currentConfigJSON['pauseBetweenDownloadAttempts'])) {
+					$GLOBALS['pauseBetweenDownloadAttempts'] = 1;				
+				} else {
+					$GLOBALS['pauseBetweenDownloadAttempts'] = $currentConfigJSON['pauseBetweenDownloadAttempts'];					
+				}
+				
 				$GLOBALS['productionPostsJSONFilename'] = $currentConfigJSON['productionPostsJSONFilename'];	
 				$GLOBALS['productionMediaFolder'] = $currentConfigJSON['productionMediaFolder'];
 				$GLOBALS['productionMediaURL'] = $currentConfigJSON['productionMediaURL'];
 				$GLOBALS['productionJSONFolder'] = $currentConfigJSON['productionJSONFolder'];								
-				$GLOBALS['ftpUploadJSON'] = $currentConfigJSON['ftpUploadJSON'];
-				$GLOBALS['ftpUploadJSONFolder'] = $currentConfigJSON['ftpUploadJSONFolder'];
-				$GLOBALS['ftpUploadMedia'] = $currentConfigJSON['ftpUploadMedia'];
-				$GLOBALS['ftpUploadMediaFolder'] = $currentConfigJSON['ftpUploadMediaFolder'];
-				$GLOBALS['ftpServer'] = $currentConfigJSON['ftpServer'];
-				$GLOBALS['ftpLoginID'] = $currentConfigJSON['ftpLoginID'];
-				$GLOBALS['ftpPassword'] = $currentConfigJSON['ftpPassword'];
+
+				if (!isset($currentConfigJSON['ftpServers'])) {
+					$GLOBALS['ftpServers'] = [];
+				} else {
+					$GLOBALS['ftpServers'] = $currentConfigJSON['ftpServers'];
+				}
+
+				if (!isset($currentConfigJSON['useColors'])) {
+					$GLOBALS['useColors'] = true;					
+				} else {
+					$GLOBALS['useColors'] = $currentConfigJSON['useColors'];					
+				}
+
 			}
 		}
 	}		
