@@ -274,8 +274,8 @@ function getConfig() {
 			'useColors' => true
 		);		
 		
-		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'myserver.com','loginId' => 'someuser', 'password' => 'mypassword', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/posts/', 'mediaFolder' => '/data/media/', 'useCurl' => true));
-		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'myserver2.com','loginId' => 'someuser2', 'password' => 'mypassword2', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/posts/', 'mediaFolder' => '/data/media/', 'useCurl' => true));
+		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver.com','loginId' => 'your_user_name', 'password' => 'your_password', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false));
+		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver2.com','loginId' => 'your_user_name2', 'password' => 'your_password2', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false));
 		
 		$GLOBALS['qTrips'] = $defaultConfig['qTrips'];
 		$GLOBALS['bogusTrips'] = $defaultConfig['bogusTrips'];
