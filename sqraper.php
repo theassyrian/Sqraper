@@ -127,7 +127,8 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 				if ($ftpServer['protocol'] == 'sftp') {
 					$addCurlParams = " -k ";
 				} else {
-					$addCurlParams = " --insecure --ssl ";
+					//$addCurlParams = " --insecure --ssl ";
+					$addCurlParams = " --insecure ";
 				}			
 
 				if ($isMedia) {
