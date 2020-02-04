@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.0
-Last Updated: February 3, 2020
+Version: 2.1.1
+Last Updated: February 4, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.0";
-$scriptUpdated = "Last Updated: February 3, 2020";
+$scriptVersion = "2.1.1";
+$scriptUpdated = "Last Updated: February 4, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -69,6 +69,7 @@ $debugPostNo = 7356331;
 /* ========= Variables ========= */
 /* ============================= */
 
+$GLOBALS['postsAddedThisLoop'] = 0;
 $newlyAddedQPosts = [];
 $continue = true;
 $threadMap = [];
@@ -878,6 +879,7 @@ do {
 	$noCache = time();
 	
 	$timeStarted  = strtotime(date('m/d/Y h:i:s a', time()));
+	$GLOBALS['postsAddedThisLoop'] = 0;
 	
 	echo "============================================================\n";
 
@@ -1392,6 +1394,8 @@ do {
 								uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
 							}							
 						}
+
+						$GLOBALS['postsAddedThisLoop'] = sizeof($newlyAddedQPosts);
 						unset($newlyAddedQPosts);
 						$newlyAddedQPosts = [];
 					} else {
