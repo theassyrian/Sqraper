@@ -87,9 +87,9 @@ function displayError($errDescription) {
 	
 	echo "\n" . $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " ========================================\n";
 	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " ERROR: $errDescription\n";			
-	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " SLEEP: 5 seconds.\n";			
+	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " SLEEP: 2 seconds.\n";			
 	echo $GLOBALS['fgRed'] . ">>>" . $GLOBALS['colorEnd'] . " ========================================\n\n";		
-	sleep(5);
+	sleep(2);
 	
 }
 
