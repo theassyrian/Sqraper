@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.1.3
+Version: 2.1.4
 Last Updated: February 6, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.3";
+$scriptVersion = "2.1.4";
 $scriptUpdated = "Last Updated: February 6, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -756,7 +756,8 @@ function hasThreadUpdated($varNo, $varLastModified) {
 		if (isset($entry['no']) && isset($entry['last_modified'])) {
 			if ($entry['no'] == $varNo) {
 				$foundEntry = true;
-				if ($entry['last_modified'] == $varLastModified) {
+				//if ($entry['last_modified'] == $varLastModified) {
+				if ($entry['last_modified'] >= $varLastModified) {
 					$entryUpdated = false;		
 				} else {
 
