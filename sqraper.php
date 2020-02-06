@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.1
-Last Updated: February 4, 2020
+Version: 2.1.2
+Last Updated: February 6, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.1";
-$scriptUpdated = "Last Updated: February 4, 2020";
+$scriptVersion = "2.1.2";
+$scriptUpdated = "Last Updated: February 6, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -122,15 +122,8 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 
 	if (isset($GLOBALS['ftpServers'])) {
 		foreach($GLOBALS['ftpServers'] as $ftpServer) {															
-		
-			if ((($isMedia) && ($ftpServer['uploadMedia'])) || ((!$isMedia) && ($ftpServer['uploadJSON']))) {
 
-				if ($ftpServer['protocol'] == 'sftp') {
-					$addCurlParams = " -k ";
-				} else {
-					//$addCurlParams = " --insecure --ssl ";
-					$addCurlParams = " --insecure ";
-				}			
+			if ((($isMedia) && ($ftpServer['uploadMedia'])) || ((!$isMedia) && ($ftpServer['uploadJSON']))) {
 
 				if ($isMedia) {
 					$dataType = FTP_BINARY;
@@ -142,15 +135,17 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 					$remoteFilePath = $ftpServer['jsonFolder'] . $remoteFile;
 				}
 
-				if ($GLOBALS['useTor']) {
-					
+				if (($ftpServer['useCurl']) || ($GLOBALS['useTor'])) {
+
 					/*
+					" || ($GLOBALS['useTor'])" is above because:
 					We have to spawn a shell outside of the TorSock and use cURL (or something else via a shell),
 					otherwise, FTP will send ONE file and will then error out beyond that. Something to do with Tor.
 					*/
 
 					echo $GLOBALS['fgGreen'] . "--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";				
-					$curlScriptContent = "curl" . $addCurlParams . "-u " . $ftpServer['loginId'] . ":" . $ftpServer['password'] . " -T " . $localFilePath . " " . $ftpServer['protocol'] . "://" . $ftpServer['server'] . $remoteFilePath;
+					
+					$curlScriptContent = "curl " . $ftpServer['curlExtraParameters'] . " -u " . $ftpServer['loginId'] . ":" . $ftpServer['password'] . " -T " . $localFilePath . " " . $ftpServer['protocol'] . "://" . $ftpServer['server'] . $remoteFilePath;
 					echo $GLOBALS['fgGreen'] . "--- WRITE: $curlFilename." . $GLOBALS['colorEnd'] . "\n";				
 					file_put_contents($curlFilename, $curlScriptContent, LOCK_EX);		
 					echo $GLOBALS['fgGreen'] . "--- EXEC." . $GLOBALS['colorEnd'] . "\n";				
@@ -164,47 +159,27 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 
 				} else {
 
-					if ($ftpServer['useCurl']) {
-
-						echo $GLOBALS['fgGreen'] . "--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";				
-						
-						$curlScriptContent = "curl" . $addCurlParams . "-u " . $ftpServer['loginId'] . ":" . $ftpServer['password'] . " -T " . $localFilePath . " " . $ftpServer['protocol'] . "://" . $ftpServer['server'] . $remoteFilePath;
-						echo $GLOBALS['fgGreen'] . "--- WRITE: $curlFilename." . $GLOBALS['colorEnd'] . "\n";				
-						file_put_contents($curlFilename, $curlScriptContent, LOCK_EX);		
-						echo $GLOBALS['fgGreen'] . "--- EXEC." . $GLOBALS['colorEnd'] . "\n";				
-						if (!$GLOBALS['isWindows']) {
-							echo $GLOBALS['fgGreen'] . "--- CHMOD." . $GLOBALS['colorEnd'] . "\n";				
-							chmod($curlFilename, 0777);
-							echo shell_exec("./" . $curlFilename);
-						} else {
-							shell_exec($curlFilename);
-						}
-
-					} else {
-
-						echo $GLOBALS['fgGreen'] . "--- FTP CONNECT." . $GLOBALS['colorEnd'] . "\n";	
-						$ftpConnection = ftp_connect($ftpServer['server']);
-						$login_result = ftp_login($ftpConnection, $ftpServer['loginId'], $ftpServer['password']);
-						if ($GLOBALS['useTor']) {
-							// Tor requires PASV mode for outbound FTP. When launching Sqraper with "torsocks php ~/Sqraper/sqraper.php"
-							// you also need to include --passive-ftp at the end. Example: "torsocks php ~/Sqraper/sqraper.php --passive-ftp"
-							echo $GLOBALS['fgGreen'] . "--- FTP PASV." . $GLOBALS['colorEnd'] . "\n";	
-							ftp_pasv($ftpConnection, true); 
-						}
-
-						echo $GLOBALS['fgGreen'] . "--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";
-
-						if (ftp_put($ftpConnection, $remoteFilePath, $localFilePath, $dataType)) {
-							echo $GLOBALS['fgGreen'] . "--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";
-						} else {
-							$last_error = error_get_last();
-							echo $GLOBALS['fgRed'] . "--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . "." . $GLOBALS['colorEnd'] . "\n";
-						}
-
-						echo $GLOBALS['fgGreen'] . "--- FTP CLOSE." . $GLOBALS['colorEnd'] . "\n";	
-						ftp_close($ftpConnection);	
-						
+					echo $GLOBALS['fgGreen'] . "--- FTP CONNECT." . $GLOBALS['colorEnd'] . "\n";	
+					$ftpConnection = ftp_connect($ftpServer['server']);
+					$login_result = ftp_login($ftpConnection, $ftpServer['loginId'], $ftpServer['password']);
+					if ($GLOBALS['useTor']) {
+						// Tor requires PASV mode for outbound FTP. When launching Sqraper with "torsocks php ~/Sqraper/sqraper.php"
+						// you also need to include --passive-ftp at the end. Example: "torsocks php ~/Sqraper/sqraper.php --passive-ftp"
+						echo $GLOBALS['fgGreen'] . "--- FTP PASV." . $GLOBALS['colorEnd'] . "\n";	
+						ftp_pasv($ftpConnection, true); 
 					}
+
+					echo $GLOBALS['fgGreen'] . "--- FTP PUT: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";
+
+					if (ftp_put($ftpConnection, $remoteFilePath, $localFilePath, $dataType)) {
+						echo $GLOBALS['fgGreen'] . "--- FTP PUT SUCCESS: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";
+					} else {
+						$last_error = error_get_last();
+						echo $GLOBALS['fgRed'] . "--- FTP PUT FAILED: " . $localFilePath . ' > ' . $remoteFilePath . " " . $last_error['message'] . "." . $GLOBALS['colorEnd'] . "\n";
+					}
+
+					echo $GLOBALS['fgGreen'] . "--- FTP CLOSE." . $GLOBALS['colorEnd'] . "\n";	
+					ftp_close($ftpConnection);	
 					
 				}
 				
@@ -276,8 +251,8 @@ function getConfig() {
 			'useColors' => true
 		);		
 		
-		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver.com','loginId' => 'your_user_name', 'password' => 'your_password', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false));
-		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver2.com','loginId' => 'your_user_name2', 'password' => 'your_password2', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false));
+		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver.com','loginId' => 'your_user_name', 'password' => 'your_password', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false, 'curlExtraParameters' => '--insecure');
+		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver2.com','loginId' => 'your_user_name2', 'password' => 'your_password2', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false, 'curlExtraParameters' => '--insecure'));
 		
 		$GLOBALS['qTrips'] = $defaultConfig['qTrips'];
 		$GLOBALS['bogusTrips'] = $defaultConfig['bogusTrips'];
