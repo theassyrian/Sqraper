@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.1.2
+Version: 2.1.3
 Last Updated: February 6, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.2";
+$scriptVersion = "2.1.3";
 $scriptUpdated = "Last Updated: February 6, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -872,7 +872,7 @@ do {
 	foreach($bogusTrips as $bogusTrip) {	
 		$strBogusTrips = $strBogusTrips . $bogusTrip . " ";
 	}
-
+	
 	echo $fgBlue . "Sqraper Started:" . $colorEnd . " $sqraperStarted\n";
 	echo $fgBlue . "New Q Drops Since Start:" . $colorEnd . " $newQSinceStart\n";
 	echo $fgBlue . "Configuration:" . $colorEnd . "\n";
@@ -904,7 +904,22 @@ do {
 	echo "   " . $fgBlue . "Pause Between Download Attempts:" . $colorEnd . " $pauseBetweenDownloadAttempts\n";
 	echo "   " . $fgBlue . "Sleep Between Loops:" . $colorEnd . " $sleepBetweenNewQPostChecks\n";
 	echo "   " . $fgBlue . "Off Peak Sleep Between Loops:" . $colorEnd . " $offPeakSleepBetweenNewQPostChecks\n";
-	echo "   " . $fgBlue . "FTP Server(s): " . $colorEnd . json_encode($GLOBALS['ftpServers'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS) . "\n";	
+
+	$strFTPServers = "";
+	foreach($GLOBALS['ftpServers'] as $ftpServer) {															
+		$strFTPServers = $strFTPServers . "protocol:" . $ftpServer['protocol'] . ", ";
+		$strFTPServers = $strFTPServers . "server:" . $ftpServer['server'] . ", ";
+		$strFTPServers = $strFTPServers . "loginId:" . $ftpServer['loginId'] . ", ";
+		$strFTPServers = $strFTPServers . "password:" . mask($ftpServer['password']) . ", ";
+		$strFTPServers = $strFTPServers . "uploadJSON:" . $ftpServer['uploadJSON'] . ", ";
+		$strFTPServers = $strFTPServers . "uploadMedia:" . $ftpServer['uploadMedia'] . ", ";
+		$strFTPServers = $strFTPServers . "jsonFolder:" . $ftpServer['jsonFolder'] . ", ";
+		$strFTPServers = $strFTPServers . "mediaFolder:" . $ftpServer['mediaFolder'] . ", ";
+		$strFTPServers = $strFTPServers . "useCurl:" . $ftpServer['useCurl'] . ", ";
+		$strFTPServers = $strFTPServers . "curlExtraParameters:" . $ftpServer['curlExtraParameters'] . ". ";
+	}
+
+	echo "   " . $fgBlue . "FTP Server(s): " . $colorEnd . $strFTPServers . "\n";	
 	
 	echo $fgBlue . "Loop Started:" . $colorEnd . " " . date("m/d/Y h:i:s a") . "\n";
 	echo "============================================================\n\n";
