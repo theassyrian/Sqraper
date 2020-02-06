@@ -64,7 +64,7 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
   "productionPostsJSONFilename": "posts.json",
   "productionJSONFolder": "json/",
   "productionMediaFolder": "media/",
-  "ftpServers [{"protocol":"ftp","server":"myserver.com","loginId":"someuser","password":"mypassword","uploadJSON":false,"uploadMedia":false,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true},{"protocol":"ftp","server":"myserver2.com","loginId":"someuser2","password":"mypassword2","uploadJSON":true,"uploadMedia":true,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true}],
+  "ftpServers [{"protocol":"ftp","server":"myserver.com","loginId":"someuser","password":"mypassword","uploadJSON":false,"uploadMedia":false,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true,"curlExtraParameters":"--insecure"},{"protocol":"ftp","server":"myserver2.com","loginId":"someuser2","password":"mypassword2","uploadJSON":true,"uploadMedia":true,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true,"curlExtraParameters":"--insecure"}],
 "productionMediaURL": "https://yourserver.com/media/",
   "maxDownloadAttempts":10,
   "pauseBetweenDownloadAttempts":1,
@@ -187,7 +187,7 @@ bogusTrips:
       
   ftpServers:
     Type: Nested Multidimensional Array
-    Default [{"protocol":"ftp","server":"myserver.com","loginId":"someuser","password":"mypassword","uploadJSON":false,"uploadMedia":false,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true},{"protocol":"ftp","server":"myserver2.com","loginId":"someuser2","password":"mypassword2","uploadJSON":true,"uploadMedia":true,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true}]
+    Default [{"protocol":"ftp","server":"myserver.com","loginId":"someuser","password":"mypassword","uploadJSON":false,"uploadMedia":false,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true,"curlExtraParameters":"--insecure"},{"protocol":"ftp","server":"myserver2.com","loginId":"someuser2","password":"mypassword2","uploadJSON":true,"uploadMedia":true,"jsonFolder":"/data/posts/","mediaFolder":"/data/media/","useCurl":true,"curlExtraParameters":"--insecure"}]
     Supports sending to any quantity of FTP servers. Useful for when multiple hosts host data from your scrapes.
 
 	  protocol:
@@ -237,7 +237,12 @@ bogusTrips:
 	    Default: false
 	    Changes from using the default PHP FTP library to using Curl. Curl must be installed on your OS.
 	    See https://curl.haxx.se/ for more information on Curl.
-      
+
+	  curlExtraParameters:
+	    Type: String
+	    Default: "--insecure"
+	    See https://curl.haxx.se/ for more information on Curl.
+	        
   productionMediaURL:
     Type: String
     Default: "https://yourserver.com/media/"
