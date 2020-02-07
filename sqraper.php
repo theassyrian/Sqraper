@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.1.4
+Version: 2.1.5
 Last Updated: February 6, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,7 +36,7 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.4";
+$scriptVersion = "2.1.5";
 $scriptUpdated = "Last Updated: February 6, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
@@ -129,10 +129,12 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 					$dataType = FTP_BINARY;
 					$localFilePath = $GLOBALS['productionMediaFolder'] . $localFile;
 					$remoteFilePath = $ftpServer['mediaFolder'] . $remoteFile;
+					$addCurlASCII = "";
 				} else {
 					$dataType = FTP_ASCII;
 					$localFilePath = $GLOBALS['productionJSONFolder'] . $localFile;
 					$remoteFilePath = $ftpServer['jsonFolder'] . $remoteFile;
+					$addCurlASCII = " --use-ascii ";
 				}
 
 				if (($ftpServer['useCurl']) || ($GLOBALS['useTor'])) {
@@ -145,7 +147,7 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 
 					echo $GLOBALS['fgGreen'] . "--- CURL UPLOAD: " . $localFilePath . ' > ' . $remoteFilePath . "." . $GLOBALS['colorEnd'] . "\n";				
 					
-					$curlScriptContent = "curl " . $ftpServer['curlExtraParameters'] . " -u " . $ftpServer['loginId'] . ":" . $ftpServer['password'] . " -T " . $localFilePath . " " . $ftpServer['protocol'] . "://" . $ftpServer['server'] . $remoteFilePath;
+					$curlScriptContent = "curl " . $ftpServer['curlExtraParameters'] . $addCurlASCII . " -u " . $ftpServer['loginId'] . ":" . $ftpServer['password'] . " -T " . $localFilePath . " " . $ftpServer['protocol'] . "://" . $ftpServer['server'] . $remoteFilePath;
 					echo $GLOBALS['fgGreen'] . "--- WRITE: $curlFilename." . $GLOBALS['colorEnd'] . "\n";				
 					file_put_contents($curlFilename, $curlScriptContent, LOCK_EX);		
 					echo $GLOBALS['fgGreen'] . "--- EXEC." . $GLOBALS['colorEnd'] . "\n";				
