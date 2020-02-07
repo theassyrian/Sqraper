@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.5
-Last Updated: February 6, 2020
+Version: 2.1.6
+Last Updated: February 7, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.5";
-$scriptUpdated = "Last Updated: February 6, 2020";
+$scriptVersion = "2.1.6";
+$scriptUpdated = "Last Updated: February 7, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -113,15 +113,15 @@ function createBlueBGText($text) {
 
 function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 
-	if (!$GLOBALS['isWindows']) {
-		$curlFilename = "curlScriptTemp.sh";
-	} else {
-		// For Windows, make sure you have downloaded cURL, and that curl.exe is in your path!
-		$curlFilename = "curlScriptTemp.bat";			
-	}
-
 	if (isset($GLOBALS['ftpServers'])) {
-		foreach($GLOBALS['ftpServers'] as $ftpServer) {															
+		foreach($GLOBALS['ftpServers'] as $key=>$ftpServer) {															
+
+			if (!$GLOBALS['isWindows']) {
+				$curlFilename = "curlScriptTemp$key.sh";
+			} else {
+				// For Windows, make sure you have downloaded cURL, and that curl.exe is in your path!
+				$curlFilename = "curlScriptTemp$key.bat";			
+			}
 
 			if ((($isMedia) && ($ftpServer['uploadMedia'])) || ((!$isMedia) && ($ftpServer['uploadJSON']))) {
 
