@@ -241,7 +241,8 @@ bogusTrips:
 	  curlExtraParameters:
 	    Type: String
 	    Default: "--insecure"
-	    See https://curl.haxx.se/ for more information on Curl.
+	    See https://curl.haxx.se/ for more information on Curl. "-k --ftp-ssl" or "--insecure" are the
+	    settings I use depending on the server I am uploading to.
 	        
   productionMediaURL:
     Type: String
