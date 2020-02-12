@@ -241,7 +241,7 @@ bogusTrips:
 	  curlExtraParameters:
 	    Type: String
 	    Default: "--insecure"
-	    See https://curl.haxx.se/ for more information on Curl. "--insecure -k -v --ftp-createdirs --retry 10 --retry-delay 1",
+	    See https://curl.haxx.se/ for more information on Curl. "--insecure -k -v --ftp-create-dirs --retry 10 --retry-delay 1",
 	    "--insecure -k -v --ftp-create-dirs --ftp-pasv", "--ftp-ssl -k -v" or "--insecure" are the settings I use depending
 	    on the server I am uploading to.
 	        
