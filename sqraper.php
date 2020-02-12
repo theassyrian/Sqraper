@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.6
-Last Updated: February 7, 2020
+Version: 2.1.7
+Last Updated: February 12, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.6";
-$scriptUpdated = "Last Updated: February 7, 2020";
+$scriptVersion = "2.1.7";
+$scriptUpdated = "Last Updated: February 12, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -117,10 +117,10 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 		foreach($GLOBALS['ftpServers'] as $key=>$ftpServer) {															
 
 			if (!$GLOBALS['isWindows']) {
-				$curlFilename = "curlScriptTemp$key.sh";
+				$curlFilename = "CurlScriptTemp" . ($key + 1) . ".sh";
 			} else {
 				// For Windows, make sure you have downloaded cURL, and that curl.exe is in your path!
-				$curlFilename = "curlScriptTemp$key.bat";			
+				$curlFilename = "CurlScriptTemp" . ($key + 1) . ".bat";
 			}
 
 			if ((($isMedia) && ($ftpServer['uploadMedia'])) || ((!$isMedia) && ($ftpServer['uploadJSON']))) {
@@ -130,11 +130,13 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 					$localFilePath = $GLOBALS['productionMediaFolder'] . $localFile;
 					$remoteFilePath = $ftpServer['mediaFolder'] . $remoteFile;
 					$addCurlASCII = "";
+					$curlFilename = "media" . $curlFilename;
 				} else {
 					$dataType = FTP_ASCII;
 					$localFilePath = $GLOBALS['productionJSONFolder'] . $localFile;
 					$remoteFilePath = $ftpServer['jsonFolder'] . $remoteFile;
 					$addCurlASCII = " --use-ascii ";
+					$curlFilename = "ascii" . $curlFilename;
 				}
 
 				if (($ftpServer['useCurl']) || ($GLOBALS['useTor'])) {
