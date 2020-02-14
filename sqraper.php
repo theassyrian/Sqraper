@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.7
-Last Updated: February 12, 2020
+Version: 2.1.8
+Last Updated: February 14, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.7";
-$scriptUpdated = "Last Updated: February 12, 2020";
+$scriptVersion = "2.1.8";
+$scriptUpdated = "Last Updated: February 14, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -158,7 +158,7 @@ function uploadViaFTP($localFile, $remoteFile, $isMedia) {
 						chmod($curlFilename, 0777);
 						echo shell_exec("./" . $curlFilename);
 					} else {
-						shell_exec($curlFilename);
+						shell_exec($curlFilename . " 2>&1");
 					}
 
 				} else {
