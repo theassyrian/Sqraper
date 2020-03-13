@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.8
-Last Updated: February 14, 2020
+Version: 2.1.10
+Last Updated: March 12, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.8";
-$scriptUpdated = "Last Updated: February 14, 2020";
+$scriptVersion = "2.1.10";
+$scriptUpdated = "Last Updated: March 12, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -608,7 +608,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 							'threadId' => $postReference_threadId,
 							'timestamp' => $postReference_timestamp,
 							'trip' => $postReference_trip,
-							'userId' => $postReference_userId
+							'userId' => strval($postReference_userId)
 						);															
 						
 						$post_referencesMedia = [];	
@@ -1310,7 +1310,7 @@ do {
 														'threadId' => $post_threadId,
 														'timestamp' => $post_timestamp,
 														'trip' => $post_trip,
-														'userId' => $post_userId,
+														'userId' => strval($post_userId),
 														'minedBy' => $scriptTitle . ' ' . $scriptVersion
 													);
 													
