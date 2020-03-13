@@ -3,8 +3,8 @@
 /*
 
 Sqraper
-Version: 2.1.10
-Last Updated: March 12, 2020
+Version: 2.1.11
+Last Updated: March 13, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
 
@@ -36,8 +36,8 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.10";
-$scriptUpdated = "Last Updated: March 12, 2020";
+$scriptVersion = "2.1.11";
+$scriptUpdated = "Last Updated: March 13, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
@@ -608,7 +608,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 							'threadId' => $postReference_threadId,
 							'timestamp' => $postReference_timestamp,
 							'trip' => $postReference_trip,
-							'userId' => strval($postReference_userId)
+							'userId' => $postReference_userId
 						);															
 						
 						$post_referencesMedia = [];	
@@ -946,7 +946,7 @@ do {
 	if (!file_exists($productionJSONFolder . $productionPostsJSONFilename)) {
 		echo $fgRed . "CREATE FILE:" . $colorEnd . " $productionJSONFolder$productionPostsJSONFilename did not exist. Creating empty JSON file.\n";
 		$blankPosts = array();
-		file_put_contents($productionJSONFolder . $productionPostsJSONFilename, json_encode($blankPosts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
+		file_put_contents($productionJSONFolder . $productionPostsJSONFilename, json_encode($blankPosts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), LOCK_EX);
 	}			
 
 	foreach($boards as $board) { // Loop through all boards defined in the array in the configuration section at the top of the page.
@@ -1310,7 +1310,7 @@ do {
 														'threadId' => $post_threadId,
 														'timestamp' => $post_timestamp,
 														'trip' => $post_trip,
-														'userId' => strval($post_userId),
+														'userId' => $post_userId,
 														'minedBy' => $scriptTitle . ' ' . $scriptVersion
 													);
 													
@@ -1383,7 +1383,7 @@ do {
 									  return $element['timestamp'];
 								  }, $mergedArray), SORT_DESC, $mergedArray);
 								echo "\n" . $fgGreen . "--- WRITE " . $productionJSONFolder . $productionPostsJSONFilename . "." . $colorEnd . "\n";
-								file_put_contents($productionJSONFolder . $productionPostsJSONFilename, json_encode($mergedArray, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
+								file_put_contents($productionJSONFolder . $productionPostsJSONFilename, json_encode($mergedArray, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), LOCK_EX);
 								unset($mergedArray);
 								unset($jsonContents);	
 								uploadViaFTP($productionPostsJSONFilename, $productionPostsJSONFilename, false);
