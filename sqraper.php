@@ -684,7 +684,7 @@ function getReferencesObject($searchStr, $digDeeper) {
 						}
 						
 						if ($digDeeper == true) {
-							$subSub_References_Result = getReferencesObject($postReference_text, true); // If you want to dig unlimited levels deep set to true
+							$subSub_References_Result = getReferencesObject($postReference_text, false); // If you want to dig unlimited levels deep set to true
 							if (!empty($subSub_References_Result)) {
 								$thisReferencesPost['references'] = $subSub_References_Result;
 							}							
