@@ -3,7 +3,7 @@
 /*
 
 Sqraper
-Version: 2.1.11
+Version: 2.1.12
 Last Updated: March 13, 2020
 Author: DevAnon from QAlerts.app
 Email: qalertsapp@gmail.com
@@ -36,12 +36,13 @@ config changes as the config file is re-read at the end of each loop.
 /* ============================= */
 
 $scriptTitle = "Sqraper";
-$scriptVersion = "2.1.11";
+$scriptVersion = "2.1.12";
 $scriptUpdated = "Last Updated: March 13, 2020";
 $scriptAuthor = "DevAnon from QAlerts.app";
 $scriptAuthorEmail = "qalertsapp@gmail.com";
 
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    $GLOBALS['isWindows'] = true;
     $GLOBALS['isWindows'] = true;
 } else {
     $GLOBALS['isWindows'] = false;
@@ -252,7 +253,8 @@ function getConfig() {
 			'productionMediaFolder' => 'media/',
 			'productionMediaURL' => 'https://yourserver.com/media/', // If not blank, the media URL in the file will be build with this domain and path.
 			'ftpServers' => [],
-			'useColors' => true
+			'useColors' => true,
+			'unlimitedRefPostDepth' => false
 		);		
 		
 		array_push($defaultConfig[ftpServers], array('protocol' => 'ftp','server' => 'ftp.yourserver.com','loginId' => 'your_user_name', 'password' => 'your_password', 'uploadJSON' => false, 'uploadMedia' => false, 'jsonFolder' => '/data/json/', 'mediaFolder' => '/media/', 'useCurl' => false, 'curlExtraParameters' => '--insecure'));
@@ -279,6 +281,7 @@ function getConfig() {
 		$GLOBALS['productionJSONFolder'] = $defaultConfig['productionJSONFolder'];
 		$GLOBALS['ftpServers'] = $defaultConfig['ftpServers'];		
 		$GLOBALS['useColors'] = $defaultConfig['useColors'];
+		$GLOBALS['unlimitedRefPostDepth'] = $defaultConfig['unlimitedRefPostDepth'];
 		file_put_contents('sqraper_config.json', json_encode($defaultConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK), LOCK_EX);
 						
 	} else {
@@ -342,6 +345,12 @@ function getConfig() {
 					$GLOBALS['useColors'] = true;					
 				} else {
 					$GLOBALS['useColors'] = $currentConfigJSON['useColors'];					
+				}
+
+				if (!isset($currentConfigJSON['unlimitedRefPostDepth'])) {
+					$GLOBALS['unlimitedRefPostDepth'] = false;
+				} else {
+					$GLOBALS['unlimitedRefPostDepth'] = $currentConfigJSON['unlimitedRefPostDepth'];					
 				}
 
 				assignColors($GLOBALS['useColors']);
@@ -683,8 +692,8 @@ function getReferencesObject($searchStr, $digDeeper) {
 							$thisReferencesPost['media'] = [];
 						}
 						
-						if ($digDeeper == true) {
-							$subSub_References_Result = getReferencesObject($postReference_text, false); // If you want to dig unlimited levels deep set to true
+						if ($GLOBALS['unlimitedRefPostDepth'] == true) {
+							$subSub_References_Result = getReferencesObject($postReference_text, $GLOBALS['unlimitedRefPostDepth']);
 							if (!empty($subSub_References_Result)) {
 								$thisReferencesPost['references'] = $subSub_References_Result;
 							}							
@@ -907,6 +916,7 @@ do {
 	echo "   " . $fgBlue . "Read From Local 8Kun Files (for debugging/testing):" . $colorEnd . " $readFromLocal8KunFiles\n";
 	echo "   " . $fgBlue . "Max Download Attempts:" . $colorEnd . " $maxDownloadAttempts\n";
 	echo "   " . $fgBlue . "Pause Between Download Attempts:" . $colorEnd . " $pauseBetweenDownloadAttempts\n";
+	echo "   " . $fgBlue . "Unlimited Ref Post Depth:" . $colorEnd . " $unlimitedRefPostDepth\n";
 	echo "   " . $fgBlue . "Sleep Between Loops:" . $colorEnd . " $sleepBetweenNewQPostChecks\n";
 	echo "   " . $fgBlue . "Off Peak Sleep Between Loops:" . $colorEnd . " $offPeakSleepBetweenNewQPostChecks\n";
 
