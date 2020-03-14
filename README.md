@@ -68,7 +68,8 @@ CONFIGURATION FILE: sqraper_config.json (needs to be in the same folder as sqrap
 "productionMediaURL": "https://yourserver.com/media/",
   "maxDownloadAttempts":10,
   "pauseBetweenDownloadAttempts":1,
-  "useColors":true
+  "useColors":true,
+  "unlimitedRefPostDepth":false
 }
 
 -----------------
@@ -267,6 +268,15 @@ bogusTrips:
     Display Sqraper in color. For older Windows Server versions colors will not display so it is useful to set
     to false in order to clean up readability.
 
+  unlimitedRefPostDepth:
+    Type: Boolean
+    Default: false
+    Most aggregator sites only show referenced posts 1, maybe two levels deep. To only scrape 2 levels deep,
+    leave set to false. If set to true, Sqraper will scrape an unlimited number of posts deep. The QAnon.pub
+    data contains reference posts of unlimited depth. Obviously, unlimited depth results in larger file sizes.
+    If your site is not displaying more than 2 levels deep of referenced posts, there really is no need to go
+    deeper.
+    
 -----------------
 
 PREREQUISITES:
